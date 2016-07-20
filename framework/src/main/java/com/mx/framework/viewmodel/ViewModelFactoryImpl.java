@@ -10,6 +10,8 @@ import com.mx.framework.view.BaseActivity;
 import com.mx.framework.view.BaseFragment;
 import com.mx.framework.view.RunState;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Created by liuyuxuan on 16/6/6.
  */
@@ -27,17 +29,14 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
         CheckUtils.checkNotNull(viewModelClassType);
         CheckUtils.checkNotNull(baseFragment);
         CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created, baseFragment.getString(R.string.activity_msg));
-
-        T value = ObjectUtils.newInstance(viewModelClassType);
+        T value = ObjectUtils.newInstance(viewModelClassType, baseFragment);
         if (null != value) {
             if (value instanceof ModuleAware) {
                 value.setModule(module);
             }
-
             if (value instanceof ActivityAware) {
                 value.setActivity((BaseActivity) baseFragment.getActivity());
             }
-
             if (value instanceof ViewModelManagerAware) {
                 value.setViewModelManager(baseFragment.getViewModelManager());
             }
@@ -51,8 +50,8 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
         CheckUtils.checkNotNull(baseActivity);
         CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created, baseActivity.getString(R.string.activity_msg));
         CheckUtils.checkNotNull(viewModelClassType);
+        T value = ObjectUtils.newInstance(viewModelClassType, baseActivity);
 
-        T value = ObjectUtils.newInstance(viewModelClassType);
         if (null != value) {
             if (value instanceof ModuleAware) {
                 value.setModule(module);

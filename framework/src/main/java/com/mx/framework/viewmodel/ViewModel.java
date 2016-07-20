@@ -94,7 +94,7 @@ public abstract class ViewModel implements BaseActivity.ActivityResultListener, 
         runState = RunState.Created;
     }
 
-    protected final Context getContext() {
+    public final Context getContext() {
         return contextRef.get();
     }
 

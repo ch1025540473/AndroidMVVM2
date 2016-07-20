@@ -1,5 +1,6 @@
 package com.mx.engine.event;
 
+
 import org.greenrobot.eventbus.EventBus;
 
 /**
@@ -47,7 +48,7 @@ public class EventProxy {
 
     }
 
-    public  void unregister(Object subscriber) {
+    public void unregister(Object subscriber) {
 
         if (eventBus.isRegistered(subscriber)) {
             eventBus.unregister(subscriber);

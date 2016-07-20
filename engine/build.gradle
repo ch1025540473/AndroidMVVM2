@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.3"
     }
 
     sourceSets {
@@ -21,6 +21,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
     lintOptions {
         warning 'InvalidPackage'
         abortOnError false
@@ -48,7 +49,8 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:logging-interceptor:3.2.0'
-    compile 'com.orhanobut:logger:1.6'
+    compile 'com.github.orhanobut:logger:1.12'
+
 
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.1-rc1'
@@ -73,17 +75,41 @@ dependencies {
 
 }
 
-uploadArchives {
 
-    repositories.mavenDeployer {
-        name = 'mavenCentralReleaseDeployer'
-        repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-            authentication(userName: "admin", password: "admin123")
+afterEvaluate { project ->
+    uploadArchives {
+        repositories.mavenDeployer {
+            name = 'mavenCentralReleaseDeployer'
+            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+                authentication(userName: "admin", password: "admin123")
+            }
+            pom.version = "1.0.3"
+            pom.artifactId = "engine"
+            pom.groupId = "com.mx.architecture"
+            pom.name = "engine"
+            pom.packaging = 'aar'
+
         }
-        pom.version = "1.0.0"
-        pom.artifactId = "engine"
-        pom.groupId = "com.mx.architecture"
-        pom.name = "engine"
-        pom.packaging = 'aar'
+    }
+
+
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    artifacts {
+        archives androidSourcesJar
+//  archives androidJavadocsJar
     }
 }

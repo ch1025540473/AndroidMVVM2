@@ -43,7 +43,7 @@ public class ObjectUtils {
         return hexString;
     }
 
-    public static  <T extends Serializable> T hexStringToObject(String hexString) {
+    public static <T extends Serializable> T hexStringToObject(String hexString) {
         T object = null;
         ByteArrayInputStream bais = null;
         ObjectInputStream ois = null;
@@ -105,6 +105,23 @@ public class ObjectUtils {
         }
     }
 
+    public static <T> T newInstance(Class<T> cls, Object object) {
+
+        if (null == object) {
+            return newInstance(cls);
+        }
+
+        try {
+            cls.getConstructor(object.getClass()).newInstance(object);
+            T value = (T) cls.getConstructors()[0].newInstance(object);
+            return value;
+        } catch (Exception e) {
+
+        }
+
+        return newInstance(cls);
+
+    }
 
     /**
      * Get the Field object from an object's class or its all super classes.

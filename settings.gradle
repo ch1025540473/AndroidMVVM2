@@ -1,1 +1,1 @@
-include ':engine',':framework',':ptr-lib','PtrrecyclerView',':demo'
+include ':engine', ':framework', ':ptr-lib', 'PtrrecyclerView', ':demo',"gomeshop"
