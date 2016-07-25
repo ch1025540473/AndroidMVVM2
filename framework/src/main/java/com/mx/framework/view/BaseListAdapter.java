@@ -66,7 +66,15 @@ public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
         this.items.clear();
         onDataChange();
     }
+    public void addItems(int position, Collection<ItemType> items) {
+        this.items.addAll(position, items);
+        onDataChange();
+    }
 
+    public void insertItem(int index, ItemType itemType) {
+        this.items.add(index, itemType);
+        onDataChange();
+    }
     protected BaseActivity getActivity() {
         return this.activity;
     }

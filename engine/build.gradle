@@ -88,7 +88,10 @@ afterEvaluate { project ->
             pom.groupId = "com.mx.architecture"
             pom.name = "engine"
             pom.packaging = 'aar'
-
+            pom.project {
+                description ""
+                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/engine"
+            }
         }
     }
 

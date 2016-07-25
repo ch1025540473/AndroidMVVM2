@@ -62,6 +62,10 @@ public abstract class BaseRecyclerAdapter<ItemType> extends RecyclerView.Adapter
         this.items.addAll(items);
         onDataChange();
     }
+    public void addItems(int position, Collection<ItemType> items) {
+        this.items.addAll(position, items);
+        onDataChange();
+    }
 
     public void insertItem(int index, ItemType itemType) {
         this.items.add(index, itemType);
@@ -73,7 +77,6 @@ public abstract class BaseRecyclerAdapter<ItemType> extends RecyclerView.Adapter
         for (int i = items.size() - 1; i >= start; i--) {
             items.remove(i);
         }
-
     }
 
     public void removeItem(ItemType itemType) {

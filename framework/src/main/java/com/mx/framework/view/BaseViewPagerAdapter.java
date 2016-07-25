@@ -55,6 +55,16 @@ public abstract class BaseViewPagerAdapter<ItemType> extends PagerAdapter {
         onDataChange();
     }
 
+    public void addItems(int position, Collection<ItemType> items) {
+        this.items.addAll(position, items);
+        onDataChange();
+    }
+
+    public void insertItem(int index, ItemType itemType) {
+        this.items.add(index, itemType);
+        onDataChange();
+    }
+
     public int indexOf(ItemType itemType) {
         return items.indexOf(itemType);
     }
