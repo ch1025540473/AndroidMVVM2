@@ -39,10 +39,10 @@ public abstract class ViewModelRecyclerViewAdapter<ItemType> extends BaseRecycle
     @Override
     public final int getItemViewType(int position) {
         RecyclerItemViewModel<?, ItemType> items = getViewModelType(position);
-        int index = viewModelTypes.indexOf(getViewModelType(position));
+        int index = viewModelTypes.indexOf(items);
         if (index == -1) {
             viewModelTypes.add(items);
-            index = viewModelTypes.indexOf(getViewModelType(position));
+            index = viewModelTypes.indexOf(items);
         }
         Log.d("index", "index=" + index+ items.getClass().getName());
 

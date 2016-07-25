@@ -315,16 +315,16 @@ public class PtrFrameLayout extends ViewGroup {
                 float offsetY = mPtrIndicator.getOffsetY();
 
                 View contentView = getContentView();
-                int mesuredHeight = contentView.getMeasuredHeight();
-                if (mesuredHeight == 0){
+                int top = contentView.getTop();
+                if (top <= mPagingTouchSlop){
+                    if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > Math.abs(offsetY))) {
+                        mPreventForHorizontal = true;
+                    }
+                } else {
                     if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > mPagingTouchSlop && Math.abs(offsetX) > Math.abs(offsetY))) {
                         if (mPtrIndicator.isInStartPosition()) {
                             mPreventForHorizontal = true;
                         }
-                    }
-                } else {
-                    if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > Math.abs(offsetY))) {
-                        mPreventForHorizontal = true;
                     }
                 }
                 if (mPreventForHorizontal) {
