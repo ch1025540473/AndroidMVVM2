@@ -43,7 +43,7 @@ public abstract class AbsItemViewModel<DataBindingType extends ViewDataBinding, 
     protected abstract void onUpdateView(DataBindingType dataBinding, ItemType item);
 
     @Override
-    protected final void onLoadData() {
+    protected void onLoadData() {
 
     }
 }

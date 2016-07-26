@@ -99,9 +99,7 @@ public class BaseActivity extends FragmentActivity implements DataSourceChangeAw
         }
 
         for (BaseFragment baseFragment : getFragments()) {
-            if (baseFragment.getRunState() == RunState.Started) {
-                baseFragment.reloadData(sender);
-            }
+            baseFragment.reloadData(sender);
         }
     }
 
@@ -209,7 +207,6 @@ public class BaseActivity extends FragmentActivity implements DataSourceChangeAw
         CheckUtils.checkNotNull(viewModelManager);
         return viewModelManager;
     }
-
 
 
     /**

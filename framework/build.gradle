@@ -67,7 +67,7 @@ afterEvaluate { project ->
                 authentication(userName: "admin", password: "admin123")
             }
             pom.version = "1.0.3"
-            pom.artifactId = "framework"
+            pom.artifactId = "framework-beta"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
             pom.packaging = 'aar'
