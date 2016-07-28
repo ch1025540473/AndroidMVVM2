@@ -12,7 +12,7 @@ import in.srain.cube.views.ptr.util.PtrCLog;
 /**
  * This layout view for "Pull to Refresh(Ptr)" support all of the view, you can contain everything you want.
  * support: pull to refresh / release to refresh / auto refresh / keep header view while refreshing / hide header view while refreshing
- * It defines {@link PtrUIHandler}, which allows you customize the UI easily.
+ * It defines {@link in.srain.cube.views.ptr.PtrUIHandler}, which allows you customize the UI easily.
  */
 public class PtrFrameLayout extends ViewGroup {
 
@@ -107,7 +107,7 @@ public class PtrFrameLayout extends ViewGroup {
         mScrollChecker = new ScrollChecker();
 
         final ViewConfiguration conf = ViewConfiguration.get(getContext());
-        mPagingTouchSlop = conf.getScaledTouchSlop() * 2;
+        mPagingTouchSlop = conf.getScaledTouchSlop() ;
     }
 
     @Override
@@ -201,7 +201,7 @@ public class PtrFrameLayout extends ViewGroup {
         if (mContent != null) {
             measureContentView(mContent, widthMeasureSpec, heightMeasureSpec);
             if (isDebug()) {
-                MarginLayoutParams lp = (MarginLayoutParams) mContent.getLayoutParams();
+                ViewGroup.MarginLayoutParams lp = (MarginLayoutParams) mContent.getLayoutParams();
                 PtrCLog.d(LOG_TAG, "onMeasure content, width: %s, height: %s, margin: %s %s %s %s",
                         getMeasuredWidth(), getMeasuredHeight(),
                         lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin);
@@ -314,17 +314,9 @@ public class PtrFrameLayout extends ViewGroup {
                 float offsetX = mPtrIndicator.getOffsetX();
                 float offsetY = mPtrIndicator.getOffsetY();
 
-                View contentView = getContentView();
-                int top = contentView.getTop();
-                if (top <= mPagingTouchSlop){
-                    if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > Math.abs(offsetY))) {
+                if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > mPagingTouchSlop && Math.abs(offsetX) > Math.abs(offsetY))) {
+                    if (mPtrIndicator.isInStartPosition()) {
                         mPreventForHorizontal = true;
-                    }
-                } else {
-                    if (mDisableWhenHorizontalMove && !mPreventForHorizontal && (Math.abs(offsetX) > mPagingTouchSlop && Math.abs(offsetX) > Math.abs(offsetY))) {
-                        if (mPtrIndicator.isInStartPosition()) {
-                            mPreventForHorizontal = true;
-                        }
                     }
                 }
                 if (mPreventForHorizontal) {

@@ -9,7 +9,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
     }
 
     lintOptions {
@@ -42,8 +42,8 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.2"
-            pom.artifactId = "ptr-lib"
+            pom.version = "1.0.3"
+            pom.artifactId = "ptr-lib-beta"
             pom.groupId = "com.mx.architecture"
             pom.name = "ptr-lib"
             pom.packaging = 'aar'

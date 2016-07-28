@@ -13,6 +13,8 @@ import com.widget.ptr.view.PtrLoadingMoreFooterView;
 import com.widget.ptr.view.PtrPullHeaderView;
 import com.widget.ptr.view.PtrRecyclerView;
 
+import in.srain.cube.views.ptr.PtrHandler;
+
 /**
  * Created by liuyuxuan on 16/6/20.
  */
@@ -28,6 +30,15 @@ public class PtrRecyclerViewBuilder {
     private RecyclerView.ItemDecoration decoration;
     private LoadMoreRecyclerListener loadMoreRecyclerListener;
     private RecyclerView.ItemAnimator itemAnimator;
+    private PtrHandler ptrHandler;
+
+    public PtrHandler getPtrHandler() {
+        return ptrHandler;
+    }
+
+    public void setPtrHandler(PtrHandler ptrHandler) {
+        this.ptrHandler = ptrHandler;
+    }
 
     public PtrRecyclerViewBuilder(@NonNull RecyclerView.Adapter adapter) {
 
@@ -161,6 +172,7 @@ public class PtrRecyclerViewBuilder {
         recyclerView.setMode(getPtrMode());
         loadMoreRecyclerListener = new LoadMoreRecyclerListener(recyclerView.getRecyclerView(), ptrMode);
         recyclerView.addOnScrollListener(loadMoreRecyclerListener);
+        recyclerView.setPtrHandler(getPtrHandler());
 
         if (PtrMode.BOTH == getPtrMode()) {
             if (null != onBothRefreshListener) {
@@ -180,6 +192,7 @@ public class PtrRecyclerViewBuilder {
         recyclerView.setLayoutManager(getLayoutManager());
         recyclerView.setFooterView(getPtrLoadingMoreFooterView());
         recyclerView.setPtrHeaderView(getPtrPullHeaderView());
+
     }
 
 }

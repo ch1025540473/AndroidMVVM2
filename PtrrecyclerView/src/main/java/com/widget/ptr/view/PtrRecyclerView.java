@@ -27,7 +27,12 @@ public class PtrRecyclerView extends PtrRefreshLayout {
     private PtrMode mode;
     private float downY;
 
-    private int touchSlop;
+    PtrHandler ptrHandler;
+
+    @Override
+    public void setPtrHandler(PtrHandler ptrHandler) {
+        this.ptrHandler = ptrHandler;
+    }
 
     public PtrRecyclerView(Context context) {
         super(context);
@@ -51,12 +56,7 @@ public class PtrRecyclerView extends PtrRefreshLayout {
         return recyclerView;
     }
 
-    /**
-     * RecyclerView实例工厂
-     * @param context
-     * @return
-     */
-    protected RecyclerView buildRecyclerView(Context context, AttributeSet attrs){
+    protected RecyclerView buildRecyclerView(Context context, AttributeSet attrs) {
         return new RecyclerView(context, attrs);
     }
 
@@ -70,14 +70,13 @@ public class PtrRecyclerView extends PtrRefreshLayout {
         addView(recyclerView);
         setResistance(1.7f);
         setRatioOfHeaderHeightToRefresh(1.2f);
-        setDurationToClose(200);
+        setDurationToClose(20);
         setDurationToCloseHeader(1000);
         setKeepHeaderWhenRefresh(true);
         setPullToRefresh(false);
         //ViewPager滑动冲突
         disableWhenHorizontalMove(true);
 
-        touchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
     }
 
 
@@ -144,15 +143,20 @@ public class PtrRecyclerView extends PtrRefreshLayout {
 
         if (PtrMode.BOTH == mode || PtrMode.TOP == mode) {
             //当前允许下拉刷新
+            //当前允许下拉刷新
+            super.setPtrHandler(new PtrHandler() {
 
-            setPtrHandler(new PtrHandler() {
                 @Override
                 public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                    return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+                    return ptrHandler != null ? ptrHandler.checkCanDoRefresh(frame, content, header) :
+                            PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
                 }
 
                 @Override
                 public void onRefreshBegin(PtrFrameLayout frame) {
+                    if (null != ptrHandler) {
+                        ptrHandler.onRefreshBegin(frame);
+                    }
                     listener.onPullDown();
                 }
             });
@@ -181,15 +185,19 @@ public class PtrRecyclerView extends PtrRefreshLayout {
 
         if (PtrMode.BOTH == mode || PtrMode.TOP == mode) {
             //当前允许下拉刷新
-            setPtrHandler(new PtrHandler() {
+            super.setPtrHandler(new PtrHandler() {
 
                 @Override
                 public boolean checkCanDoRefresh(PtrFrameLayout frame, View content, View header) {
-                    return PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
+                    return ptrHandler != null ? ptrHandler.checkCanDoRefresh(frame, content, header) :
+                            PtrDefaultHandler.checkContentCanBePulledDown(frame, content, header);
                 }
 
                 @Override
                 public void onRefreshBegin(PtrFrameLayout frame) {
+                    if (null != ptrHandler) {
+                        ptrHandler.onRefreshBegin(frame);
+                    }
                     listener.onPullDown();
                 }
             });
@@ -262,34 +270,4 @@ public class PtrRecyclerView extends PtrRefreshLayout {
         return super.dispatchTouchEvent(e);
     }
 
-    private int lastX = 0;
-    private int lastY = 0;
-
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        final int x = (int) ev.getX();
-//        final int y = (int) ev.getY();
-//
-//        boolean intercept = false;
-//
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                intercept = false;
-//                break;
-//            case MotionEvent.ACTION_MOVE:
-//                if (y > lastX && y > touchSlop && )
-//                int xOffSet = Math.abs(x - lastX);
-//                int yOffSet = Math.abs(y - lastY);
-//                if (yOffSet > touchSlop) {
-//                    intercept = true;
-//                }
-//                break;
-//        }
-//
-//        lastX = x;
-//        lastY = y;
-//
-//
-//        return intercept ? intercept : super.onInterceptTouchEvent(ev);
-//    }
 }

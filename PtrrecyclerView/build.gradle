@@ -8,7 +8,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.0.3"
     }
     buildTypes {
         release {
@@ -27,7 +27,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.mx.architecture:ptr-lib:1.0.1'
+    compile 'com.mx.architecture:ptr-lib-beta:1.0.3'
 
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.1-rc1'
@@ -51,8 +51,8 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.2"
-            pom.artifactId = "ptr-recyclerview"
+            pom.version = "1.0.6"
+            pom.artifactId = "ptr-recyclerview-beta"
             pom.groupId = "com.mx.architecture"
             pom.name = "ptr-recyclerview"
             pom.packaging = 'aar'
