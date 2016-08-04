@@ -22,9 +22,11 @@ public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
         this.items = new ArrayList<>();
         this.viewModel = viewModel;
     }
+
     protected final ViewModel getViewModel() {
         return viewModel;
     }
+
     @Override
     public int getCount() {
         return items.size();
@@ -66,15 +68,21 @@ public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
         this.items.clear();
         onDataChange();
     }
+
     public void addItems(int position, Collection<ItemType> items) {
         this.items.addAll(position, items);
         onDataChange();
+    }
+
+    public int indexOf(ItemType itemType) {
+        return items.indexOf(itemType);
     }
 
     public void insertItem(int index, ItemType itemType) {
         this.items.add(index, itemType);
         onDataChange();
     }
+
     protected BaseActivity getActivity() {
         return this.activity;
     }

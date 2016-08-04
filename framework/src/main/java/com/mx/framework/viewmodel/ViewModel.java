@@ -118,7 +118,7 @@ public abstract class ViewModel implements BaseActivity.ActivityResultListener, 
 
     @Override
     public BaseActivity getActivity() {
-        if (this.activityRef==null){
+        if (this.activityRef == null) {
             return null;
         }
         return this.activityRef.get();
@@ -130,8 +130,9 @@ public abstract class ViewModel implements BaseActivity.ActivityResultListener, 
     }
 
     public void startActivityForResult(Intent intent, int requestCode) {
-        getActivity().registerActivityResultListener(requestCode, this);
-        getActivity().startActivityForResult(intent, requestCode);
+        BaseActivity baseActivity = getActivity() == null ? (BaseActivity) getContext() : getActivity();
+        baseActivity.registerActivityResultListener(requestCode, this);
+        baseActivity.startActivityForResult(intent, requestCode);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
