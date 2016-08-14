@@ -13,8 +13,9 @@ import com.mx.framework2.Module;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.model.UseCase;
-import com.mx.framework2.view.ui.BaseActivity;
-import com.mx.framework2.view.ui.RunState;
+import com.mx.framework2.model.UseCaseHolder;
+import com.mx.framework2.view.BaseActivity;
+import com.mx.framework2.view.RunState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -23,6 +24,7 @@ import java.lang.annotation.Target;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,7 +34,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
-public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, ActivityAware, ModuleAware, ViewModelManagerAware {
+public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, ActivityAware, ModuleAware, ViewModelManagerAware, UseCaseHolder {
     @Override
     public void setViewModelManager(@NonNull ViewModelManager viewModelManager) {
         checkNotNull(viewModelManager);
@@ -110,7 +112,7 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
         }
         T useCase = (T) useCases.get(classType);
         if (null == useCase) {
-            useCase = module.getUserCaseManager().obtainUseCase(classType);
+            useCase = module.getUserCaseManager().obtainUseCase(classType, this);
             useCases.put(classType, useCase);
         }
         return useCase;
@@ -167,11 +169,7 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
 
 
     private void recycle() {
-        if (null != useCases) {
-            for (UseCase useCase : useCases.values()) {
-                useCase.close();
-            }
-        }
+
         if (eventProxy.isRegistered(this)) {
             eventProxy.unregister(this);
         }
@@ -238,5 +236,21 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
 
 
     }
+
+    final void distory() {
+        runState = RunState.Destroyed;
+        if (null != useCases) {
+            for (UseCase useCase : useCases.values()) {
+                module.getUserCaseManager().closeUseCase(useCase, this);
+            }
+        }
+        onDistory();
+    }
+
+    protected void onDistory() {
+
+
+    }
+
 
 }

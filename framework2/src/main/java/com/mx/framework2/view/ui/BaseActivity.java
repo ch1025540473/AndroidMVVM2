@@ -7,13 +7,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.SparseArray;
 
+import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
+import com.mx.framework2.model.CloseUseCaseEvent;
+import com.mx.framework2.model.UseCaseHolder;
+import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -162,8 +167,11 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         this.runState = RunState.Destroyed;
-        activityResultListeners.clear();
         super.onDestroy();
+        activityResultListeners.clear();
+        getViewModelManager().distoty();
+        EventProxy.getDefault().post(new CloseUseCaseEvent());
+
     }
 
     @Override

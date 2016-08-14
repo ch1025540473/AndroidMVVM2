@@ -64,6 +64,12 @@ public class ViewModelManager {
         }
     }
 
+    public void distoty() {
+        for (ViewModel model : viewModelMap.values()) {
+            model.distory();
+        }
+    }
+
     public void saveInstanceState(Bundle outState) {
 
         for (ViewModel model : viewModelMap.values()) {

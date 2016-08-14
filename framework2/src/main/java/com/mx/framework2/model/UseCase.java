@@ -5,7 +5,16 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 
+import com.mx.engine.event.EventProxy;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 
 import static com.mx.engine.utils.CheckUtils.checkNotNull;
 
@@ -19,6 +28,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 public abstract class UseCase {
 
     UseCaseManager useCaseManager;
+    List<WeakReference<UseCaseHolder>> useCaseHodlers;
     private Context context;
 
     final void setUseCaseManager(@Nullable UseCaseManager useCaseManager) {
@@ -114,17 +124,78 @@ public abstract class UseCase {
         return sharedPreferences.getInt(key, 0);
     }
 
-    final void open() {
-        onOpen();
-    }
+    final synchronized void open(UseCaseHolder useCaseHolder) {
 
-    public final void close() {
-        onClose();
+        if (null == useCaseHodlers) {
+            useCaseHodlers = new LinkedList<>();
+        }
+        if (!isOpen()) {
+            EventProxy.getDefault().register(this);
+            onOpen();
+        }
 
-        if (null != useCaseManager) {
-            useCaseManager.closeUseCase(this);
+        if (!isExistHolder(useCaseHolder)) {
+            useCaseHodlers.add(new WeakReference(useCaseHolder));
         }
     }
+
+    final synchronized void close(UseCaseHolder UseCaseHolder) {
+        removeUseCaseHolder(UseCaseHolder);
+        if (!isOpen()) {
+            EventProxy.getDefault().unregister(this);
+            useCaseHodlers.clear();
+            onClose();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void checkCloseUseCase(CloseUseCaseEvent closeUseCasEvent) {
+        close(null);
+    }
+
+    private boolean isExistHolder(UseCaseHolder useCaseHolder) {
+
+        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+            return false;
+        }
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        while (iterator.hasNext()) {
+            WeakReference<UseCaseHolder> reference = iterator.next();
+            if (reference.get() != null && reference.get() == useCaseHolder) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void removeUseCaseHolder(UseCaseHolder useCaseHolder) {
+        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+            return;
+        }
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        while (iterator.hasNext()) {
+            WeakReference<UseCaseHolder> reference = iterator.next();
+            if (reference.get() != null && reference.get().equals(useCaseHolder)) {
+                iterator.remove();
+                return;
+            }
+        }
+    }
+
+    private boolean isOpen() {
+        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+            return false;
+        }
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        while (iterator.hasNext()) {
+            WeakReference<UseCaseHolder> reference = iterator.next();
+            if (reference.get() == null) {
+                iterator.remove();
+            }
+        }
+        return useCaseHodlers.size() > 0;
+    }
+
 
     protected abstract void onOpen();
 

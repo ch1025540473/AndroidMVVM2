@@ -53,7 +53,7 @@ public class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         runState = RunState.Created;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -105,6 +105,7 @@ public class BaseFragment extends Fragment {
     public void onDestroy() {
         runState = RunState.Destroyed;
         super.onDestroy();
+        getViewModelManager().distoty();
 
     }
 
