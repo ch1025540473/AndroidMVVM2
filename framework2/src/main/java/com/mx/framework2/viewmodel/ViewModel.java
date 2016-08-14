@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.DataSourceChangeAware;
 import com.mx.framework2.Module;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
@@ -33,7 +32,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
-public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, DataSourceChangeAware, ActivityAware, ModuleAware, ViewModelManagerAware {
+public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, ActivityAware, ModuleAware, ViewModelManagerAware {
     @Override
     public void setViewModelManager(@NonNull ViewModelManager viewModelManager) {
         checkNotNull(viewModelManager);
@@ -183,32 +182,6 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
         eventProxy.post(event);
     }
 
-    @Override
-    public void reloadData(DataSourceChangeAware sender) {
-
-        if (!onReloadData(sender)) {
-            onLoadData();
-        }
-    }
-
-    protected abstract void onLoadData();
-
-    protected boolean onReloadData(DataSourceChangeAware sender) {
-        return false;
-    }
-
-    public final void requestDataReloading() {
-        requestDataReloading(this);
-    }
-
-    @Override
-    public final void requestDataReloading(DataSourceChangeAware sender) {
-        BaseActivity activity = activityRef.get();
-        if (null != activity && getRunState() != RunState.Stoped) {
-            activity.requestDataReloading(this);
-        }
-    }
-
     public void onSaveInstanceState(Bundle outState) {
 
     }
@@ -231,7 +204,6 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
         runState = RunState.Started;
         init();
         onStart();
-        onLoadData();
     }
 
     protected void onStart() {
