@@ -5,19 +5,13 @@ import android.content.Context;
 import com.mx.engine.utils.ObjectUtils;
 
 
-import java.lang.ref.Reference;
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
 import static com.mx.engine.utils.CheckUtils.checkArgument;
 
-// TODO UseCase spell
 public class UseCaseManager {
 
     private Set<Class<? extends UseCase>> useCaseTypes;
@@ -42,7 +36,6 @@ public class UseCaseManager {
         T useCase = (T) useCaseRefs.get(useCaseClass.getName());
         if (null == useCase) {
             useCase = ObjectUtils.newInstance(useCaseClass);
-            useCase.setUseCaseManager(this);
             useCase.setContext(context);
             useCase.open(useCaseHolder);
             useCaseRefs.put(useCaseClass.getName(), useCase);

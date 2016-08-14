@@ -27,37 +27,31 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
  */
 public abstract class UseCase {
 
-    UseCaseManager useCaseManager;
-    List<WeakReference<UseCaseHolder>> useCaseHodlers;
+    private List<WeakReference<UseCaseHolder>> useCaseHolders;
     private Context context;
-
-    final void setUseCaseManager(@Nullable UseCaseManager useCaseManager) {
-        checkNotNull(useCaseManager);
-        this.useCaseManager = useCaseManager;
-    }
 
     final void setContext(Context context) {
         this.context = context;
     }
 
-    protected final <Value extends Serializable> void preferencePutInt(@Nullable String fileName, @Nullable String key, int value) {
+    protected Context getContext() {
+        return this.context;
+    }
 
+    protected final <Value extends Serializable> void preferencePutInt(@Nullable String fileName, @Nullable String key, int value) {
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(value);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putInt(key, value).apply();
     }
 
     protected final <Value extends Serializable> void preferencePutLong(@Nullable String fileName, @Nullable String key, @Nullable long value) {
-
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(value);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putLong(key, value).apply();
     }
@@ -67,50 +61,41 @@ public abstract class UseCase {
         checkNotNull(key);
         checkNotNull(value);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putFloat(key, value).apply();
     }
 
 
     protected final <Value extends Serializable> void preferencePutString(@Nullable String fileName, @Nullable String key, String value) {
-
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(value);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         sharedPreferences.edit().putString(key, value).apply();
     }
 
     protected float preferenceGetFloat(@Nullable String fileName, @Nullable String key) {
-
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getFloat(key, 0);
     }
 
 
     protected String preferenceGetString(@Nullable String fileName, @Nullable String key) {
-
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, null);
     }
 
     protected long preferenceGetLong(@Nullable String fileName, @Nullable String key) {
-
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getLong(key, 0);
     }
@@ -119,23 +104,20 @@ public abstract class UseCase {
         checkNotNull(fileName);
         checkNotNull(key);
         checkNotNull(context);
-
         SharedPreferences sharedPreferences = context.getSharedPreferences(fileName, Context.MODE_PRIVATE);
         return sharedPreferences.getInt(key, 0);
     }
 
     final synchronized void open(UseCaseHolder useCaseHolder) {
-
-        if (null == useCaseHodlers) {
-            useCaseHodlers = new LinkedList<>();
+        if (null == useCaseHolders) {
+            useCaseHolders = new LinkedList<>();
         }
         if (!isOpen()) {
             EventProxy.getDefault().register(this);
             onOpen();
         }
-
         if (!isExistHolder(useCaseHolder)) {
-            useCaseHodlers.add(new WeakReference(useCaseHolder));
+            useCaseHolders.add(new WeakReference(useCaseHolder));
         }
     }
 
@@ -143,22 +125,22 @@ public abstract class UseCase {
         removeUseCaseHolder(UseCaseHolder);
         if (!isOpen()) {
             EventProxy.getDefault().unregister(this);
-            useCaseHodlers.clear();
+            useCaseHolders.clear();
             onClose();
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void checkCloseUseCase(CloseUseCaseEvent closeUseCasEvent) {
+    public void closeUseCase(CloseUseCaseEvent closeUseCasEvent) {
         close(null);
     }
 
     private boolean isExistHolder(UseCaseHolder useCaseHolder) {
 
-        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+        if (useCaseHolders == null || useCaseHolders.size() < 1) {
             return false;
         }
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
             if (reference.get() != null && reference.get() == useCaseHolder) {
@@ -169,10 +151,10 @@ public abstract class UseCase {
     }
 
     private void removeUseCaseHolder(UseCaseHolder useCaseHolder) {
-        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+        if (useCaseHolders == null || useCaseHolders.size() < 1) {
             return;
         }
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
             if (reference.get() != null && reference.get().equals(useCaseHolder)) {
@@ -183,26 +165,21 @@ public abstract class UseCase {
     }
 
     private boolean isOpen() {
-        if (useCaseHodlers == null || useCaseHodlers.size() < 1) {
+        if (useCaseHolders == null || useCaseHolders.size() < 1) {
             return false;
         }
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHodlers.listIterator();
+        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
             if (reference.get() == null) {
                 iterator.remove();
             }
         }
-        return useCaseHodlers.size() > 0;
+        return useCaseHolders.size() > 0;
     }
-
 
     protected abstract void onOpen();
 
     protected abstract void onClose();
-
-    protected Context getContext() {
-        return this.context;
-    }
 
 }
