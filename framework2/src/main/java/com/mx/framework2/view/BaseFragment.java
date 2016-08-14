@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.DataSourceChangeAware;
 import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 
@@ -21,7 +20,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
-public class BaseFragment extends Fragment implements DataSourceChangeAware {
+public class BaseFragment extends Fragment {
 
     private ViewModelManager viewModelManager;
     private RunState runState;
@@ -125,38 +124,7 @@ public class BaseFragment extends Fragment implements DataSourceChangeAware {
     }
 
     public RunState getRunState() {
-
         return runState;
-    }
-
-    @Override
-    public void requestDataReloading(DataSourceChangeAware sender) {
-        reloadData(sender);
-    }
-
-    @Override
-    public void reloadData(DataSourceChangeAware sender) {
-
-        Collection<ViewModel> collections = getViewModelManager().getAllModel();
-
-        if (null != collections) {
-
-            for (ViewModel vm : collections) {
-                vm.reloadData(this);
-            }
-        }
-
-        List<Fragment> fragments = getChildFragmentManager().getFragments();
-
-        if (null != fragments) {
-
-            for (Fragment fragment : fragments) {
-                if (fragment instanceof BaseFragment) {
-                    BaseFragment baseFragment = (BaseFragment) fragment;
-                    baseFragment.reloadData(sender);
-                }
-            }
-        }
     }
 
 }

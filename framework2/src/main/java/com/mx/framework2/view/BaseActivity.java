@@ -9,7 +9,6 @@ import android.util.SparseArray;
 
 import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
-import com.mx.framework2.DataSourceChangeAware;
 import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 
@@ -30,7 +29,7 @@ import java.util.ListIterator;
  * 2,提供viewModel的共享数据;
  * 3,提供ViewModel的通信;
  */
-public class BaseActivity extends FragmentActivity implements DataSourceChangeAware {
+public class BaseActivity extends FragmentActivity {
 
     // add  get put
 
@@ -80,26 +79,6 @@ public class BaseActivity extends FragmentActivity implements DataSourceChangeAw
 
         if (fragment instanceof BaseFragment) {
             fragments.add(new SoftReference<BaseFragment>((BaseFragment) fragment));
-        }
-    }
-
-    @Override
-    public void requestDataReloading(DataSourceChangeAware sender) {
-        reloadData(sender);
-    }
-
-    @Override
-    public void reloadData(DataSourceChangeAware sender) {
-        Collection<ViewModel> collections = getViewModelManager().getAllModel();
-
-        if (null != collections) {
-            for (ViewModel vm : collections) {
-                vm.reloadData(sender);
-            }
-        }
-
-        for (BaseFragment baseFragment : getFragments()) {
-            baseFragment.reloadData(sender);
         }
     }
 
