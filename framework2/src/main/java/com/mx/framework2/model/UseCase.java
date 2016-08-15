@@ -5,11 +5,6 @@ import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 
 
-import com.mx.engine.event.EventProxy;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -27,8 +22,9 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
  */
 public abstract class UseCase {
 
-    private List<WeakReference<UseCaseHolder>> useCaseHolders;
+    private List<WeakReference<UseCaseHolder>> useCaseHolders = new LinkedList<>();
     private Context context;
+    private boolean isOpen = false;
 
     final void setContext(Context context) {
         this.context = context;
@@ -108,38 +104,21 @@ public abstract class UseCase {
         return sharedPreferences.getInt(key, 0);
     }
 
-    final synchronized void open(UseCaseHolder useCaseHolder) {
-        if (null == useCaseHolders) {
-            useCaseHolders = new LinkedList<>();
-        }
-        if (!isOpen()) {
-            EventProxy.getDefault().register(this);
-            onOpen();
-        }
-        if (!isExistHolder(useCaseHolder)) {
-            useCaseHolders.add(new WeakReference(useCaseHolder));
-        }
+    final synchronized void open() {
+        isOpen = true;
+        onOpen();
+        clean();
     }
 
-    final synchronized void close(UseCaseHolder UseCaseHolder) {
-        removeUseCaseHolder(UseCaseHolder);
-        if (!isOpen()) {
-            EventProxy.getDefault().unregister(this);
+    final synchronized void close() {
+        if (isOpen) {
             useCaseHolders.clear();
+            isOpen = false;
             onClose();
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void closeUseCase(CloseUseCaseEvent closeUseCasEvent) {
-        close(null);
-    }
-
-    private boolean isExistHolder(UseCaseHolder useCaseHolder) {
-
-        if (useCaseHolders == null || useCaseHolders.size() < 1) {
-            return false;
-        }
+    private boolean useCaseHolderExists(UseCaseHolder useCaseHolder) {
         ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
@@ -151,9 +130,6 @@ public abstract class UseCase {
     }
 
     private void removeUseCaseHolder(UseCaseHolder useCaseHolder) {
-        if (useCaseHolders == null || useCaseHolders.size() < 1) {
-            return;
-        }
         ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
@@ -164,18 +140,32 @@ public abstract class UseCase {
         }
     }
 
-    private boolean isOpen() {
-        if (useCaseHolders == null || useCaseHolders.size() < 1) {
-            return false;
+    void addUseCaseHolder(UseCaseHolder useCaseHolder) {
+        if (!useCaseHolderExists(useCaseHolder)) {
+            useCaseHolders.add(new WeakReference(useCaseHolder));
         }
+    }
+
+    final boolean isOpen() {
+        return isOpen;
+    }
+
+    private void clean() {
         ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
         while (iterator.hasNext()) {
             WeakReference<UseCaseHolder> reference = iterator.next();
-            if (reference.get() == null) {
+            if (reference.get() == null || reference.get().isDestroyed()) {
                 iterator.remove();
             }
         }
-        return useCaseHolders.size() > 0;
+    }
+
+    public void onHolderDestroy(UseCaseHolder holder) {
+        removeUseCaseHolder(holder);
+        clean();
+        if (useCaseHolders.size() == 0) {
+            close();
+        }
     }
 
     protected abstract void onOpen();

@@ -2,9 +2,13 @@ package com.mx.framework2;
 
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
+import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.viewmodel.ViewModelFactory;
 import com.mx.framework2.viewmodel.ViewModelFactoryImpl;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +41,10 @@ public abstract class Module {
         eventProxy.register(this);
         userCaseManager = new UseCaseManager(BaseApplication.instance());
         viewModelFactory = new ViewModelFactoryImpl(this);
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onActivityDestroy(Events.ActivityDestroyEvent event) {
+        userCaseManager.onUseCaseHolderDestroy(event.getActivity());
     }
 
     public UseCaseManager getUserCaseManager() {

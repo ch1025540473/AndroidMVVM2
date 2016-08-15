@@ -13,7 +13,6 @@ import java.util.Set;
 import static com.mx.engine.utils.CheckUtils.checkArgument;
 
 public class UseCaseManager {
-
     private Set<Class<? extends UseCase>> useCaseTypes;
     private Map<String, UseCase> useCaseRefs;
     private Context context;
@@ -37,16 +36,20 @@ public class UseCaseManager {
         if (null == useCase) {
             useCase = ObjectUtils.newInstance(useCaseClass);
             useCase.setContext(context);
-            useCase.open(useCaseHolder);
             useCaseRefs.put(useCaseClass.getName(), useCase);
         }
+        if (!useCase.isOpen()) {
+            useCase.open();
+        }
+        useCase.addUseCaseHolder(useCaseHolder);
         return useCase;
     }
 
-    public final synchronized <T extends UseCase> void closeUseCase(T value, UseCaseHolder useCaseHolder) {
-        checkArgument(useCaseTypes.contains(value.getClass()));
-        checkArgument(useCaseRefs.get(value.getClass().getName()) != null);
-        value.close(useCaseHolder);
+    public final void onUseCaseHolderDestroy(UseCaseHolder holder) {
+        for (UseCase useCase : useCaseRefs.values()) {
+            useCase.onHolderDestroy(holder);
+        }
     }
+
 
 }

@@ -34,7 +34,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
-public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, ActivityAware, ModuleAware, ViewModelManagerAware, UseCaseHolder {
+public abstract class ViewModel extends BaseObservable implements BaseActivity.ActivityResultListener, ActivityAware, ModuleAware, ViewModelManagerAware {
     @Override
     public void setViewModelManager(@NonNull ViewModelManager viewModelManager) {
         checkNotNull(viewModelManager);
@@ -73,7 +73,6 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
     private Reference<BaseActivity> activityRef;
     RunState runState;
     private ViewModelManager viewModelManager;
-    private Map<Class, UseCase> useCases;
     private Module module;
     private static Handler handler;
     private Reference<Context> contextRef;
@@ -107,14 +106,9 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
 
     protected final <T extends UseCase> T obtainUseCase(Class<T> classType) {
         checkNotNull(module);
-        if (null == useCases) {
-            useCases = new LinkedHashMap<>();
-        }
-        T useCase = (T) useCases.get(classType);
-        if (null == useCase) {
-            useCase = module.getUserCaseManager().obtainUseCase(classType, this);
-            useCases.put(classType, useCase);
-        }
+
+        T useCase = useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity());
+
         return useCase;
     }
 
@@ -166,7 +160,9 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
         Log.d("ViewModel", "thisHashCode=" + hashCode());
         eventProxy.register(this);
     }
+    public void setUserVisibleHint(boolean isVisibleToUser) {
 
+    }
 
     private void recycle() {
 
@@ -237,17 +233,12 @@ public abstract class ViewModel extends BaseObservable implements BaseActivity.A
 
     }
 
-    final void distory() {
+    final void destroy() {
         runState = RunState.Destroyed;
-        if (null != useCases) {
-            for (UseCase useCase : useCases.values()) {
-                module.getUserCaseManager().closeUseCase(useCase, this);
-            }
-        }
-        onDistory();
+        onDestroy();
     }
 
-    protected void onDistory() {
+    protected void onDestroy() {
 
 
     }

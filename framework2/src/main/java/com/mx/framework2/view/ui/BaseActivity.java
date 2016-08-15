@@ -10,15 +10,13 @@ import android.util.SparseArray;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
-import com.mx.framework2.model.CloseUseCaseEvent;
+import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCaseHolder;
-import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.ListIterator;
  * 2,提供viewModel的共享数据;
  * 3,提供ViewModel的通信;
  */
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends FragmentActivity implements UseCaseHolder {
 
     // add  get put
 
@@ -169,9 +167,8 @@ public class BaseActivity extends FragmentActivity {
         this.runState = RunState.Destroyed;
         super.onDestroy();
         activityResultListeners.clear();
-        getViewModelManager().distoty();
-        EventProxy.getDefault().post(new CloseUseCaseEvent());
-
+        getViewModelManager().destroy();
+        EventProxy.getDefault().post(new Events.ActivityDestroyEvent(this));
     }
 
     @Override

@@ -102,10 +102,23 @@ public class BaseFragment extends Fragment {
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Collection<ViewModel> viewModels = getViewModelManager().getAllModel();
+        if (viewModels != null) {
+            for (ViewModel vm : viewModels) {
+                if (vm != null) {
+                    vm.setUserVisibleHint(isVisibleToUser);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onDestroy() {
         runState = RunState.Destroyed;
         super.onDestroy();
-        getViewModelManager().distoty();
+        getViewModelManager().destroy();
 
     }
 

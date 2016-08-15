@@ -64,9 +64,9 @@ public class ViewModelManager {
         }
     }
 
-    public void distoty() {
+    public void destroy() {
         for (ViewModel model : viewModelMap.values()) {
-            model.distory();
+            model.destroy();
         }
     }
 
