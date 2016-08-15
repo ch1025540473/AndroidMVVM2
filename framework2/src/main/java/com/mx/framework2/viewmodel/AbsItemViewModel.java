@@ -1,49 +1,22 @@
 package com.mx.framework2.viewmodel;
 
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.view.View;
-
-import java.util.Map;
-import java.util.WeakHashMap;
-
 /**
  * Created by chenbaocheng on 16/5/5.
  */
-public abstract class AbsItemViewModel<DataBindingType extends ViewDataBinding, ItemType> extends ViewModel {
+public abstract class AbsItemViewModel<ItemType> extends ViewModel {
 
-    private final Map<View, ItemType> viewDataMapping;
+    private ItemType item = null;
 
-    public AbsItemViewModel() {
-        super();
-        this.viewDataMapping = new WeakHashMap<>();
+    protected abstract void onItemChange(ItemType oldItem, ItemType item);
+
+    public final void setItem(ItemType item) {
+        ItemType oldItem = this.item;
+        this.item = item;
+
+        onItemChange(oldItem, item);
     }
 
-    public final void updateView(DataBindingType dataBinding, ItemType item) {
-
-        this.viewDataMapping.put(dataBinding.getRoot(), item);
-        onUpdateView(dataBinding, item);
-    }
-
-    protected final ItemType getItemByView(View view) {
-
-        return viewDataMapping.get(view);
-    }
-
-
-    protected final DataBindingType findDataBindingByView(View view) {
-
-        return DataBindingUtil.findBinding(view);
-
-    }
-
-
-    public abstract DataBindingType createViewDataBinding();
-
-    protected abstract void onUpdateView(DataBindingType dataBinding, ItemType item);
-
-    @Override
-    protected void onLoadData() {
-
+    public final ItemType getItem() {
+        return item;
     }
 }

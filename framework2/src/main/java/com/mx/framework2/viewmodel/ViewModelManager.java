@@ -3,7 +3,7 @@ package com.mx.framework2.viewmodel;
 import android.os.Bundle;
 
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.view.RunState;
+import com.mx.framework2.view.ui.RunState;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;

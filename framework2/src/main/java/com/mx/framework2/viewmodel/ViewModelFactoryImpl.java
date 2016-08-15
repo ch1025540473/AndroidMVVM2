@@ -6,9 +6,9 @@ import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.Module;
 import com.mx.framework2.R;
-import com.mx.framework2.view.BaseActivity;
-import com.mx.framework2.view.BaseFragment;
-import com.mx.framework2.view.RunState;
+import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.framework2.view.ui.BaseFragment;
+import com.mx.framework2.view.ui.RunState;
 
 /**
  * Created by liuyuxuan on 16/6/6.

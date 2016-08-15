@@ -13,8 +13,8 @@ import com.mx.framework2.Module;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.model.UseCase;
-import com.mx.framework2.view.BaseActivity;
-import com.mx.framework2.view.RunState;
+import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.framework2.view.ui.RunState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

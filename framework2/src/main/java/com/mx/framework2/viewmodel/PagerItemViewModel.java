@@ -5,7 +5,7 @@ import android.databinding.ViewDataBinding;
 /**
  * Created by liuyuxuan on 16/6/2.
  */
-public abstract class PagerItemViewModel<DataBindingType extends ViewDataBinding, ItemType> extends AbsItemViewModel<DataBindingType, ItemType> {
+public abstract class PagerItemViewModel<ItemType> extends AbsItemViewModel<ItemType> {
 
     public PagerItemViewModel() {
         super();
