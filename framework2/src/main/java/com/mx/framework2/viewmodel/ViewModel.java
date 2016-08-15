@@ -13,9 +13,8 @@ import com.mx.framework2.Module;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.model.UseCase;
-import com.mx.framework2.model.UseCaseHolder;
-import com.mx.framework2.view.BaseActivity;
-import com.mx.framework2.view.RunState;
+import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.framework2.view.ui.RunState;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -24,9 +23,6 @@ import java.lang.annotation.Target;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static com.mx.engine.utils.CheckUtils.checkArgument;
 import static com.mx.engine.utils.CheckUtils.checkNotNull;

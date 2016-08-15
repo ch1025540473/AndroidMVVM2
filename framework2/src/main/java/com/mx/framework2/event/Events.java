@@ -3,7 +3,7 @@ package com.mx.framework2.event;
 import android.app.Activity;
 
 import com.mx.engine.event.BroadcastEvent;
-import com.mx.framework2.view.BaseActivity;
+import com.mx.framework2.view.ui.BaseActivity;
 
 /**
  * Created by liuyuxuan on 16/8/15.
