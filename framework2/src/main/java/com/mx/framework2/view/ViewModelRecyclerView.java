@@ -55,9 +55,4 @@ public class ViewModelRecyclerView extends RecyclerView{
     public void setItems(Collection items){
         adapter.putItems(items);
     }
-
-    @BindingAdapter("app:items")
-    public static void setItems(View view, Object value) {
-        System.out.println(value);
-    }
 }
