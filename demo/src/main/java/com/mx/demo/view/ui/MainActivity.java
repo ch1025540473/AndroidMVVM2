@@ -13,11 +13,12 @@ import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.view.ViewModelRecyclerView;
+import com.mx.framework2.view.ui.BaseActivity;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         // 翻译数据
-        List<ApiBean> apiBeans = DemoModule.get().getUserCaseManager().obtainUseCase(DemoUseCase.class).queryBeanList();
+        List<ApiBean> apiBeans = DemoModule.get().getUserCaseManager().obtainUseCase(DemoUseCase.class, this).queryBeanList();
         List<ItemViewBean> viewBeans = new LinkedList<>();
         for (ApiBean apiBean : apiBeans) {
             if (apiBean.type == 1) {

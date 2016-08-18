@@ -1,10 +1,12 @@
 package com.mx.framework2.view;
 
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
@@ -19,13 +21,11 @@ public class ViewModelRecyclerView extends RecyclerView{
     private final ViewModelRecyclerViewAdapter adapter;
 
     public ViewModelRecyclerView(Context context) {
-        super(context);
-        adapter = new ViewModelRecyclerViewAdapter(context);
+        this(context, null);
     }
 
     public ViewModelRecyclerView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        adapter = new ViewModelRecyclerViewAdapter(context);
+        this(context, attrs, 0);
     }
 
     public ViewModelRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
@@ -54,5 +54,10 @@ public class ViewModelRecyclerView extends RecyclerView{
 
     public void setItems(Collection items){
         adapter.putItems(items);
+    }
+
+    @BindingAdapter("app:items")
+    public static void setItems(View view, Object value) {
+        System.out.println(value);
     }
 }
