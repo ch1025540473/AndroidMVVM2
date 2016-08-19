@@ -1,44 +1,49 @@
 package com.mx.framework2.view;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.mx.engine.utils.ObjectUtils;
+import com.mx.framework2.R;
 import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
 import com.mx.framework2.view.factory.ItemViewFactory;
 
 import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Created by chenbaocheng on 16/8/14.
  */
-public class ViewModelRecyclerView extends RecyclerView{
+public class DataBindingRecyclerView extends RecyclerView{
     private final ViewModelRecyclerViewAdapter adapter;
+    private String itemViewFactory;
+    private Collection items;
 
-    public ViewModelRecyclerView(Context context) {
+    public DataBindingRecyclerView(Context context) {
         this(context, null);
     }
 
-    public ViewModelRecyclerView(Context context, @Nullable AttributeSet attrs) {
+    public DataBindingRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ViewModelRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
+    public DataBindingRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
         adapter = new ViewModelRecyclerViewAdapter(context);
-    }
+        items = Collections.emptyList();
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+        if(attrs != null) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
+            itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
+            setItemViewFactory(itemViewFactory);
+            typedArray.recycle();
+        }
 
-        this.setAdapter(adapter);
-        this.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+        setAdapter(adapter);
     }
 
     @Override

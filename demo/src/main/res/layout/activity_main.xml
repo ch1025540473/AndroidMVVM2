@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="model"
+            type="com.mx.demo.viewmodel.MainViewModel" />
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -11,12 +18,20 @@
         android:paddingTop="@dimen/activity_vertical_margin"
         tools:context=".view.ui.MainActivity">
 
-        <com.mx.framework2.view.ViewModelRecyclerView
+        <com.mx.framework2.view.DataBindingRecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/demo_mylist">
-
-        </com.mx.framework2.view.ViewModelRecyclerView>
+            android:id="@+id/demo_mylist"
+            app:layoutManager="LinearLayoutManager"
+            android:orientation="vertical"
+            app:items="@{model.items}"
+            app:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
+            >
+            <!--android:orientation="vertical"-->
+            <!--app:reverseLayout="true"-->
+            <!--app:spanCount="10"-->
+            <!--app:stackFromEnd="true"-->
+        </com.mx.framework2.view.DataBindingRecyclerView>
 
     </RelativeLayout>
 </layout>

@@ -50,7 +50,6 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
             viewModelTypes.add(type);
             index = viewModelTypes.indexOf(type);
         }
-        Log.d("index", "index=" + index + type.getName());
 
         return index;
     }
