@@ -4,15 +4,17 @@ import android.app.Activity;
 
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.framework2.viewmodel.Lifecycle;
+import com.mx.framework2.viewmodel.ViewModelScope;
 
 /**
  * Created by liuyuxuan on 16/8/15.
  */
 public class Events {
-    public static class ActivityDestroyEvent extends BroadcastEvent{
+    public static class ActivityDestroyEvent extends BroadcastEvent {
         private final BaseActivity activity;
 
-        public ActivityDestroyEvent(BaseActivity activity){
+        public ActivityDestroyEvent(BaseActivity activity) {
             this.activity = activity;
         }
 
@@ -20,4 +22,5 @@ public class Events {
             return activity;
         }
     }
+
 }

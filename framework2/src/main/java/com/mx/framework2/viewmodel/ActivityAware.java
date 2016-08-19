@@ -9,6 +9,5 @@ public interface ActivityAware {
 
     void setActivity(BaseActivity activity);
 
-    BaseActivity getActivity();
 
 }

@@ -8,8 +8,8 @@ import com.mx.framework2.view.ui.BaseFragment;
  */
 public interface ViewModelFactory {
 
-    public <T extends ViewModel> T createViewModel(Class<T> viewModelClassType, BaseFragment baseFragment);
+    public <T extends LifecycleViewModel> T createViewModel(Class<T> viewModelClassType, BaseFragment baseFragment);
 
-    public <T extends ViewModel> T createViewModel(Class<T> viewModelClassType, BaseActivity baseActivity);
+    public <T extends LifecycleViewModel> T createViewModel(Class<T> viewModelClassType, BaseActivity baseActivity);
 
 }

@@ -7,6 +7,7 @@ import android.support.annotation.LayoutRes;
 import android.view.LayoutInflater;
 
 import com.mx.engine.utils.ObjectUtils;
+import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.viewmodel.AbsItemViewModel;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
 
@@ -55,7 +56,7 @@ public abstract class ItemViewFactory<ItemType> {
     }
 
     protected final <T extends ViewDataBinding> T inflate(@LayoutRes int layoutId){
-        return DataBindingUtil.inflate(getInflater(), layoutId, null, false);
+        return DataBindingFactory.inflate(context,layoutId);
     }
 
     protected final void cacheViewModel(AbsItemViewModel vm){

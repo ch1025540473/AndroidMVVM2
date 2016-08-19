@@ -3,87 +3,191 @@ package com.mx.framework2.viewmodel;
 import android.os.Bundle;
 
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.view.ui.RunState;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by liuyuxuan on 16/4/20.
  */
 public class ViewModelManager {
-
-    private final LinkedHashMap<String, ViewModel> viewModelMap;
+    private final List<LifecycleViewModel> lifecycleViewModelList;
     Bundle savedInstanceState;
+    LifecycleState lifecycleState;
+    private List<Visitor<LifecycleViewModel>> visitors = new LinkedList<>();
+
+    private Visitor<LifecycleViewModel> onCreateVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.create(savedInstanceState);
+        }
+    };
+    private Visitor<LifecycleViewModel> onStartVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.start();
+        }
+    };
+
+    private Visitor<LifecycleViewModel> onResumeVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.onResume();
+        }
+    };
+    private Visitor<LifecycleViewModel> onPauseVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.pause();
+        }
+    };
+
+    private Visitor<LifecycleViewModel> onStopVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.stop();
+        }
+    };
+
+    private abstract class ParameterVisitor<Parameter> implements Visitor<LifecycleViewModel> {
+        Parameter parameter;
+
+        public ParameterVisitor(Parameter parameter) {
+            this.parameter = parameter;
+        }
+
+        public Parameter getParameter() {
+            return parameter;
+        }
+
+        public void setParameter(Parameter parameter) {
+            this.parameter = parameter;
+        }
+    }
+
+    private ParameterVisitor<Boolean> onUserVisibleHintVisitor =
+            new ParameterVisitor<Boolean>(null) {
+                @Override
+                public void visit(LifecycleViewModel data) {
+                    data.setUserVisibleHint(getParameter());
+                }
+            };
+
+    private ParameterVisitor<Bundle> onSaveInstanceState =
+            new ParameterVisitor<Bundle>(null) {
+                @Override
+                public void visit(LifecycleViewModel data) {
+                    data.onSaveInstanceState(getParameter());
+                }
+            };
+
+    private ParameterVisitor<Bundle> onRestoreInstanceState =
+            new ParameterVisitor<Bundle>(null) {
+                @Override
+                public void visit(LifecycleViewModel data) {
+                    data.onRestoreInstanceState(getParameter());
+                }
+            };
+
+    private ParameterVisitor<Boolean> onWindowFocusChanged =
+            new ParameterVisitor<Boolean>(null) {
+                @Override
+                public void visit(LifecycleViewModel data) {
+                    data.onWindowFocusChanged(getParameter());
+                }
+            };
 
     public ViewModelManager(Bundle savedInstanceState) {
-        viewModelMap = new LinkedHashMap<>();
+        lifecycleViewModelList = new LinkedList<>();
         this.savedInstanceState = savedInstanceState;
+
     }
 
-
-    public <T extends ViewModel> T getViewModel(Class<T> modelClass) {
-        return (T) viewModelMap.get(modelClass.getName());
+    public void addViewModel(LifecycleViewModel lifecycle) {
+        CheckUtils.checkNotNull(lifecycle);
+        if (!lifecycleViewModelList.contains(lifecycle)) {
+            lifecycleViewModelList.add(lifecycle);
+            for (Visitor<LifecycleViewModel> visitor : visitors) {
+                lifecycle.accept(visitor);
+            }
+        }
     }
 
-    public void addViewModel(ViewModel vm) {
-        CheckUtils.checkNotNull(vm);
-        vm.create(savedInstanceState);
-        CheckUtils.checkArgument(vm.getRunState() == RunState.Created);
-        viewModelMap.put(vm.getClass().getName(), vm);
+    public void removeViewModel(LifecycleViewModel lifecycle) {
+        CheckUtils.checkNotNull(lifecycle);
+        lifecycleViewModelList.remove(lifecycle);
+    }
+
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        onUserVisibleHintVisitor.setParameter(isVisibleToUser);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onUserVisibleHintVisitor);
+        }
+        visitors.add(onUserVisibleHintVisitor);
     }
 
     public void onWindowFocusChanged(boolean hasFocus) {
-        for (ViewModel vm : viewModelMap.values()) {
-            vm.onWindowFocusChanged(hasFocus);
+        onWindowFocusChanged.setParameter(hasFocus);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onWindowFocusChanged);
+        }
+        visitors.add(onWindowFocusChanged);
+    }
+
+    public void create() {
+        visitors.add(onCreateVisitor);
+        lifecycleState = LifecycleState.Created;
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onStartVisitor);
         }
     }
 
     public void start() {
-        for (ViewModel model : viewModelMap.values()) {
-            model.start();
+        visitors.add(onStartVisitor);
+        lifecycleState = LifecycleState.Started;
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onStartVisitor);
         }
     }
 
     public void resume() {
-
-        for (ViewModel model : viewModelMap.values()) {
-            model.resume();
+        lifecycleState = LifecycleState.Resumed;
+        visitors.add(onResumeVisitor);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onResumeVisitor);
         }
     }
 
     public void pause() {
-        for (ViewModel model : viewModelMap.values()) {
-            model.pause();
+        lifecycleState = LifecycleState.Paused;
+        visitors.add(onPauseVisitor);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onResumeVisitor);
         }
     }
 
     public void stop() {
-        for (ViewModel model : viewModelMap.values()) {
-            model.stop();
+        lifecycleState = LifecycleState.Stopped;
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onStopVisitor);
         }
-    }
-
-    public void destroy() {
-        for (ViewModel model : viewModelMap.values()) {
-            model.destroy();
-        }
+        visitors.clear();
     }
 
     public void saveInstanceState(Bundle outState) {
-
-        for (ViewModel model : viewModelMap.values()) {
-            model.onSaveInstanceState(outState);
+        onSaveInstanceState.setParameter(outState);
+        visitors.add(onSaveInstanceState);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onSaveInstanceState);
         }
     }
 
-    public Collection<ViewModel> getAllModel() {
-        return viewModelMap.values();
-    }
-
     public void restoreInstanceState(Bundle savedInstanceState) {
-        for (ViewModel model : viewModelMap.values()) {
-            model.onRestoreInstanceState(savedInstanceState);
+        onRestoreInstanceState.setParameter(savedInstanceState);
+        visitors.add(onRestoreInstanceState);
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onRestoreInstanceState);
         }
     }
 

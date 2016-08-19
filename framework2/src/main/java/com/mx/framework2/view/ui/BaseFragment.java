@@ -10,17 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
+import com.mx.framework2.event.Events;
+import com.mx.framework2.viewmodel.Lifecycle;
+import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
+import com.mx.framework2.viewmodel.ViewModelScope;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collection;
 
 /**
  * Created by liuyuxuan on 16/4/20.
  */
-public class BaseFragment extends Fragment {
-
+public class BaseFragment extends Fragment implements ViewModelScope {
     private ViewModelManager viewModelManager;
     private RunState runState;
 
@@ -29,9 +36,6 @@ public class BaseFragment extends Fragment {
         return viewModelManager;
     }
 
-    public synchronized <T extends ViewModel> T getViewModel(Class<T> modelClass) {
-        return getViewModelManager().getViewModel(modelClass);
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -43,6 +47,7 @@ public class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         viewModelManager = new ViewModelManager(savedInstanceState);
         runState = RunState.Created;
+        viewModelManager.create();
     }
 
     @Override
@@ -52,8 +57,15 @@ public class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        getViewModelManager().restoreInstanceState(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        EventProxy.getDefault().register(this);
         runState = RunState.Created;
         return super.onCreateView(inflater, container, savedInstanceState);
     }
@@ -61,28 +73,15 @@ public class BaseFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        attachActivity();
 
-    }
-
-    private void attachActivity() {
-        Collection<ViewModel> viewModels = getViewModelManager().getAllModel();
-        if (viewModels != null) {
-            for (ViewModel vm : viewModels) {
-                FragmentActivity activity = getActivity();
-                if (null != vm && activity instanceof BaseActivity) {
-                    vm.setActivity((BaseActivity) activity);
-                }
-            }
-        }
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        attachActivity();
         getViewModelManager().start();
         runState = RunState.Started;
+        EventProxy.getDefault().register(this);
     }
 
     @Override
@@ -90,35 +89,20 @@ public class BaseFragment extends Fragment {
         super.onStop();
         getViewModelManager().stop();
         runState = RunState.Stoped;
+        EventProxy.getDefault().unregister(this);
 
-        Collection<ViewModel> viewModels = getViewModelManager().getAllModel();
-        if (viewModels != null) {
-            for (ViewModel vm : viewModels) {
-                if (vm != null) {
-                    vm.setActivity(null);
-                }
-            }
-        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Collection<ViewModel> viewModels = getViewModelManager().getAllModel();
-        if (viewModels != null) {
-            for (ViewModel vm : viewModels) {
-                if (vm != null) {
-                    vm.setUserVisibleHint(isVisibleToUser);
-                }
-            }
-        }
+        getViewModelManager().setUserVisibleHint(isVisibleToUser);
     }
 
     @Override
     public void onDestroy() {
         runState = RunState.Destroyed;
         super.onDestroy();
-        getViewModelManager().destroy();
 
     }
 
@@ -140,4 +124,13 @@ public class BaseFragment extends Fragment {
         return runState;
     }
 
+    @Override
+    public void addViewModel(LifecycleViewModel lifecycleViewModel) {
+        getViewModelManager().addViewModel(lifecycleViewModel);
+    }
+
+    @Override
+    public void removeViewModel(LifecycleViewModel lifecycleViewModel) {
+        getViewModelManager().removeViewModel(lifecycleViewModel);
+    }
 }

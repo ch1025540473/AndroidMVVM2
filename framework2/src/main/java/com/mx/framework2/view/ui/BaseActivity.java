@@ -12,7 +12,13 @@ import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCaseHolder;
+import com.mx.framework2.viewmodel.Lifecycle;
+import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
+import com.mx.framework2.viewmodel.ViewModelScope;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.lang.ref.Reference;
@@ -30,9 +36,17 @@ import java.util.ListIterator;
  * 2,提供viewModel的共享数据;
  * 3,提供ViewModel的通信;
  */
-public class BaseActivity extends FragmentActivity implements UseCaseHolder {
+public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
+    @Override
+    public void addViewModel(LifecycleViewModel lifecycle) {
+        getViewModelManager().addViewModel(lifecycle);
+    }
 
-    // add  get put
+    @Override
+    public void removeViewModel(LifecycleViewModel lifecycle) {
+        getViewModelManager().removeViewModel(lifecycle);
+    }
+// add  get put
 
     private static final String VIEW_MODEL_SHARE_KEY = "view_model_share_key";
 
@@ -127,12 +141,14 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         viewModelManager = new ViewModelManager(savedInstanceState);
+        viewModelManager.create();
         if (null != savedInstanceState) {
             modelViewShareMap = ObjectUtils.hexStringToObject(savedInstanceState.getString(VIEW_MODEL_SHARE_KEY));
         } else {
             modelViewShareMap = new HashMap<>();
         }
         this.runState = RunState.Created;
+        EventProxy.getDefault().register(this);
     }
 
     @Override
@@ -140,12 +156,14 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder {
         super.onStart();
         getViewModelManager().start();
         this.runState = RunState.Started;
+        EventProxy.getDefault().register(this);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         getViewModelManager().stop();
+        EventProxy.getDefault().unregister(this);
         this.runState = RunState.Stoped;
     }
 
@@ -156,10 +174,10 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder {
         super.onSaveInstanceState(outState);
     }
 
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+        getViewModelManager().restoreInstanceState(savedInstanceState);
     }
 
     @Override
@@ -167,7 +185,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder {
         this.runState = RunState.Destroyed;
         super.onDestroy();
         activityResultListeners.clear();
-        getViewModelManager().destroy();
         EventProxy.getDefault().post(new Events.ActivityDestroyEvent(this));
     }
 

@@ -1,5 +1,6 @@
 package com.mx.framework2.view.adapter;
 
+import android.content.Context;
 import android.widget.BaseAdapter;
 
 import com.mx.framework2.view.ui.BaseActivity;
@@ -13,20 +14,15 @@ import java.util.List;
  * Created by chenbaocheng on 16/5/5.
  */
 public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
-    protected final BaseActivity activity;
-    protected final ViewModel viewModel;
+    protected final Context context;
     private final List<ItemType> items;
 
 
-    public BaseListAdapter(ViewModel viewModel) {
-        this.activity = viewModel.getActivity();
+    public BaseListAdapter(Context context) {
         this.items = new ArrayList<>();
-        this.viewModel = viewModel;
+        this.context = context;
     }
 
-    protected final ViewModel getViewModel() {
-        return viewModel;
-    }
 
     @Override
     public int getCount() {
@@ -84,7 +80,7 @@ public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
         onDataChange();
     }
 
-    protected BaseActivity getActivity() {
-        return this.activity;
+    protected Context getContext() {
+        return this.context;
     }
 }

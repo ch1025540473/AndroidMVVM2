@@ -1,6 +1,10 @@
 package com.mx.demo.view.factory;
 
 import android.databinding.ViewDataBinding;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.mx.demo.R;
 import com.mx.demo.databinding.ListitemColorBinding;
@@ -21,7 +25,7 @@ public class DemoItemViewFactory extends ItemViewFactory<ItemViewBean> {
     public Class<? extends AbsItemViewModel> getViewModelType(ItemViewBean item) {
         if (item instanceof ColorItemViewBean) {
             return ColorItemViewModel.class;
-        } else if (item instanceof TextItemViewBean){
+        } else if (item instanceof TextItemViewBean) {
             return TextItemViewModel.class;
         }
         return null;
@@ -29,13 +33,29 @@ public class DemoItemViewFactory extends ItemViewFactory<ItemViewBean> {
 
     @Override
     public ViewDataBinding createViewDataBinding(AbsItemViewModel<ItemViewBean> viewModel) {
+
         if (viewModel instanceof ColorItemViewModel) {
             ListitemColorBinding binding = inflate(R.layout.listitem_color);
-            binding.setModel((ColorItemViewModel)viewModel);
+
+            binding.setModel((ColorItemViewModel) viewModel);
+            ViewGroup viewGroup = (ViewGroup) binding.getRoot();
+            viewGroup.addView(new ImageView(viewGroup.getContext()) {
+                @Override
+                protected void onAttachedToWindow() {
+                    super.onAttachedToWindow();
+                    Log.d("test", "onAttachedToWindow");
+                }
+
+                @Override
+                protected void onDetachedFromWindow() {
+                    super.onDetachedFromWindow();
+                    Log.d("test", "onDetachedFromWindow");
+                }
+            }, 200, 200);
             return binding;
         } else if (viewModel instanceof TextItemViewModel) {
             ListitemTextBinding binding = inflate(R.layout.listitem_text);
-            binding.setModel((TextItemViewModel)viewModel);
+            binding.setModel((TextItemViewModel) viewModel);
             return binding;
         }
 
