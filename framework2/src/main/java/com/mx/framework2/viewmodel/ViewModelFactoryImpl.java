@@ -32,7 +32,7 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
             if (value instanceof ModuleAware) {
                 value.setModule(module);
             }
-            if (value instanceof ViewModelScope) {
+            if (baseFragment instanceof ViewModelScope) {
                 value.setViewModelScope(baseFragment);
             }
             value.setContext(baseFragment.getContext());
@@ -53,7 +53,7 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
                 value.setModule(module);
             }
 
-            if (value instanceof ViewModelScope) {
+            if (baseActivity instanceof ViewModelScope) {
                 value.setViewModelScope(baseActivity);
             }
 

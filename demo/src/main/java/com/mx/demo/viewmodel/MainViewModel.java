@@ -9,6 +9,7 @@ import com.mx.demo.view.factory.DemoItemViewFactory;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
+import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModel;
 
 import java.util.LinkedList;
@@ -17,15 +18,14 @@ import java.util.List;
 /**
  * Created by chenbaocheng on 16/8/18.
  */
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends LifecycleViewModel {
     private List<ItemViewBean> items;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
+    protected void onCreate() {
+        super.onCreate();
         // 翻译数据
-        List<ApiBean> apiBeans = DemoModule.get().getUserCaseManager().obtainUseCase(DemoUseCase.class, getActivity()).queryBeanList();
+        List<ApiBean> apiBeans = obtainUseCase(DemoUseCase.class).queryBeanList();
         items = new LinkedList<>();
         for (ApiBean apiBean : apiBeans) {
             if (apiBean.type == 1) {
