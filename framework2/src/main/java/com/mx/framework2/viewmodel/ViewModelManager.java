@@ -163,7 +163,7 @@ public class ViewModelManager {
         lifecycleState = LifecycleState.Paused;
         visitors.add(onPauseVisitor);
         for (Lifecycle lifecycle : lifecycleViewModelList) {
-            lifecycle.accept(onResumeVisitor);
+            lifecycle.accept(onPauseVisitor);
         }
     }
 
