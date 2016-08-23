@@ -7,13 +7,13 @@
     <declare-styleable name="PullToRefreshRecyclerView">
         <attr name="headerClassName" format="string" />
         <attr name="footerClassName" format="string" />
-        <attr name="onRefreshingCommand" format="reference" />
-        <attr name="onLoadingCommand" format="reference" />
-        <attr name="onPullToRefreshCommand" format="reference" />
+        <attr name="onStartRefreshingCommand" format="reference" />
+        <attr name="onLoadMoreCommand" format="reference" />
+        <attr name="onPullDownCommand" format="reference" />
         <attr name="onScrollCommand" format="reference" />
         <attr name="refreshing" format="boolean" />
-        <attr name="loadingCompleted" format="boolean" />
-        <attr name="loadingEnable" format="boolean" />
+        <attr name="loadMoreCompleted" format="boolean" />
+        <attr name="loadMoreEnable" format="boolean" />
     </declare-styleable>
 
 </resources>

@@ -39,8 +39,8 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
     private FrameLayout mSvFooterLoadingFrame;
     private FrameLayout mSvSecondFooterLoadingFrame;
     private View mSecondFooterLayout;
-    private boolean isLoadingCompleted;
-    private boolean isLoadingEnabled;
+    private boolean isLoadMoreCompleted;
+    private boolean isLoadMoreEnabled;
 
 
     private boolean mURecyclerViewExtrasEnabled;
@@ -327,20 +327,21 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
         return mSecondFooterLayout;
     }
 
-    public void onLoadingComplete() {
-        isLoadingCompleted = true;
+    public void onLoadMoreComplete() {
+        isLoadMoreCompleted = true;
     }
 
-    public void setLoading() {
-        isLoadingCompleted = false;
+    public void setStartLoading() {
+        isLoadMoreCompleted = false;
     }
 
-    public boolean isLoadingEnabled() {
-        return isLoadingEnabled;
+    public boolean isLoadMoreEnabled() {
+        return isLoadMoreEnabled;
     }
 
-    public void setLoadingEnabled(boolean isLoadingEnabled) {
-        this.isLoadingEnabled = isLoadingEnabled;
+    public void setLoadMoreEnabled(boolean isLoadingEnabled) {
+        this.isLoadMoreEnabled = isLoadingEnabled;
+
     }
 
     public final void setOnLastItemVisibleListener(OnLastItemVisibleListener listener) {
@@ -481,7 +482,7 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
         public void onScrolled(int dx, int dy) {
             super.onScrolled(dx, dy);
             if (null != mOnLastItemVisibleListener && isLastItemVisible()) {
-                setLoading();
+                setStartLoading();
                 mOnLastItemVisibleListener.onLastItemVisible();
             }
         }
@@ -505,7 +506,7 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 // 最后一个显示出来了
                 if (lastVisiblePosition == mRefreshableView.getAdapter().getItemCount() - 1) {
 
-                    if (isLoadingCompleted && isLoadingEnabled) {
+                    if (isLoadMoreCompleted && isLoadMoreEnabled) {
                         return true;
                     }
                 }

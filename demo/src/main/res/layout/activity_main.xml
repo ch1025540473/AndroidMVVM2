@@ -28,17 +28,13 @@
             binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.grid(2)}"
-            binding:loadingCompleted="@{model.loadingCompleted}"
-            binding:loadingEnable="@{model.loadingEnable}"
-            binding:onLoadingCommand="@{model.onLoadingCommand}"
-            binding:onPullToRefreshCommand="@{model.onPullToRefreshCommand}"
-            binding:onRefreshingCommand="@{model.onRefreshingCommand}"
+            binding:loadMoreCompleted="@{model.loadMoreCompleted}"
+            binding:loadMoreEnable="@{model.loadMoreEnable}"
+            binding:onLoadMoreCommand="@{model.onLoadMoreCommand}"
+            binding:onPullDownCommand="@{model.onPullDownCommand}"
             binding:onScrollCommand="@{model.onScrollCommand}"
+            binding:onStartRefreshingCommand="@{model.onStartRefreshingCommand}"
             binding:refreshing="@{model.refreshing}" />
-        <!--android:orientation="vertical"-->
-        <!--app:reverseLayout="true"-->
-        <!--app:spanCount="10"-->
-        <!--app:stackFromEnd="true"-->
 
     </RelativeLayout>
 </layout>

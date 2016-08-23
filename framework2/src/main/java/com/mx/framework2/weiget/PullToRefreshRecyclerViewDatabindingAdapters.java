@@ -5,11 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshHeaderListener;
 import com.handmark.pulltorefresh.library.recyclerview.WrapRecyclerView;
-import com.mx.framework2.R;
-
-import java.util.Collection;
 
 /**
  * Created by liuyuxuan on 16/8/22.
@@ -17,23 +13,23 @@ import java.util.Collection;
 public class PullToRefreshRecyclerViewDataBindingAdapters {
 
 
-    @BindingAdapter({"onRefreshingCommand"})
+    @BindingAdapter({"onStartRefreshingCommand"})
     public static void setOnRefreshListener(PullToRefreshRecyclerView pullToRefreshRecyclerView,
-                                            final OnRefreshingCommand onRefreshingCommand) {
-        Log.d("PTR", "setOnRefreshListener=" + onRefreshingCommand.getClass().getName());
+                                            final OnStartRefreshingCommand onStartRefreshingCommand) {
+        Log.d("PTR", "setOnRefreshListener=" + onStartRefreshingCommand.getClass().getName());
         pullToRefreshRecyclerView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WrapRecyclerView>() {
             @Override
             public void onRefresh(PullToRefreshBase<WrapRecyclerView> refreshView) {
-                onRefreshingCommand.onRefreshing();
+                onStartRefreshingCommand.onStartRefreshing();
             }
         });
     }
 
-    @BindingAdapter({"onLoadingCommand"})
+    @BindingAdapter({"onLoadMoreCommand"})
     public static void setOnLoadingListener(final PullToRefreshRecyclerView pullToRefreshRecyclerView,
-                                            final OnLoadingCommand onLoadingCommand) {
-        Log.d("PTR", "setOnLoadingListener=" + onLoadingCommand.getClass().getName());
-        if (null == onLoadingCommand) {
+                                            final OnLoadMoreCommand onLoadMoreCommand) {
+        Log.d("PTR", "setOnLoadingListener=" + onLoadMoreCommand.getClass().getName());
+        if (null == onLoadMoreCommand) {
             pullToRefreshRecyclerView.setOnLastItemVisibleListener(null);
             return;
         }
@@ -41,7 +37,7 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
             @Override
             public void onLastItemVisible() {
                 Log.d("PTR", "onLastItemVisible");
-                onLoadingCommand.onLoading();
+                onLoadMoreCommand.onLoadMore();
             }
         });
     }
@@ -55,21 +51,21 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
         }
     }
 
-    @BindingAdapter({"loadingEnable"})
-    public static void loadingEnable(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadingEnable) {
-        Log.d("PTR", "loading=" + isLoadingEnable);
+    @BindingAdapter({"loadMoreEnable"})
+    public static void loadMoreEnable(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadMoreEnable) {
+        Log.d("PTR", "isLoadMoreEnable=" + isLoadMoreEnable);
         FooterLoadingView footer = (FooterLoadingView) pullToRefreshRecyclerView.getSecondFooterLayout();
-        footer.onLoading(isLoadingEnable);
-        pullToRefreshRecyclerView.setLoadingEnabled(isLoadingEnable);
+        footer.onLoading(isLoadMoreEnable);
+        pullToRefreshRecyclerView.setLoadMoreEnabled(isLoadMoreEnable);
     }
 
-    @BindingAdapter({"loadingCompleted"})
-    public static void loading(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadingCompleted) {
-        Log.d("PTR", "isLoadingCompleted=" + isLoadingCompleted);
-        if (isLoadingCompleted) {
-            pullToRefreshRecyclerView.onLoadingComplete();
+    @BindingAdapter({"loadMoreCompleted"})
+    public static void loading(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadMoreCompleted) {
+        Log.d("PTR", "isLoadingCompleted=" + isLoadMoreCompleted);
+        if (isLoadMoreCompleted) {
+            pullToRefreshRecyclerView.onLoadMoreComplete();
         } else {
-            pullToRefreshRecyclerView.setLoading();
+            pullToRefreshRecyclerView.setStartLoading();
         }
     }
 
@@ -81,54 +77,11 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
     }
 
-
-    @BindingAdapter({"items"})
-    public static void setItems(PullToRefreshRecyclerView pullToRefreshRecyclerView, Collection collection) {
-        pullToRefreshRecyclerView.setItems(collection);
-    }
-
-    @BindingAdapter({"onScrollCommand"})
-    public static void setScrollCommand(final PullToRefreshRecyclerView pullToRefreshRecyclerView,
-                                        final OnScrollCommand onScrollCommand) {
-        Log.d("PTR", "onScrollCommand=" + onScrollCommand.getClass());
-        pullToRefreshRecyclerView.setOnScrollCommand(onScrollCommand);
-    }
-
-    @BindingAdapter({"onPullToRefreshCommand"})
-    public static void setOnPullToRefreshingCommand(final PullToRefreshRecyclerView pullToRefreshRecyclerView,
-                                                    final OnPullToRefreshCommand onRefreshingCommand) {
+    @BindingAdapter({"onPullDownCommand"})
+    public static void setOnPullToRefreshingListener(final PullToRefreshRecyclerView pullToRefreshRecyclerView,
+                                                     final OnPullDownCommand onRefreshingCommand) {
         Log.d("PTR", "setOnPullToRefreshingCommand=" + onRefreshingCommand.getClass());
-        pullToRefreshRecyclerView.setPullToRefreshHeaderListener(new PullToRefreshHeaderListener() {
-            boolean isPullToRefresh = false;
-
-            @Override
-            public void pullToRefresh() {
-                isPullToRefresh = true;
-            }
-
-            @Override
-            public void releaseToRefresh() {
-                isPullToRefresh = false;
-            }
-
-            @Override
-            public void onPull(float scaleOfLayout) {
-                onRefreshingCommand.onMove(isPullToRefresh, scaleOfLayout);
-
-            }
-
-            @Override
-            public void refreshing() {
-                onRefreshingCommand.onRefreshing();
-
-            }
-
-            @Override
-            public void reset() {
-                onRefreshingCommand.onReset();
-
-            }
-        });
+        pullToRefreshRecyclerView.setPullToRefreshHeaderListener(onRefreshingCommand);
 
     }
 

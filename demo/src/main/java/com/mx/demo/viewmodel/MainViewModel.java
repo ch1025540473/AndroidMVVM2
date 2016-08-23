@@ -8,11 +8,10 @@ import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.weiget.OnLoadingCommand;
-import com.mx.framework2.weiget.OnPullToRefreshCommand;
-import com.mx.framework2.weiget.OnRefreshingCommand;
+import com.mx.framework2.weiget.OnLoadMoreCommand;
+import com.mx.framework2.weiget.OnPullDownCommand;
+import com.mx.framework2.weiget.OnStartRefreshingCommand;
 import com.mx.framework2.weiget.OnScrollCommand;
-import com.mx.framework2.weiget.PullToRefreshRecyclerViewDataBindingAdapters;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,28 +27,28 @@ import rx.schedulers.Schedulers;
  */
 public class MainViewModel extends LifecycleViewModel {
     private LinkedList<ItemViewBean> items;
-    private OnRefreshingCommand onRefreshingCommand;
-    private OnLoadingCommand onLoadingCommand;
+    private OnStartRefreshingCommand onStartRefreshingCommand;
+    private OnLoadMoreCommand onLoadMoreCommand;
     private OnScrollCommand onScrollCommand;
-    private OnPullToRefreshCommand onPullToRefreshCommand;
+    private OnPullDownCommand onPullDownCommand;
     boolean isRefreshing = true;
-    boolean isLoadingCompleted = true;
-    boolean isLoadingEnable = false;
+    boolean isLoadMoreCompleted = true;
+    boolean isLoadMoreEnable = false;
 
-    public boolean isLoadingEnable() {
-        return isLoadingEnable;
+    public boolean isLoadMoreEnable() {
+        return isLoadMoreEnable;
     }
 
-    public void setLoadingEnable(boolean loadingEnable) {
-        isLoadingEnable = loadingEnable;
+    public void setLoadMoreEnable(boolean loadMoreEnable) {
+        isLoadMoreEnable = loadMoreEnable;
     }
 
-    public boolean isLoadingCompleted() {
-        return isLoadingCompleted;
+    public boolean isLoadMoreCompleted() {
+        return isLoadMoreCompleted;
     }
 
-    public void setLoadingCompleted(boolean isLoadingComplated) {
-        this.isLoadingCompleted = isLoadingComplated;
+    public void setLoadMoreCompleted(boolean isLoadingComplated) {
+        this.isLoadMoreCompleted = isLoadingComplated;
     }
 
     public boolean isRefreshing() {
@@ -77,33 +76,43 @@ public class MainViewModel extends LifecycleViewModel {
         return onScrollCommand;
     }
 
-    public OnPullToRefreshCommand getOnPullToRefreshCommand() {
-        if (null == onPullToRefreshCommand) {
-            onPullToRefreshCommand = new OnPullToRefreshCommand() {
+    public OnPullDownCommand getOnPullDownCommand() {
+        if (null == onPullDownCommand) {
+            onPullDownCommand = new OnPullDownCommand() {
                 @Override
-                public void onMove(boolean isPullToRefresh, float scaleOfLayout) {
-                    Log.d("PTR", "onMove isPullToRefresh=" + isPullToRefresh + " scaleOfLayout=" + scaleOfLayout);
+                public void pullToRefresh() {
+                    Log.d("PTR", "pullToRefresh");
                 }
 
                 @Override
-                public void onRefreshing() {
-                    Log.d("PTR", "onMove onRefreshing");
+                public void releaseToRefresh() {
+                    Log.d("PTR", "releaseToRefresh");
                 }
 
                 @Override
-                public void onReset() {
-                    Log.d("PTR", "onMove onReset");
+                public void onPull(float scaleOfLayout) {
+                    Log.d("PTR", "onPull>> scaleOfLayout=" + scaleOfLayout);
+                }
+
+                @Override
+                public void refreshing() {
+                    Log.d("PTR", "refreshing");
+                }
+
+                @Override
+                public void reset() {
+                    Log.d("PTR", "reset");
                 }
             };
         }
-        return onPullToRefreshCommand;
+        return onPullDownCommand;
     }
 
-    public OnLoadingCommand getOnLoadingCommand() {
-        if (onLoadingCommand == null) {
-            onLoadingCommand = new OnLoadingCommand() {
+    public OnLoadMoreCommand getOnLoadMoreCommand() {
+        if (onLoadMoreCommand == null) {
+            onLoadMoreCommand = new OnLoadMoreCommand() {
                 @Override
-                public void onLoading() {
+                public void onLoadMore() {
                     Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
                         @Override
                         public void call(Subscriber<? super List<ApiBean>> subscriber) {
@@ -132,21 +141,21 @@ public class MainViewModel extends LifecycleViewModel {
                                     items.add(viewBean);
                                 }
                             }
-                            setLoadingCompleted(true);
+                            setLoadMoreCompleted(true);
                             notifyChange();
                         }
                     });
                 }
             };
         }
-        return onLoadingCommand;
+        return onLoadMoreCommand;
     }
 
-    public OnRefreshingCommand getOnRefreshingCommand() {
-        if (onRefreshingCommand == null) {
-            onRefreshingCommand = new OnRefreshingCommand() {
+    public OnStartRefreshingCommand getOnStartRefreshingCommand() {
+        if (onStartRefreshingCommand == null) {
+            onStartRefreshingCommand = new OnStartRefreshingCommand() {
                 @Override
-                public void onRefreshing() {
+                public void onStartRefreshing() {
 
                     Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
                         @Override
@@ -178,8 +187,8 @@ public class MainViewModel extends LifecycleViewModel {
                                 }
                             }
                             setRefreshing(false);
-                            setLoadingEnable(true);
-                            setLoadingCompleted(true);
+                            setLoadMoreEnable(true);
+                            setLoadMoreCompleted(true);
                             notifyChange();
                         }
                     });
@@ -188,7 +197,7 @@ public class MainViewModel extends LifecycleViewModel {
                 }
             };
         }
-        return onRefreshingCommand;
+        return onStartRefreshingCommand;
     }
 
 
