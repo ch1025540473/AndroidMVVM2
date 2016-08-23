@@ -9,6 +9,8 @@
         <attr name="footerClassName" format="string" />
         <attr name="onRefreshingCommand" format="reference" />
         <attr name="onLoadingCommand" format="reference" />
+        <attr name="onPullToRefreshCommand" format="reference" />
+        <attr name="onScrollCommand" format="reference" />
         <attr name="refreshing" format="boolean" />
         <attr name="loadingCompleted" format="boolean" />
         <attr name="loadingEnable" format="boolean" />

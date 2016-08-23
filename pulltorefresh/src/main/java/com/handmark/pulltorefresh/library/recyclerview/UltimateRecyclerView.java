@@ -503,7 +503,7 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 int lastVisiblePosition = getLastVisiblePosition();
 
                 // 最后一个显示出来了
-                if (lastVisiblePosition == mRefreshableView.getAdapter().getItemCount() - 2) {
+                if (lastVisiblePosition == mRefreshableView.getAdapter().getItemCount() - 1) {
 
                     if (isLoadingCompleted && isLoadingEnabled) {
                         return true;

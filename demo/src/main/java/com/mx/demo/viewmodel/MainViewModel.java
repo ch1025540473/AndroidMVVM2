@@ -1,26 +1,23 @@
 package com.mx.demo.viewmodel;
 
-import android.os.AsyncTask;
-import android.os.Bundle;
+import android.util.Log;
 
-import com.mx.demo.BR;
-import com.mx.demo.DemoModule;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
-import com.mx.demo.view.factory.DemoItemViewFactory;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
-import com.mx.framework2.event.Events;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.weiget.PullToRefreshRecyclerViewDatabindingAdapters;
+import com.mx.framework2.weiget.OnLoadingCommand;
+import com.mx.framework2.weiget.OnPullToRefreshCommand;
+import com.mx.framework2.weiget.OnRefreshingCommand;
+import com.mx.framework2.weiget.OnScrollCommand;
+import com.mx.framework2.weiget.PullToRefreshRecyclerViewDataBindingAdapters;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import rx.Observable;
-import rx.Scheduler;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -31,10 +28,12 @@ import rx.schedulers.Schedulers;
  */
 public class MainViewModel extends LifecycleViewModel {
     private LinkedList<ItemViewBean> items;
-    private PullToRefreshRecyclerViewDatabindingAdapters.OnRefreshingCommand onRefreshingCommand;
-    private PullToRefreshRecyclerViewDatabindingAdapters.OnLoadingCommand onLoadingCommand;
+    private OnRefreshingCommand onRefreshingCommand;
+    private OnLoadingCommand onLoadingCommand;
+    private OnScrollCommand onScrollCommand;
+    private OnPullToRefreshCommand onPullToRefreshCommand;
     boolean isRefreshing = true;
-    boolean isLoadingComplated = true;
+    boolean isLoadingCompleted = true;
     boolean isLoadingEnable = false;
 
     public boolean isLoadingEnable() {
@@ -45,12 +44,12 @@ public class MainViewModel extends LifecycleViewModel {
         isLoadingEnable = loadingEnable;
     }
 
-    public boolean isLoadingComplated() {
-        return isLoadingComplated;
+    public boolean isLoadingCompleted() {
+        return isLoadingCompleted;
     }
 
-    public void setLoadingComplated(boolean isLoadingComplated) {
-        this.isLoadingComplated = isLoadingComplated;
+    public void setLoadingCompleted(boolean isLoadingComplated) {
+        this.isLoadingCompleted = isLoadingComplated;
     }
 
     public boolean isRefreshing() {
@@ -61,9 +60,48 @@ public class MainViewModel extends LifecycleViewModel {
         isRefreshing = refreshing;
     }
 
-    public PullToRefreshRecyclerViewDatabindingAdapters.OnLoadingCommand getOnLoadingCommand() {
+    public OnScrollCommand getOnScrollCommand() {
+        if (null == onScrollCommand) {
+            onScrollCommand = new OnScrollCommand() {
+                @Override
+                public void onScrollStateChanged(int id, int state) {
+                    Log.d("PTR", "onScrollStateChanged id=" + id + " state=" + state);
+                }
+
+                @Override
+                public void onScrolled(int id, int v, int h, int dx, int dy) {
+                    Log.d("PTR", "onScrolled id=" + id + " v=" + v + " h=" + h + " dx=" + dx + " dy=" + dy);
+                }
+            };
+        }
+        return onScrollCommand;
+    }
+
+    public OnPullToRefreshCommand getOnPullToRefreshCommand() {
+        if (null == onPullToRefreshCommand) {
+            onPullToRefreshCommand = new OnPullToRefreshCommand() {
+                @Override
+                public void onMove(boolean isPullToRefresh, float scaleOfLayout) {
+                    Log.d("PTR", "onMove isPullToRefresh=" + isPullToRefresh + " scaleOfLayout=" + scaleOfLayout);
+                }
+
+                @Override
+                public void onRefreshing() {
+                    Log.d("PTR", "onMove onRefreshing");
+                }
+
+                @Override
+                public void onReset() {
+                    Log.d("PTR", "onMove onReset");
+                }
+            };
+        }
+        return onPullToRefreshCommand;
+    }
+
+    public OnLoadingCommand getOnLoadingCommand() {
         if (onLoadingCommand == null) {
-            onLoadingCommand = new PullToRefreshRecyclerViewDatabindingAdapters.OnLoadingCommand() {
+            onLoadingCommand = new OnLoadingCommand() {
                 @Override
                 public void onLoading() {
                     Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
@@ -94,7 +132,7 @@ public class MainViewModel extends LifecycleViewModel {
                                     items.add(viewBean);
                                 }
                             }
-                            setLoadingComplated(true);
+                            setLoadingCompleted(true);
                             notifyChange();
                         }
                     });
@@ -104,9 +142,9 @@ public class MainViewModel extends LifecycleViewModel {
         return onLoadingCommand;
     }
 
-    public PullToRefreshRecyclerViewDatabindingAdapters.OnRefreshingCommand getOnRefreshingCommand() {
+    public OnRefreshingCommand getOnRefreshingCommand() {
         if (onRefreshingCommand == null) {
-            onRefreshingCommand = new PullToRefreshRecyclerViewDatabindingAdapters.OnRefreshingCommand() {
+            onRefreshingCommand = new OnRefreshingCommand() {
                 @Override
                 public void onRefreshing() {
 
@@ -126,6 +164,7 @@ public class MainViewModel extends LifecycleViewModel {
                     }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<ApiBean>>() {
                         @Override
                         public void call(List<ApiBean> apiBeen) {
+                            items.clear();
                             for (ApiBean apiBean : apiBeen) {
                                 if (apiBean.type == 1) {
                                     ColorItemViewBean viewBean = new ColorItemViewBean();
@@ -139,8 +178,9 @@ public class MainViewModel extends LifecycleViewModel {
                                 }
                             }
                             setRefreshing(false);
+                            setLoadingEnable(true);
+                            setLoadingCompleted(true);
                             notifyChange();
-
                         }
                     });
 
@@ -150,6 +190,7 @@ public class MainViewModel extends LifecycleViewModel {
         }
         return onRefreshingCommand;
     }
+
 
     @Override
     protected void onCreate() {

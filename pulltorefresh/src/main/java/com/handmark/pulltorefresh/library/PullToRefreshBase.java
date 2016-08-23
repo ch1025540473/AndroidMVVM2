@@ -99,8 +99,8 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         return mPullToRefreshHeaderListener;
     }
 
-    public void setPullToRefreshHeaderListener(PullToRefreshHeaderListener mPullToRefreshHeaderListener) {
-        this.mPullToRefreshHeaderListener = mPullToRefreshHeaderListener;
+    public void setPullToRefreshHeaderListener(PullToRefreshHeaderListener pullToRefreshHeaderListener) {
+        this.mPullToRefreshHeaderListener = pullToRefreshHeaderListener;
     }
 
     private OnRefreshListener<T> mOnRefreshListener;
@@ -767,7 +767,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
     protected void onRefreshing(final boolean doScroll) {
         if (mMode.showHeaderLoadingLayout()) {
             mHeaderLayout.refreshing();
-            if (mPullToRefreshHeaderListener!=null){
+            if (mPullToRefreshHeaderListener != null) {
                 mPullToRefreshHeaderListener.refreshing();
             }
         }
@@ -837,7 +837,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
         // Always reset both layouts, just in case...
         mHeaderLayout.reset();
         mFooterLayout.reset();
-        if (mPullToRefreshHeaderListener!=null){
+        if (mPullToRefreshHeaderListener != null) {
             mPullToRefreshHeaderListener.reset();
         }
 

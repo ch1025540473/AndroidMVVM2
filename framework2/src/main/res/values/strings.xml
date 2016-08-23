@@ -2,5 +2,5 @@
     <string name="app_name">framework</string>
     <string name="activity_msg"> activity RunState!=CreatedState,super.onCreate()未提前调用</string>
     <string name="fragment_msg"> fragment RunState!=CreatedState,super.onViewCreated()未提前调用</string>
-
+    <item name="ptr_tag" type="id" />
 </resources>
