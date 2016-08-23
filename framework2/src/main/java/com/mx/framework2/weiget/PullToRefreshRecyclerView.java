@@ -114,6 +114,7 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
                             recyclerView.computeHorizontalScrollOffset(), dx, dy);
                 }
             };
+            getRefreshableView().addOnScrollListener(onScrollListener);
         }
     }
 }

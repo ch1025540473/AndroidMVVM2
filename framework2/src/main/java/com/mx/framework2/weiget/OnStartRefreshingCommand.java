@@ -5,6 +5,5 @@ package com.mx.framework2.weiget;
  */
 //TODO
 public interface OnStartRefreshingCommand {
-    //TODO onStartRefreshing
     void onStartRefreshing();
 }
