@@ -8,10 +8,10 @@ import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.weiget.OnLoadMoreCommand;
-import com.mx.framework2.weiget.OnPullDownCommand;
-import com.mx.framework2.weiget.OnStartRefreshingCommand;
-import com.mx.framework2.weiget.OnScrollCommand;
+import com.mx.framework2.widget.OnLoadMoreCommand;
+import com.mx.framework2.widget.OnPullDownCommand;
+import com.mx.framework2.widget.OnStartRefreshingCommand;
+import com.mx.framework2.widget.OnScrollCommand;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -32,23 +32,23 @@ public class MainViewModel extends LifecycleViewModel {
     private OnScrollCommand onScrollCommand;
     private OnPullDownCommand onPullDownCommand;
     boolean isRefreshing = true;
-    boolean isLoadMoreCompleted = true;
-    boolean isLoadMoreEnable = false;
+    boolean isLoadMoreComplete = true;
+    boolean isLoadMoreEnabled = false;
 
-    public boolean isLoadMoreEnable() {
-        return isLoadMoreEnable;
+    public boolean isLoadMoreEnabled() {
+        return isLoadMoreEnabled;
     }
 
-    public void setLoadMoreEnable(boolean loadMoreEnable) {
-        isLoadMoreEnable = loadMoreEnable;
+    public void setLoadMoreEnabled(boolean loadMoreEnabled) {
+        isLoadMoreEnabled = loadMoreEnabled;
     }
 
-    public boolean isLoadMoreCompleted() {
-        return isLoadMoreCompleted;
+    public boolean isLoadMoreComplete() {
+        return isLoadMoreComplete;
     }
 
-    public void setLoadMoreCompleted(boolean isLoadingComplated) {
-        this.isLoadMoreCompleted = isLoadingComplated;
+    public void setLoadMoreComplete(boolean isLoadingComplated) {
+        this.isLoadMoreComplete = isLoadingComplated;
     }
 
     public boolean isRefreshing() {
@@ -141,7 +141,7 @@ public class MainViewModel extends LifecycleViewModel {
                                     items.add(viewBean);
                                 }
                             }
-                            setLoadMoreCompleted(true);
+                            setLoadMoreComplete(true);
                             notifyChange();
                         }
                     });
@@ -187,8 +187,8 @@ public class MainViewModel extends LifecycleViewModel {
                                 }
                             }
                             setRefreshing(false);
-                            setLoadMoreEnable(true);
-                            setLoadMoreCompleted(true);
+                            setLoadMoreEnabled(true);
+                            setLoadMoreComplete(true);
                             notifyChange();
                         }
                     });

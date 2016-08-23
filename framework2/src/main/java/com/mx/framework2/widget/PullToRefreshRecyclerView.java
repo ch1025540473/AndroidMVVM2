@@ -1,8 +1,7 @@
-package com.mx.framework2.weiget;
+package com.mx.framework2.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,7 +16,6 @@ import com.mx.framework2.view.factory.ItemViewFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by liuyuxuan on 16/8/22.

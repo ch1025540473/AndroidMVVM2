@@ -1,4 +1,4 @@
-package com.mx.framework2.weiget;
+package com.mx.framework2.widget;
 
 import android.databinding.BindingAdapter;
 import android.support.v7.widget.RecyclerView;
@@ -51,17 +51,17 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
         }
     }
 
-    @BindingAdapter({"loadMoreEnable"})
+    @BindingAdapter({"loadMoreEnabled"})
     public static void loadMoreEnable(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadMoreEnable) {
-        Log.d("PTR", "isLoadMoreEnable=" + isLoadMoreEnable);
+        Log.d("PTR", "isLoadMoreEnabled=" + isLoadMoreEnable);
         FooterLoadingView footer = (FooterLoadingView) pullToRefreshRecyclerView.getSecondFooterLayout();
         footer.onLoading(isLoadMoreEnable);
         pullToRefreshRecyclerView.setLoadMoreEnabled(isLoadMoreEnable);
     }
 
-    @BindingAdapter({"loadMoreCompleted"})
+    @BindingAdapter({"loadMoreComplete"})
     public static void loading(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadMoreCompleted) {
-        Log.d("PTR", "isLoadingCompleted=" + isLoadMoreCompleted);
+        Log.d("PTR", "isLoadingComplete=" + isLoadMoreCompleted);
         if (isLoadMoreCompleted) {
             pullToRefreshRecyclerView.onLoadMoreComplete();
         } else {

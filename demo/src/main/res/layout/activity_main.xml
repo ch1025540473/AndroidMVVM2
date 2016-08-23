@@ -8,7 +8,7 @@
             name="model"
             type="com.mx.demo.viewmodel.MainViewModel" />
 
-        <import type="com.mx.framework2.weiget.LayoutManagers" />
+        <import type="com.mx.framework2.widget.LayoutManagers" />
     </data>
 
     <RelativeLayout
@@ -19,7 +19,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <com.mx.framework2.weiget.PullToRefreshRecyclerView
+        <com.mx.framework2.widget.PullToRefreshRecyclerView
             android:id="@+id/demo_mylist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -27,9 +27,9 @@
             binding:headerClassName="com.mx.demo.view.PullToRefreshHeaderView"
             binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
             binding:items="@{model.items}"
-            binding:layoutManager="@{LayoutManagers.grid(2)}"
-            binding:loadMoreCompleted="@{model.loadMoreCompleted}"
-            binding:loadMoreEnable="@{model.loadMoreEnable}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:loadMoreComplete="@{model.loadMoreComplete}"
+            binding:loadMoreEnabled="@{model.loadMoreEnabled}"
             binding:onLoadMoreCommand="@{model.onLoadMoreCommand}"
             binding:onPullDownCommand="@{model.onPullDownCommand}"
             binding:onScrollCommand="@{model.onScrollCommand}"

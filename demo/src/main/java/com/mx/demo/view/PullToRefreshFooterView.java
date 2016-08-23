@@ -6,13 +6,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mx.demo.R;
 import com.mx.engine.utils.ScreenUtils;
-import com.mx.framework2.weiget.FooterLoadingView;
+import com.mx.framework2.widget.FooterLoadingView;
 
 /**
  * Created by liuyuxuan on 16/8/9.

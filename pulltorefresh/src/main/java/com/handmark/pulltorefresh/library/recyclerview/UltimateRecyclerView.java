@@ -39,7 +39,7 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
     private FrameLayout mSvFooterLoadingFrame;
     private FrameLayout mSvSecondFooterLoadingFrame;
     private View mSecondFooterLayout;
-    private boolean isLoadMoreCompleted;
+    private boolean isLoadMoreComplete;
     private boolean isLoadMoreEnabled;
 
 
@@ -328,11 +328,11 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
     }
 
     public void onLoadMoreComplete() {
-        isLoadMoreCompleted = true;
+        isLoadMoreComplete = true;
     }
 
     public void setStartLoading() {
-        isLoadMoreCompleted = false;
+        isLoadMoreComplete = false;
     }
 
     public boolean isLoadMoreEnabled() {
@@ -504,9 +504,9 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 int lastVisiblePosition = getLastVisiblePosition();
 
                 // 最后一个显示出来了
-                if (lastVisiblePosition == mRefreshableView.getAdapter().getItemCount() - 1) {
+                if (mRefreshableView.getAdapter().getItemCount()-lastVisiblePosition>=1) {
 
-                    if (isLoadMoreCompleted && isLoadMoreEnabled) {
+                    if (isLoadMoreComplete && isLoadMoreEnabled) {
                         return true;
                     }
                 }
