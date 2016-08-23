@@ -90,23 +90,8 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
     @BindingAdapter({"onScrollCommand"})
     public static void setScrollCommand(final PullToRefreshRecyclerView pullToRefreshRecyclerView,
                                         final OnScrollCommand onScrollCommand) {
-        if (onScrollCommand == pullToRefreshRecyclerView.getRefreshableView().getTag(R.id.ptr_tag)) {
-            return;
-        }
         Log.d("PTR", "onScrollCommand=" + onScrollCommand.getClass());
-        pullToRefreshRecyclerView.getRefreshableView().setTag(R.id.ptr_tag, onScrollCommand);
-        pullToRefreshRecyclerView.getRefreshableView().addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                onScrollCommand.onScrollStateChanged(recyclerView.getId(), newState);
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                onScrollCommand.onScrolled(recyclerView.getId(), recyclerView.computeVerticalScrollOffset(),
-                        recyclerView.computeHorizontalScrollOffset(), dx, dy);
-            }
-        });
+        pullToRefreshRecyclerView.setOnScrollCommand(onScrollCommand);
     }
 
     @BindingAdapter({"onPullToRefreshCommand"})

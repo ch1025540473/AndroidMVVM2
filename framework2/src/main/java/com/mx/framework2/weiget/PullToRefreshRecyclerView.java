@@ -26,6 +26,8 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
     private final ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
+    private RecyclerView.OnScrollListener onScrollListener;
+    private OnScrollCommand onScrollCommand;
 
     public PullToRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -92,5 +94,26 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
     public void setItems(Collection items) {
         adapter.putItems(items);
+    }
+
+    public void setOnScrollCommand(
+            final OnScrollCommand onScrollCommand) {
+        Log.d("PTR", "onScrollCommand=" + onScrollCommand.getClass());
+        this.onScrollCommand = onScrollCommand;
+        if (onScrollListener == null) {
+            onScrollListener = new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    PullToRefreshRecyclerView.this.onScrollCommand.onScrollStateChanged(recyclerView.getId(), newState);
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    PullToRefreshRecyclerView.this.onScrollCommand.onScrolled(recyclerView.getId(),
+                            recyclerView.computeVerticalScrollOffset(),
+                            recyclerView.computeHorizontalScrollOffset(), dx, dy);
+                }
+            };
+        }
     }
 }

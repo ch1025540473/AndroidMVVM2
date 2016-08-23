@@ -27,7 +27,7 @@
             binding:headerClassName="com.mx.demo.view.PullToRefreshHeaderView"
             binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
             binding:items="@{model.items}"
-            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:layoutManager="@{LayoutManagers.grid(2)}"
             binding:loadingCompleted="@{model.loadingCompleted}"
             binding:loadingEnable="@{model.loadingEnable}"
             binding:onLoadingCommand="@{model.onLoadingCommand}"
