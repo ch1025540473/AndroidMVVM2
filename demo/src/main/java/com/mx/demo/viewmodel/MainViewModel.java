@@ -34,15 +34,23 @@ public class MainViewModel extends LifecycleViewModel {
     private PullToRefreshRecyclerViewDatabindingAdapters.OnRefreshingCommand onRefreshingCommand;
     private PullToRefreshRecyclerViewDatabindingAdapters.OnLoadingCommand onLoadingCommand;
     boolean isRefreshing = true;
-    boolean isLoading = true;
+    boolean isLoadingComplated = true;
+    boolean isLoadingEnable = false;
 
-    public boolean isLoading() {
-        return isLoading;
+    public boolean isLoadingEnable() {
+        return isLoadingEnable;
     }
 
-    public void setLoading(boolean loading) {
-        isLoading = loading;
-        notifyPropertyChanged(BR.model);
+    public void setLoadingEnable(boolean loadingEnable) {
+        isLoadingEnable = loadingEnable;
+    }
+
+    public boolean isLoadingComplated() {
+        return isLoadingComplated;
+    }
+
+    public void setLoadingComplated(boolean isLoadingComplated) {
+        this.isLoadingComplated = isLoadingComplated;
     }
 
     public boolean isRefreshing() {
@@ -86,7 +94,7 @@ public class MainViewModel extends LifecycleViewModel {
                                     items.add(viewBean);
                                 }
                             }
-                            setLoading(true);
+                            setLoadingComplated(true);
                             notifyChange();
                         }
                     });
@@ -131,7 +139,6 @@ public class MainViewModel extends LifecycleViewModel {
                                 }
                             }
                             setRefreshing(false);
-                            setLoading(true);
                             notifyChange();
 
                         }

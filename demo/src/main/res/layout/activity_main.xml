@@ -28,7 +28,8 @@
             binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:loading="@{model.loading}"
+            binding:loadingCompleted="@{model.loadingComplated}"
+            binding:loadingEnable="@{model.loadingEnable}"
             binding:onLoadingCommand="@{model.onLoadingCommand}"
             binding:onRefreshingCommand="@{model.onRefreshingCommand}"
             binding:refreshing="@{model.refreshing}" />

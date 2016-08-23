@@ -76,7 +76,11 @@ public class PullToRefreshRecyclerViewDatabindingAdapters {
     @BindingAdapter({"loadingCompleted"})
     public static void loading(PullToRefreshRecyclerView pullToRefreshRecyclerView, boolean isLoadingCompleted) {
         Log.d("PTR", "isLoadingCompleted=" + isLoadingCompleted);
-        pullToRefreshRecyclerView.onLoadingCompleted();
+        if (isLoadingCompleted) {
+            pullToRefreshRecyclerView.onLoadingComplete();
+        } else {
+            pullToRefreshRecyclerView.setLoading();
+        }
     }
 
     @BindingAdapter({"headerClassName"})
