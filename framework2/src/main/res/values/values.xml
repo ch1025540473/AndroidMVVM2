@@ -15,5 +15,7 @@
         <attr name="loadMoreComplete" format="boolean" />
         <attr name="loadMoreEnabled" format="boolean" />
     </declare-styleable>
-
+    <declare-styleable name="View">
+        <attr name="clickCommand" format="reference" />
+    </declare-styleable>
 </resources>

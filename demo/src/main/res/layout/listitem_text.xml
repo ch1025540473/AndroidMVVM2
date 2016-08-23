@@ -1,21 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="model"
             type="com.mx.demo.viewmodel.TextItemViewModel" />
+
+
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        binding:clickCommand="@{model.clickCommand}">
 
         <TextView
             android:id="@+id/demo_listitem_text"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="@{model.textToShow}"/>
+            binding:clickCommand="@{model.clickCommand}"
+            android:text="@{model.textToShow}" />
 
     </LinearLayout>
 </layout>
