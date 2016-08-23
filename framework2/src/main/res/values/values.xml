@@ -4,4 +4,13 @@
         <attr name="items" format="string" />
         <attr name="itemViewFactory" format="string" />
     </declare-styleable>
+    <declare-styleable name="PullToRefreshRecyclerView">
+        <attr name="headerClassName" format="string" />
+        <attr name="footerClassName" format="string" />
+        <attr name="onRefreshingCommand" format="reference" />
+        <attr name="onLoadingCommand" format="reference" />
+        <attr name="refreshing" format="boolean" />
+        <attr name="loading" format="boolean" />
+    </declare-styleable>
+
 </resources>

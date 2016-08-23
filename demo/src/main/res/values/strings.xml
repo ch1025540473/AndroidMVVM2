@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">AndroidMVVM</string>
+    <string name="xlistview_header_hint_normal" translatable="false">下拉刷新</string>
+    <string name="xlistview_header_hint_ready" translatable="false">释放刷新</string>
+    <string name="xlistview_header_hint_loading" translatable="false">正在加载...</string>
+
 </resources>

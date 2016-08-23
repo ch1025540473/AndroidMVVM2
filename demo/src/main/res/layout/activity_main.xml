@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout  xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="model"
             type="com.mx.demo.viewmodel.MainViewModel" />
+
+        <import type="com.mx.framework2.weiget.LayoutManagers" />
     </data>
 
     <RelativeLayout
@@ -15,23 +17,25 @@
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        tools:context=".view.ui.MainActivity">
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <com.mx.framework2.view.DataBindingRecyclerView
+        <com.mx.framework2.weiget.PullToRefreshRecyclerView
+            android:id="@+id/demo_mylist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/demo_mylist"
-            app:layoutManager="LinearLayoutManager"
-            android:orientation="vertical"
-            app:items="@{model.items}"
-            app:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
-            >
-            <!--android:orientation="vertical"-->
-            <!--app:reverseLayout="true"-->
-            <!--app:spanCount="10"-->
-            <!--app:stackFromEnd="true"-->
-        </com.mx.framework2.view.DataBindingRecyclerView>
+            binding:footerClassName='@{"com.mx.demo.view.PullToRefreshFooterView"}'
+            binding:headerClassName='@{"com.mx.demo.view.PullToRefreshHeaderView"}'
+            binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
+            binding:items="@{model.items}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:loading="@{model.loading}"
+            binding:onLoadingCommand="@{model.onLoadingCommand}"
+            binding:onRefreshingCommand="@{model.onRefreshingCommand}"
+            binding:refreshing="@{model.refreshing}" />
+        <!--android:orientation="vertical"-->
+        <!--app:reverseLayout="true"-->
+        <!--app:spanCount="10"-->
+        <!--app:stackFromEnd="true"-->
 
     </RelativeLayout>
 </layout>

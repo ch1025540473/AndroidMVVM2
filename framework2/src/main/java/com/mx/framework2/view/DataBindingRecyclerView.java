@@ -17,7 +17,7 @@ import java.util.Collections;
 /**
  * Created by chenbaocheng on 16/8/14.
  */
-public class DataBindingRecyclerView extends RecyclerView{
+public class DataBindingRecyclerView extends RecyclerView {
     private final ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
     private Collection items;
@@ -35,14 +35,6 @@ public class DataBindingRecyclerView extends RecyclerView{
 
         adapter = new ViewModelRecyclerViewAdapter(context);
         items = Collections.emptyList();
-
-        if(attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
-            itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
-            setItemViewFactory(itemViewFactory);
-            typedArray.recycle();
-        }
-
         setAdapter(adapter);
     }
 
@@ -51,13 +43,13 @@ public class DataBindingRecyclerView extends RecyclerView{
         return adapter;
     }
 
-    public void setItemViewFactory(String className){
+    public void setItemViewFactory(String className) {
         ItemViewFactory factory = ObjectUtils.newInstance(className);
         factory.setContext(getContext());
         adapter.setItemViewFactory(factory);
     }
 
-    public void setItems(Collection items){
+    public void setItems(Collection items) {
         adapter.putItems(items);
     }
 }

@@ -36,22 +36,9 @@ public class DemoItemViewFactory extends ItemViewFactory<ItemViewBean> {
 
         if (viewModel instanceof ColorItemViewModel) {
             ListitemColorBinding binding = inflate(R.layout.listitem_color);
-
             binding.setModel((ColorItemViewModel) viewModel);
             ViewGroup viewGroup = (ViewGroup) binding.getRoot();
-            viewGroup.addView(new ImageView(viewGroup.getContext()) {
-                @Override
-                protected void onAttachedToWindow() {
-                    super.onAttachedToWindow();
-                    Log.d("test", "onAttachedToWindow");
-                }
 
-                @Override
-                protected void onDetachedFromWindow() {
-                    super.onDetachedFromWindow();
-                    Log.d("test", "onDetachedFromWindow");
-                }
-            }, 200, 200);
             return binding;
         } else if (viewModel instanceof TextItemViewModel) {
             ListitemTextBinding binding = inflate(R.layout.listitem_text);
