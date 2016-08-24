@@ -20,7 +20,6 @@ import java.util.Collections;
 public class DataBindingRecyclerView extends RecyclerView {
     private final ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
-    private Collection items;
 
     public DataBindingRecyclerView(Context context) {
         this(context, null);
@@ -32,9 +31,13 @@ public class DataBindingRecyclerView extends RecyclerView {
 
     public DataBindingRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        if (attrs != null) {
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
+            itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
+            setItemViewFactory(itemViewFactory);
+            typedArray.recycle();
+        }
         adapter = new ViewModelRecyclerViewAdapter(context);
-        items = Collections.emptyList();
         setAdapter(adapter);
     }
 
