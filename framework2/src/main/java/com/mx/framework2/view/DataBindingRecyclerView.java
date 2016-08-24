@@ -10,6 +10,7 @@ import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
 import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
 import com.mx.framework2.view.factory.ItemViewFactory;
+import com.mx.framework2.widget.LayoutManagers;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import java.util.Collections;
  * Created by chenbaocheng on 16/8/14.
  */
 public class DataBindingRecyclerView extends RecyclerView {
-    private final ViewModelRecyclerViewAdapter adapter;
+    private ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
 
     public DataBindingRecyclerView(Context context) {
@@ -31,14 +32,13 @@ public class DataBindingRecyclerView extends RecyclerView {
 
     public DataBindingRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        adapter = new ViewModelRecyclerViewAdapter(context);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
             itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
             setItemViewFactory(itemViewFactory);
             typedArray.recycle();
         }
-        adapter = new ViewModelRecyclerViewAdapter(context);
-        setAdapter(adapter);
     }
 
     @Override
@@ -50,6 +50,11 @@ public class DataBindingRecyclerView extends RecyclerView {
         ItemViewFactory factory = ObjectUtils.newInstance(className);
         factory.setContext(getContext());
         adapter.setItemViewFactory(factory);
+    }
+
+    public void setLayoutManager(LayoutManagers.LayoutManagerFactory factory) {
+        super.setLayoutManager(factory.create(this));
+        setAdapter(adapter);
     }
 
     public void setItems(Collection items) {

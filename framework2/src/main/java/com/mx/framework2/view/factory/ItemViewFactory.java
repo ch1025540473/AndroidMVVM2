@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.util.Log;
 import android.view.LayoutInflater;
 
 import com.mx.engine.utils.ObjectUtils;
@@ -23,13 +24,13 @@ public abstract class ItemViewFactory<ItemType> {
     private Context context;
     private Map<Class<?>, Queue<AbsItemViewModel>> viewModelCache = new HashMap<>();
 
-    public ItemViewFactory(){
+    public ItemViewFactory() {
     }
 
     @SuppressWarnings("unchecked")
-    public final AbsItemViewModel<ItemType> getViewModel(ItemType item){
+    public final AbsItemViewModel<ItemType> getViewModel(ItemType item) {
         Class<?> type = getViewModelType(item);
-        AbsItemViewModel<ItemType> vm = (AbsItemViewModel<ItemType>)ObjectUtils.newInstance(type); //TODO use factory here
+        AbsItemViewModel<ItemType> vm = (AbsItemViewModel<ItemType>) ObjectUtils.newInstance(type); //TODO use factory here
         cacheViewModel(vm);
 
         return vm;
@@ -39,7 +40,7 @@ public abstract class ItemViewFactory<ItemType> {
 
     protected abstract ViewDataBinding createViewDataBinding(AbsItemViewModel<ItemType> viewModel);
 
-    public final ViewDataBinding getViewDataBinding(AbsItemViewModel<ItemType> viewModel){
+    public final ViewDataBinding getViewDataBinding(AbsItemViewModel<ItemType> viewModel) {
         return createViewDataBinding(viewModel);
     }
 
@@ -47,29 +48,30 @@ public abstract class ItemViewFactory<ItemType> {
         this.context = context;
     }
 
-    public Context getContext(){
+    public Context getContext() {
         return this.context;
     }
 
-    protected final LayoutInflater getInflater(){
+    protected final LayoutInflater getInflater() {
         return LayoutInflater.from(context);
     }
 
-    protected final <T extends ViewDataBinding> T inflate(@LayoutRes int layoutId){
-        return DataBindingFactory.inflate(context,layoutId);
+    protected final <T extends ViewDataBinding> T inflate(@LayoutRes int layoutId) {
+        return DataBindingFactory.inflate(context, layoutId);
     }
 
-    protected final void cacheViewModel(AbsItemViewModel vm){
+    protected final void cacheViewModel(AbsItemViewModel vm) {
+        Log.d("ItemViewFactory", "cacheViewModel=" + (vm == null ? null : vm.getClass()));
         Queue<AbsItemViewModel> queue = viewModelCache.get(vm.getClass());
-        if(queue == null){
+        if (queue == null) {
             queue = new LinkedList<>();
             viewModelCache.put(vm.getClass(), queue);
         }
         queue.add(vm);
     }
 
-    public final AbsItemViewModel obtainViewModel(Class<?> viewModelType){
-        if(viewModelCache.containsKey(viewModelType)){
+    public final AbsItemViewModel obtainViewModel(Class<?> viewModelType) {
+        if (viewModelCache.containsKey(viewModelType)) {
             return viewModelCache.get(viewModelType).poll();
         }
         return null;

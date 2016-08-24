@@ -3,11 +3,9 @@
     xmlns:binding="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="model"
-            type="com.mx.demo.viewmodel.TextItemViewModel" />
-
+            type="com.mx.demo.viewmodel.ChildTextItemViewModel" />
     </data>
 
     <LinearLayout
@@ -19,7 +17,7 @@
             android:id="@+id/demo_listitem_text"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="@{model.textToShow}" />
+            android:text="@{model.childText}" />
 
     </LinearLayout>
 </layout>

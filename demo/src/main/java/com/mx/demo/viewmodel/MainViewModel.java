@@ -4,6 +4,10 @@ import android.util.Log;
 
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
+import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
+import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
+import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
+import com.mx.demo.viewmodel.viewbean.ChildTextItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
@@ -15,6 +19,7 @@ import com.mx.framework2.widget.OnScrollCommand;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -139,6 +144,23 @@ public class MainViewModel extends LifecycleViewModel {
                                     viewBean.setText(apiBean.content);
                                     viewBean.setUpperCase(apiBean.isTitle);
                                     items.add(viewBean);
+                                } else if (apiBean.type == 3) {
+                                    ChildListViewBean childListViewBean = new ChildListViewBean();
+                                    List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
+
+                                    for (int i = 0; i < 20; i++) {
+                                        if (i % 3 == 0) {
+                                            ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
+                                            list.add(childColorItemViewBean);
+                                        } else {
+                                            ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
+                                            childTextItemViewBean.setText("child item" + i);
+                                            list.add(childTextItemViewBean);
+                                        }
+                                    }
+                                    childListViewBean.setChildItemViewBeanList(list);
+                                    items.add(childListViewBean);
+
                                 }
                             }
                             setLoadMoreComplete(true);
@@ -184,6 +206,23 @@ public class MainViewModel extends LifecycleViewModel {
                                     viewBean.setText(apiBean.content);
                                     viewBean.setUpperCase(apiBean.isTitle);
                                     items.addFirst(viewBean);
+                                } else if (apiBean.type == 3) {
+                                    ChildListViewBean childListViewBean = new ChildListViewBean();
+                                    List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
+
+                                    for (int i = 0; i < 20; i++) {
+                                        if (i % 3 == 0) {
+                                            ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
+                                            list.add(childColorItemViewBean);
+                                        } else {
+                                            ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
+                                            childTextItemViewBean.setText("child item" + i);
+                                            list.add(childTextItemViewBean);
+                                        }
+                                    }
+                                    childListViewBean.setChildItemViewBeanList(list);
+                                    items.addFirst(childListViewBean);
+
                                 }
                             }
                             setRefreshing(false);

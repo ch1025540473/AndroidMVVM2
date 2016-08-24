@@ -18,6 +18,7 @@ public class MainActivity extends BaseActivity {
 
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel(MainViewModel.class, this);
         mainBinding.setModel(viewModel);
+
     }
 
     @Override
