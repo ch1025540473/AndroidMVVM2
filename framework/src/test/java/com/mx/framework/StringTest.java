@@ -1,6 +1,5 @@
 package com.mx.framework;
 
-import com.mx.engine.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +10,7 @@ import org.robolectric.annotation.Config;
  * Created by liuyuxuan on 16/6/21.
  */
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = com.mx.engine.BuildConfig.class)
+@Config(constants = BuildConfig.class)
 public class StringTest {
 
     @Test

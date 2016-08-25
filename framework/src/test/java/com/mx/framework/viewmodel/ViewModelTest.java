@@ -6,6 +6,7 @@ import android.util.SparseArray;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.event.NetworkBroadcastEvent;
+import com.mx.framework.BuildConfig;
 import com.mx.framework.DataSourceChangeAware;
 import com.mx.framework.Module;
 import com.mx.framework.model.UseCase;
@@ -30,7 +31,7 @@ import static org.junit.Assert.*;
  */
 
 @RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = com.mx.engine.BuildConfig.class)
+@Config(constants = BuildConfig.class)
 public class ViewModelTest {
 
     public static class TestModel extends ViewModel {
@@ -106,7 +107,7 @@ public class ViewModelTest {
             assertEquals(e.getClass(), NullPointerException.class);
         }
         useCases = (Map<Class, UseCase>) field.get(testModel);
-        assertEquals(null, useCases);
+        assertNotNull(useCases);
     }
 
 

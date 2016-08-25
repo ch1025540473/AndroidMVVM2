@@ -2,7 +2,8 @@ package com.mx.framework.model;
 
 import android.content.Context;
 
-import com.mx.engine.BuildConfig;
+
+import com.mx.framework.BuildConfig;
 
 import org.junit.Before;
 import org.junit.Test;
