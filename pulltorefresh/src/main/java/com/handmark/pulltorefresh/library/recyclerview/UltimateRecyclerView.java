@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -216,6 +217,14 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
         WrapRecyclerView recyclerView = new InternalWrapRecyclerView(context, attrs);
         recyclerView.setId(R.id.ultimate_recycler_view);
         recyclerView.setScrollingTouchSlop(RecyclerView.TOUCH_SLOP_PAGING);
+//        recyclerView.getItemAnimator().setChangeDuration(0);
+//        recyclerView.getItemAnimator().setMoveDuration(0);
+//        recyclerView.getItemAnimator().setAddDuration(0);
+//        RecyclerView.ItemAnimator animator = recyclerView.getItemAnimator();
+//        if (animator instanceof SimpleItemAnimator) {
+//            ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
+//        }
+        recyclerView.setHasFixedSize(true);
         return recyclerView;
     }
 

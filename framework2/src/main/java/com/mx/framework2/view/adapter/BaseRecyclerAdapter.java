@@ -32,7 +32,7 @@ public abstract class BaseRecyclerAdapter extends RecyclerView.Adapter {
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return items.hashCode()+position;
     }
 
     protected abstract void onDataChange();
