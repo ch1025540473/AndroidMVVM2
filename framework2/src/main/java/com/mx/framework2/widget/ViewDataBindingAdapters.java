@@ -1,6 +1,7 @@
 package com.mx.framework2.widget;
 
 import android.databinding.BindingAdapter;
+import android.databinding.BindingConversion;
 import android.util.Log;
 import android.view.View;
 
@@ -9,17 +10,29 @@ import android.view.View;
  */
 public class ViewDataBindingAdapters {
 
-    @BindingAdapter({"clickCommand"})
-    public static void clickCommandAdapter(View view, final ClickCommand clickCommand) {
-        Log.d("PTR", "clickCommandAdapter"+ clickCommand.getClass());
-        view.setOnClickListener(new View.OnClickListener() {
+//    @BindingAdapter({"clickCommand"})
+//    public static void clickCommandAdapter(View view, final ClickCommand clickCommand) {
+//        Log.d("PTR", "clickCommandAdapter" + clickCommand.getClass());
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (clickCommand != null) {
+//                    clickCommand.execute(v.getId());
+//                }
+//            }
+//        });
+//    }
+    @BindingConversion
+    public static  View.OnClickListener click(final  ClickCommand clickCommand) {
+
+        return new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 if (clickCommand != null) {
-                    clickCommand.execute(v.getId());
+                    clickCommand.execute(view.getId());
                 }
             }
-        });
+        };
     }
 
 

@@ -2,8 +2,8 @@ package com.mx.demo.viewmodel;
 
 import android.util.Log;
 
-import com.mx.demo.BR;
 import com.mx.demo.R;
+import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
@@ -20,6 +20,9 @@ public class TextItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
             @Override
             public void execute(int id) {
                 Log.d("PTR", "ClickCommand==> " + item.getText());
+                RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
+                removeTxtEvent.setId(item.getId());
+                postEvent(removeTxtEvent);
             }
         };
     }

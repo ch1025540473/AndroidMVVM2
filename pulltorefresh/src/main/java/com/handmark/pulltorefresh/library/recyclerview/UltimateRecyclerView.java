@@ -83,12 +83,9 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
             super.onRefreshing(doScroll);
             return;
         }
-
         super.onRefreshing(false);
-
         final LoadingLayoutBase origLoadingView, recyclerViewLoadingView, oppositeRecyclerViewLoadingView;
         final int scrollToPosition, scrollToY;
-
         switch (getCurrentMode()) {
             case MANUAL_REFRESH_ONLY:
             case PULL_FROM_END:
@@ -274,7 +271,6 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
     @Override
     public void setHeaderLayout(LoadingLayoutBase headerLayout) {
         super.setHeaderLayout(headerLayout);
-
         try {
             Constructor c = headerLayout.getClass().getDeclaredConstructor(new Class[]{Context.class});
             LoadingLayoutBase mHeaderLayout = (LoadingLayoutBase) c.newInstance(new Object[]{getContext()});
@@ -282,11 +278,9 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 mSvHeaderLoadingFrame.removeAllViews();
                 final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-
                 mHeaderLoadingView = mHeaderLayout;
                 mHeaderLoadingView.setVisibility(View.GONE);
                 mSvHeaderLoadingFrame.addView(mHeaderLoadingView, lp);
-                mRefreshableView.getAdapter().notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -304,11 +298,9 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 mSvFooterLoadingFrame.removeAllViews();
                 final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER_HORIZONTAL);
-
                 mFooterLoadingView = mFooterLayout;
                 mFooterLoadingView.setVisibility(View.GONE);
                 mSvFooterLoadingFrame.addView(mFooterLoadingView, lp);
-                mRefreshableView.getAdapter().notifyDataSetChanged();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -504,7 +496,7 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
                 int lastVisiblePosition = getLastVisiblePosition();
 
                 // 最后一个显示出来了
-                if (mRefreshableView.getAdapter().getItemCount()-lastVisiblePosition>=1) {
+                if (mRefreshableView.getAdapter().getItemCount() - lastVisiblePosition >= 1) {
 
                     if (isLoadMoreComplete && isLoadMoreEnabled) {
                         return true;

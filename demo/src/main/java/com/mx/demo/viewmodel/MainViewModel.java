@@ -1,7 +1,9 @@
 package com.mx.demo.viewmodel;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
@@ -17,9 +19,11 @@ import com.mx.framework2.widget.OnPullDownCommand;
 import com.mx.framework2.widget.OnStartRefreshingCommand;
 import com.mx.framework2.widget.OnScrollCommand;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -113,6 +117,7 @@ public class MainViewModel extends LifecycleViewModel {
         return onPullDownCommand;
     }
 
+
     public OnLoadMoreCommand getOnLoadMoreCommand() {
         if (onLoadMoreCommand == null) {
             onLoadMoreCommand = new OnLoadMoreCommand() {
@@ -121,52 +126,23 @@ public class MainViewModel extends LifecycleViewModel {
                     Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
                         @Override
                         public void call(Subscriber<? super List<ApiBean>> subscriber) {
-
                             try {
                                 Thread.sleep(2000);
                             } catch (Exception e) {
-
                             }
-
                             List<ApiBean> apiBeans = obtainUseCase(DemoUseCase.class).queryBeanList();
                             subscriber.onNext(apiBeans);
                         }
-                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<ApiBean>>() {
-                        @Override
-                        public void call(List<ApiBean> apiBeen) {
-                            for (ApiBean apiBean : apiBeen) {
-                                if (apiBean.type == 1) {
-                                    ColorItemViewBean viewBean = new ColorItemViewBean();
-                                    viewBean.setColor(apiBean.color);
-                                    items.add(viewBean);
-                                } else if (apiBean.type == 2) {
-                                    TextItemViewBean viewBean = new TextItemViewBean();
-                                    viewBean.setText(apiBean.content);
-                                    viewBean.setUpperCase(apiBean.isTitle);
-                                    items.add(viewBean);
-                                } else if (apiBean.type == 3) {
-                                    ChildListViewBean childListViewBean = new ChildListViewBean();
-                                    List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
-
-                                    for (int i = 0; i < 20; i++) {
-                                        if (i % 3 == 0) {
-                                            ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
-                                            list.add(childColorItemViewBean);
-                                        } else {
-                                            ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
-                                            childTextItemViewBean.setText("child item" + i);
-                                            list.add(childTextItemViewBean);
-                                        }
-                                    }
-                                    childListViewBean.setChildItemViewBeanList(list);
-                                    items.add(childListViewBean);
-
+                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<List<ApiBean>>() {
+                                @Override
+                                public void call(List<ApiBean> apiBeen) {
+                                    translate(apiBeen);
+                                    updateItemViewId();
+                                    setLoadMoreComplete(true);
+                                    notifyChange();
                                 }
-                            }
-                            setLoadMoreComplete(true);
-                            notifyChange();
-                        }
-                    });
+                            });
                 }
             };
         }
@@ -182,56 +158,26 @@ public class MainViewModel extends LifecycleViewModel {
                     Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
                         @Override
                         public void call(Subscriber<? super List<ApiBean>> subscriber) {
-
                             try {
                                 Thread.sleep(2000);
                             } catch (Exception e) {
-
                             }
-
                             List<ApiBean> apiBeans = obtainUseCase(DemoUseCase.class).queryBeanList();
                             subscriber.onNext(apiBeans);
                         }
-                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<List<ApiBean>>() {
-                        @Override
-                        public void call(List<ApiBean> apiBeen) {
-                            items.clear();
-                            for (ApiBean apiBean : apiBeen) {
-                                if (apiBean.type == 1) {
-                                    ColorItemViewBean viewBean = new ColorItemViewBean();
-                                    viewBean.setColor(apiBean.color);
-                                    items.addFirst(viewBean);
-                                } else if (apiBean.type == 2) {
-                                    TextItemViewBean viewBean = new TextItemViewBean();
-                                    viewBean.setText(apiBean.content);
-                                    viewBean.setUpperCase(apiBean.isTitle);
-                                    items.addFirst(viewBean);
-                                } else if (apiBean.type == 3) {
-                                    ChildListViewBean childListViewBean = new ChildListViewBean();
-                                    List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
-
-                                    for (int i = 0; i < 20; i++) {
-                                        if (i % 3 == 0) {
-                                            ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
-                                            list.add(childColorItemViewBean);
-                                        } else {
-                                            ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
-                                            childTextItemViewBean.setText("child item" + i);
-                                            list.add(childTextItemViewBean);
-                                        }
-                                    }
-                                    childListViewBean.setChildItemViewBeanList(list);
-                                    items.addFirst(childListViewBean);
-
+                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new Action1<List<ApiBean>>() {
+                                @Override
+                                public void call(List<ApiBean> apiBeen) {
+                                    items.clear();
+                                    translate(apiBeen);
+                                    updateItemViewId();
+                                    setRefreshing(false);
+                                    setLoadMoreEnabled(true);
+                                    setLoadMoreComplete(true);
+                                    notifyChange();
                                 }
-                            }
-                            setRefreshing(false);
-                            setLoadMoreEnabled(true);
-                            setLoadMoreComplete(true);
-                            notifyChange();
-                        }
-                    });
-
+                            });
 
                 }
             };
@@ -240,17 +186,62 @@ public class MainViewModel extends LifecycleViewModel {
     }
 
 
+    private void translate(List<ApiBean> apiBeanList) {
+        for (ApiBean apiBean : apiBeanList) {
+            if (apiBean.type == 1) {
+                ColorItemViewBean viewBean = new ColorItemViewBean();
+                viewBean.setColor(apiBean.color);
+                items.add(viewBean);
+            } else if (apiBean.type == 2) {
+                TextItemViewBean viewBean = new TextItemViewBean();
+                viewBean.setText(apiBean.content);
+                viewBean.setUpperCase(apiBean.isTitle);
+                items.add(viewBean);
+            } else if (apiBean.type == 3) {
+                ChildListViewBean childListViewBean = new ChildListViewBean();
+                List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
+                for (int i = 0; i < 20; i++) {
+                    if (i % 3 == 0) {
+                        ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
+                        list.add(childColorItemViewBean);
+                    } else {
+                        ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
+                        childTextItemViewBean.setText("child item" + i);
+                        list.add(childTextItemViewBean);
+                    }
+                }
+                childListViewBean.setChildItemViewBeanList(list);
+                items.add(childListViewBean);
+            }
+        }
+    }
+
     @Override
     protected void onCreate() {
         super.onCreate();
         // 翻译数据
         items = new LinkedList<>();
-        // 业务bean -> main view model -> view beans -> recyclerview -> item view model -> item view bean
-
         notifyChange();
+    }
+
+    private void updateItemViewId() {
+        int id = 0;
+        for (ItemViewBean item : items) {
+            item.setId(id);
+            id++;
+        }
     }
 
     public List<ItemViewBean> getItems() {
         return items;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receiveRemove(RemoveTxtEvent removeTxtEvent) {
+        Log.d("PTR", "ClickCommand==> " + removeTxtEvent.getId());
+        Toast.makeText(getContext(), "receiveRemove", Toast.LENGTH_SHORT).show();
+        items.remove(removeTxtEvent.getId());
+        updateItemViewId();
+        notifyChange();
     }
 }
