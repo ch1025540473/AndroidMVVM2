@@ -31,10 +31,10 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
         notifyDataSetChanged();
     }
 
-//    @Override
-//    public long getItemId(int position) {
-//        return getItem(position).hashCode();
-//    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     @SuppressWarnings("unchecked")
     protected RecyclerItemViewModel getViewModel(int position) {
