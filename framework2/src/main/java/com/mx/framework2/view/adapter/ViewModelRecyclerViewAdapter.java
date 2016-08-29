@@ -22,22 +22,23 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public ViewModelRecyclerViewAdapter(Context context) {
         super(context);
         this.viewModelTypes = new ArrayList<>();
-        setHasStableIds(true);
+        setHasStableIds(false);
     }
 
     @Override
     protected final void onDataChange() {
+        Log.d("onDataChange", "notifyDataSetChanged");
         notifyDataSetChanged();
     }
 
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
+//    @Override
+//    public long getItemId(int position) {
+//        return getItem(position).hashCode();
+//    }
 
     @SuppressWarnings("unchecked")
     protected RecyclerItemViewModel getViewModel(int position) {
-        RecyclerItemViewModel vm = (RecyclerItemViewModel)itemViewFactory.getViewModel(getItem(position));
+        RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.getViewModel(getItem(position));
         return vm;
     }
 
@@ -68,7 +69,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerItemViewModel vm = (RecyclerItemViewModel)itemViewFactory.obtainViewModel(viewModelTypes.get(viewType));
+        RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.obtainViewModel(viewModelTypes.get(viewType));
         return new ViewHolder(vm, itemViewFactory.getViewDataBinding(vm));
     }
 

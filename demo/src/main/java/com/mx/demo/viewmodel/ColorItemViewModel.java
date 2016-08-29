@@ -2,20 +2,36 @@ package com.mx.demo.viewmodel;
 
 import android.graphics.Color;
 
+import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
+import com.mx.framework2.widget.ClickCommand;
 
 /**
  * Created by chenbaocheng on 16/8/14.
  */
 public class ColorItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
+    ItemViewBean item;
+
+    public ClickCommand getClickCommand() {
+        return new ClickCommand() {
+            @Override
+            public void execute(int id) {
+                RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
+                removeTxtEvent.setId(item.getId());
+                postEvent(removeTxtEvent);
+            }
+        };
+    }
+
     private int color = Color.BLACK;
 
     @Override
     protected void onItemChange(ItemViewBean oldItem, ItemViewBean item) {
-        if (((ColorItemViewBean)item).getColor() != null) {
-            switch (((ColorItemViewBean)item).getColor()) {
+        this.item = item;
+        if (((ColorItemViewBean) item).getColor() != null) {
+            switch (((ColorItemViewBean) item).getColor()) {
                 case "red":
                     color = Color.RED;
                     break;

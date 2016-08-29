@@ -1,9 +1,9 @@
 package com.mx.demo.viewmodel;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mx.demo.event.RemoveTxtEvent;
+import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
@@ -13,6 +13,8 @@ import com.mx.demo.viewmodel.viewbean.ChildTextItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
+import com.mx.engine.event.EventProxy;
+import com.mx.engine.utils.SubscriberResult;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.widget.OnLoadMoreCommand;
 import com.mx.framework2.widget.OnPullDownCommand;
@@ -24,12 +26,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by chenbaocheng on 16/8/18.
@@ -123,26 +119,27 @@ public class MainViewModel extends LifecycleViewModel {
             onLoadMoreCommand = new OnLoadMoreCommand() {
                 @Override
                 public void onLoadMore() {
-                    Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
+                    obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
                         @Override
-                        public void call(Subscriber<? super List<ApiBean>> subscriber) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (Exception e) {
-                            }
-                            List<ApiBean> apiBeans = obtainUseCase(DemoUseCase.class).queryBeanList();
-                            subscriber.onNext(apiBeans);
+                        public void onSuccess(List<ApiBean> apiBeanList) {
+                            items.clear();
+                            translate(apiBeanList);
+                            setLoadMoreEnabled(true);
+                            setLoadMoreComplete(true);
+                            notifyChange();
                         }
-                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Action1<List<ApiBean>>() {
-                                @Override
-                                public void call(List<ApiBean> apiBeen) {
-                                    translate(apiBeen);
-                                    updateItemViewId();
-                                    setLoadMoreComplete(true);
-                                    notifyChange();
-                                }
-                            });
+
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+
+                        }
+                    });
+
                 }
             };
         }
@@ -155,30 +152,27 @@ public class MainViewModel extends LifecycleViewModel {
                 @Override
                 public void onStartRefreshing() {
 
-                    Observable.create(new Observable.OnSubscribe<List<ApiBean>>() {
+                    obtainUseCase(DemoUseCase.class).refreshApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
                         @Override
-                        public void call(Subscriber<? super List<ApiBean>> subscriber) {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (Exception e) {
-                            }
-                            List<ApiBean> apiBeans = obtainUseCase(DemoUseCase.class).queryBeanList();
-                            subscriber.onNext(apiBeans);
+                        public void onSuccess(List<ApiBean> apiBeanList) {
+                            items.clear();
+                            translate(apiBeanList);
+                            setRefreshing(false);
+                            setLoadMoreEnabled(true);
+                            setLoadMoreComplete(true);
+                            notifyChange();
                         }
-                    }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(new Action1<List<ApiBean>>() {
-                                @Override
-                                public void call(List<ApiBean> apiBeen) {
-                                    items.clear();
-                                    translate(apiBeen);
-                                    updateItemViewId();
-                                    setRefreshing(false);
-                                    setLoadMoreEnabled(true);
-                                    setLoadMoreComplete(true);
-                                    notifyChange();
-                                }
-                            });
 
+                        @Override
+                        public void onError(int i, String s) {
+
+                        }
+
+                        @Override
+                        public void onFailure(Throwable throwable) {
+
+                        }
+                    });
                 }
             };
         }
@@ -191,11 +185,13 @@ public class MainViewModel extends LifecycleViewModel {
             if (apiBean.type == 1) {
                 ColorItemViewBean viewBean = new ColorItemViewBean();
                 viewBean.setColor(apiBean.color);
+                viewBean.setId(apiBean.getId());
                 items.add(viewBean);
             } else if (apiBean.type == 2) {
                 TextItemViewBean viewBean = new TextItemViewBean();
                 viewBean.setText(apiBean.content);
                 viewBean.setUpperCase(apiBean.isTitle);
+                viewBean.setId(apiBean.getId());
                 items.add(viewBean);
             } else if (apiBean.type == 3) {
                 ChildListViewBean childListViewBean = new ChildListViewBean();
@@ -211,6 +207,7 @@ public class MainViewModel extends LifecycleViewModel {
                     }
                 }
                 childListViewBean.setChildItemViewBeanList(list);
+                childListViewBean.setId(apiBean.getId());
                 items.add(childListViewBean);
             }
         }
@@ -224,24 +221,25 @@ public class MainViewModel extends LifecycleViewModel {
         notifyChange();
     }
 
-    private void updateItemViewId() {
-        int id = 0;
-        for (ItemViewBean item : items) {
-            item.setId(id);
-            id++;
-        }
-    }
-
     public List<ItemViewBean> getItems() {
         return items;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveRemove(RemoveTxtEvent removeTxtEvent) {
-        Log.d("PTR", "ClickCommand==> " + removeTxtEvent.getId());
-        Toast.makeText(getContext(), "receiveRemove", Toast.LENGTH_SHORT).show();
-        items.remove(removeTxtEvent.getId());
-        updateItemViewId();
+    public void receiveUpdateItems(UpdatedApiBeanEvent updatedApiBeanEvent) {
+        Log.d("PTR", "ClickCommand==> receiveUpdateItems");
+        items.clear();
         notifyChange();
+        translate(obtainUseCase(DemoUseCase.class).queryBeanList());
+        notifyChange();
+
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
+        Log.d("PTR", "ClickCommand==> receiveRemove");
+        obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
+        EventProxy.getDefault().post(new UpdatedApiBeanEvent());
+    }
+
 }

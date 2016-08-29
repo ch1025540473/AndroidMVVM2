@@ -7,13 +7,13 @@ import com.mx.engine.event.BroadcastEvent;
  * Created by liuyuxuan on 16/8/26.
  */
 public class RemoveTxtEvent extends BroadcastEvent {
-    int id;
+    String id;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

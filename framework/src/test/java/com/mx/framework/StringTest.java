@@ -16,7 +16,12 @@ public class StringTest {
 
     @Test
     public void testLength() throws Exception {
-        System.out.println(count(8));
+        try {
+            Class c = Class.forName("com.android.internal.os.BackgroundThread");
+            System.out.println(c);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public int count(int n) {
