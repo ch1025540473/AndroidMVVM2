@@ -6,10 +6,8 @@ import android.support.annotation.Nullable;
 
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.HashSet;
+import java.util.Set;
 
 import static com.mx.engine.utils.CheckUtils.checkNotNull;
 
@@ -21,8 +19,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
  * 5. 接收,发送广播;
  */
 public abstract class UseCase {
-
-    private List<WeakReference<UseCaseHolder>> useCaseHolders = new LinkedList<>();
+    private Set<String> holderIds = new HashSet<>();
     private Context context;
     private boolean isOpen = false;
 
@@ -107,63 +104,32 @@ public abstract class UseCase {
     final synchronized void open() {
         isOpen = true;
         onOpen();
-        clean();
     }
 
     final synchronized void close() {
         if (isOpen) {
-            useCaseHolders.clear();
+            holderIds.clear();
             isOpen = false;
             onClose();
         }
     }
 
-    private boolean useCaseHolderExists(UseCaseHolder useCaseHolder) {
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
-        while (iterator.hasNext()) {
-            WeakReference<UseCaseHolder> reference = iterator.next();
-            if (reference.get() != null && reference.get() == useCaseHolder) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private void removeUseCaseHolder(UseCaseHolder useCaseHolder) {
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
-        while (iterator.hasNext()) {
-            WeakReference<UseCaseHolder> reference = iterator.next();
-            if (reference.get() != null && reference.get().equals(useCaseHolder)) {
-                iterator.remove();
-                return;
-            }
-        }
+        holderIds.remove(useCaseHolder.getUseCaseHolderId());
     }
 
     void addUseCaseHolder(UseCaseHolder useCaseHolder) {
-        if (!useCaseHolderExists(useCaseHolder)) {
-            useCaseHolders.add(new WeakReference(useCaseHolder));
-        }
+        holderIds.add(useCaseHolder.getUseCaseHolderId());
     }
 
     final boolean isOpen() {
         return isOpen;
     }
 
-    private void clean() {
-        ListIterator<WeakReference<UseCaseHolder>> iterator = useCaseHolders.listIterator();
-        while (iterator.hasNext()) {
-            WeakReference<UseCaseHolder> reference = iterator.next();
-            if (reference.get() == null || reference.get().isDestroyed()) {
-                iterator.remove();
-            }
-        }
-    }
-
     public void onHolderDestroy(UseCaseHolder holder) {
         removeUseCaseHolder(holder);
-        clean();
-        if (useCaseHolders.size() == 0) {
+        if (holderIds.size() == 0) {
             close();
         }
     }

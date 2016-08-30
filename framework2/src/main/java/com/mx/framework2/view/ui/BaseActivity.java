@@ -23,10 +23,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.UUID;
 
 //import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -37,39 +40,16 @@ import java.util.ListIterator;
  * 3,提供ViewModel的通信;
  */
 public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
-    @Override
-    public void addViewModel(LifecycleViewModel lifecycle) {
-        getViewModelManager().addViewModel(lifecycle);
-    }
-
-    @Override
-    public void removeViewModel(LifecycleViewModel lifecycle) {
-        getViewModelManager().removeViewModel(lifecycle);
-    }
-// add  get put
-
-    private static final String VIEW_MODEL_SHARE_KEY = "view_model_share_key";
-
-    private HashMap<String, Object> modelViewShareMap = new HashMap<>();
-
+    private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
+    private String uuid;
     private final SparseArray<ActivityResultListener> activityResultListeners = new SparseArray<>();
-
-
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
 
-    public <Value extends Serializable> void put(@NonNull String key, @NonNull Value value) {
-//        checkNotNull(key);
-//        checkNotNull(value);
-        modelViewShareMap.put(key, value);
+    public interface ActivityResultListener {
+        void onActivityResult(int requestCode, int resultCode, Intent intent);
     }
 
-    public <Value extends Serializable> Value get(@NonNull String key) {
-//        checkNotNull(key);
-
-        return (Value) modelViewShareMap.get(key);
-    }
-
-    public List<BaseFragment> getFragments() {
+    private List<BaseFragment> getFragments() {
 
         List<BaseFragment> baseFragments = new LinkedList<>();
 
@@ -95,10 +75,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         if (fragment instanceof BaseFragment) {
             fragments.add(new SoftReference<BaseFragment>((BaseFragment) fragment));
         }
-    }
-
-    public static interface ActivityResultListener {
-        void onActivityResult(int requestCode, int resultCode, Intent intent);
     }
 
 
@@ -140,13 +116,14 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            uuid = savedInstanceState.getString(UUID_KEY);
+            CheckUtils.checkNotNull(uuid, "uuid is null");
+        } else {
+            uuid = UUID.randomUUID().toString();
+        }
         viewModelManager = new ViewModelManager(savedInstanceState);
         viewModelManager.create();
-        if (null != savedInstanceState) {
-            modelViewShareMap = ObjectUtils.hexStringToObject(savedInstanceState.getString(VIEW_MODEL_SHARE_KEY));
-        } else {
-            modelViewShareMap = new HashMap<>();
-        }
         this.runState = RunState.Created;
         EventProxy.getDefault().register(this);
     }
@@ -169,8 +146,8 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(VIEW_MODEL_SHARE_KEY, ObjectUtils.objectToHexString(modelViewShareMap));
         getViewModelManager().saveInstanceState(outState);
+        outState.putString(UUID_KEY, uuid);
         super.onSaveInstanceState(outState);
     }
 
@@ -207,6 +184,20 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         return viewModelManager;
     }
 
+    @Override
+    public String getUseCaseHolderId() {
+        return uuid;
+    }
+
+    @Override
+    public void addViewModel(LifecycleViewModel lifecycle) {
+        getViewModelManager().addViewModel(lifecycle);
+    }
+
+    @Override
+    public void removeViewModel(LifecycleViewModel lifecycle) {
+        getViewModelManager().removeViewModel(lifecycle);
+    }
 
     /**
      * 显示进度条

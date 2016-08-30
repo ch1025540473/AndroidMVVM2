@@ -3,6 +3,7 @@ package com.mx.framework2;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.event.Events;
+import com.mx.framework2.model.UseCaseHolder;
 import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.viewmodel.ViewModelFactory;
 import com.mx.framework2.viewmodel.ViewModelFactoryImpl;
@@ -42,9 +43,12 @@ public abstract class Module {
         userCaseManager = new UseCaseManager(BaseApplication.instance());
         viewModelFactory = new ViewModelFactoryImpl(this);
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityDestroy(Events.ActivityDestroyEvent event) {
-        userCaseManager.onUseCaseHolderDestroy(event.getActivity());
+        if (event.getActivity().isFinishing()) {
+            userCaseManager.onUseCaseHolderDestroy((UseCaseHolder)event.getActivity());
+        }
     }
 
     public UseCaseManager getUserCaseManager() {

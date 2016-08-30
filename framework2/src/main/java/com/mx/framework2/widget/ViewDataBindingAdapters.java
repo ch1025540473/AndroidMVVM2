@@ -17,7 +17,7 @@ public class ViewDataBindingAdapters {
 //            @Override
 //            public void onClick(View v) {
 //                if (clickCommand != null) {
-//                    clickCommand.execute(v.getId());
+//                    clickCommand.execute(v.getUseCaseHolderId());
 //                }
 //            }
 //        });
