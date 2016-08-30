@@ -139,7 +139,7 @@ public class ViewModelManager {
         visitors.add(onCreateVisitor);
         lifecycleState = LifecycleState.Created;
         for (Lifecycle lifecycle : lifecycleViewModelList) {
-            lifecycle.accept(onStartVisitor);
+            lifecycle.accept(onCreateVisitor);
         }
     }
 
