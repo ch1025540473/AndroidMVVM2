@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0.3"
+        versionCode 2
+        versionName "1.0.1"
     }
 
     sourceSets {
@@ -67,8 +67,8 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.5"
-            pom.artifactId = "framework-beta"
+            pom.version = "1.0.1"
+            pom.artifactId = "framework2-alpha"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
             pom.packaging = 'aar'
