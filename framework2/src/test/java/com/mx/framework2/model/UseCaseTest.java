@@ -33,6 +33,13 @@ public class UseCaseTest {
         }
     }
 
+    public class TestUseCaseHolder implements UseCaseHolder{
+
+        @Override
+        public String getUseCaseHolderId() {
+            return null;
+        }
+    }
 
 
     Context context;
@@ -97,5 +104,12 @@ public class UseCaseTest {
         testUseCase.preferencePutString(preferenceFile, "putStringKey", "stringtest");
         String string = testUseCase.preferenceGetString(preferenceFile, "putStringKey");
         assertEquals("stringtest", string);
+    }
+
+    @Test
+    public void testUseCaseHolderExists() throws Exception {
+        UseCaseHolder useCaseHolder=new TestUseCaseHolder();
+//        testUseCase.useCaseHolderExists(useCaseHolder);
+
     }
 }
