@@ -70,6 +70,7 @@ public class UseCaseTest {
     @Test
     public void testClose() {
         TestUseCase testUseCaseSpy = Mockito.spy(testUseCase);
+        testUseCaseSpy.open();
         testUseCaseSpy.close();
         Mockito.verify(testUseCaseSpy).onClose();
     }

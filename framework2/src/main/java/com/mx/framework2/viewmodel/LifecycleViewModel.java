@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.mx.engine.event.EventProxy;
+import com.mx.engine.utils.SystemUtils;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCase;
 import com.mx.framework2.view.ui.BaseActivity;
@@ -34,9 +35,10 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
         Log.d("ViewModel", "thisHashCode=" + hashCode());
         eventProxy = EventProxy.getDefault();
         eventProxy.register(this);
+        System.out.print(eventProxy.isRegistered(this));
     }
 
-    private void recycle() {
+    private final void recycle() {
         if (eventProxy.isRegistered(this)) {
             eventProxy.unregister(this);
         }
