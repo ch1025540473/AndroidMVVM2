@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyInt;
 
 /**
  * Created by wwish on 16/8/30.
@@ -76,6 +77,7 @@ public class LifecycleViewModelTest {
         ViewModelScope viewModelScope=(ViewModelScope) ReflectUtil.invoke(testModel,"getActivity");
 
         assertEquals(viewModelScope,baseActivity);
+        anyInt();
 
     }
 
