@@ -18,7 +18,7 @@ public class TextItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
     public ClickCommand getClickCommand() {
         return new ClickCommand() {
             @Override
-            public void execute(int id) {
+            public void execute(int viewId) {
                 Log.d("PTR", "ClickCommand==> " + item.getText());
                 RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
                 removeTxtEvent.setId(item.getId());

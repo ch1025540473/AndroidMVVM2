@@ -47,7 +47,8 @@ dependencies {
     compile 'com.mx.architecture:engine:1.0.3'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
-    compile project(':pulltorefresh')
+    compile 'com.mx.architecture:pulltorefresh-alpha:1.0.0'
+    compile 'com.mx.architecture:framework-beta:1.0.5'
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.1-rc1'
 
@@ -67,7 +68,7 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.1"
+            pom.version = "1.0.3"
             pom.artifactId = "framework2-alpha"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"

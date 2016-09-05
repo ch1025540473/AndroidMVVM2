@@ -17,7 +17,7 @@ public class ColorItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
     public ClickCommand getClickCommand() {
         return new ClickCommand() {
             @Override
-            public void execute(int id) {
+            public void execute(int viewId) {
                 RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
                 removeTxtEvent.setId(item.getId());
                 postEvent(removeTxtEvent);

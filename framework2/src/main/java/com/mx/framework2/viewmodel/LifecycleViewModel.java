@@ -46,7 +46,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
 
     protected final <T extends UseCase> T obtainUseCase(Class<T> classType) {
         checkNotNull(module);
-        T useCase = useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity());
+        T useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity());
         return useCase;
     }
 

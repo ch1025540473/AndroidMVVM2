@@ -5,5 +5,5 @@ package com.mx.framework2.widget;
  */
 public interface ClickCommand {
 
-    void execute(int id);
+    void execute(int viewId);
 }
