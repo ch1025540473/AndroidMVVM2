@@ -30,6 +30,9 @@ import com.mx.framework2.widget.ClickCommand;
  */
 public class DemoItemViewFactory extends ItemViewFactory<ItemViewBean> {
 
+    public static String getClassName() {
+        return DemoItemViewFactory.class.getName();
+    }
 
     @Override
     public Class<? extends AbsItemViewModel> getViewModelType(ItemViewBean item) {

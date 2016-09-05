@@ -32,20 +32,33 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
         adapter = new ViewModelRecyclerViewAdapter(context);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
-            itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
-            setItemViewFactory(itemViewFactory);
-            typedArray.recycle();
+
+            if (typedArray != null) {
+                itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
+                if (itemViewFactory != null) {
+                    setItemViewFactory(itemViewFactory);
+                }
+                typedArray.recycle();
+            }
+
             typedArray = context.obtainStyledAttributes(attrs, R.styleable.PullToRefreshRecyclerView);
-            String headerClass = typedArray.getString(R.styleable.PullToRefreshRecyclerView_headerClassName);
-            setHeaderClassName(headerClass);
-            String footerClass = typedArray.getString(R.styleable.PullToRefreshRecyclerView_footerClassName);
-            setFooterClassName(footerClass);
-            typedArray.recycle();
+            if (typedArray != null) {
+                String headerClass = typedArray.getString(R.styleable.PullToRefreshRecyclerView_headerClassName);
+                if (headerClass != null) {
+                    setHeaderClassName(headerClass);
+                }
+                String footerClass = typedArray.getString(R.styleable.PullToRefreshRecyclerView_footerClassName);
+                if (footerClass != null) {
+                    setFooterClassName(footerClass);
+                }
+                typedArray.recycle();
+            }
+
         }
         setMode(Mode.PULL_FROM_START);
     }
 
-    private void setHeaderClassName(String headerClassName) {
+    public void setHeaderClassName(String headerClassName) {
         try {
             Constructor c = Class.forName(headerClassName).getDeclaredConstructor(new Class[]{Context.class});
             LoadingLayoutBase headerLayout = (LoadingLayoutBase) c.newInstance(new Object[]{getContext()});
@@ -55,7 +68,7 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
         }
     }
 
-    private void setFooterClassName(String footerClassName) {
+    public void setFooterClassName(String footerClassName) {
         try {
             Constructor c = Class.forName(footerClassName).getDeclaredConstructor(new Class[]{Context.class});
             FooterLoadingView footerLayout = (FooterLoadingView) c.newInstance(new Object[]{getContext()});

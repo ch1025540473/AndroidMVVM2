@@ -9,6 +9,12 @@
             type="com.mx.demo.viewmodel.MainViewModel" />
 
         <import type="com.mx.framework2.widget.LayoutManagers" />
+
+        <import type="com.mx.demo.view.PullToRefreshFooterView" />
+
+        <import type="com.mx.demo.view.PullToRefreshHeaderView" />
+
+        <import type="com.mx.demo.view.factory.DemoItemViewFactory" />
     </data>
 
     <RelativeLayout
@@ -23,9 +29,9 @@
             android:id="@+id/demo_mylist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            binding:footerClassName="com.mx.demo.view.PullToRefreshFooterView"
-            binding:headerClassName="com.mx.demo.view.PullToRefreshHeaderView"
-            binding:itemViewFactory="com.mx.demo.view.factory.DemoItemViewFactory"
+            binding:footerClassName="@{PullToRefreshFooterView.className}"
+            binding:headerClassName="@{PullToRefreshHeaderView.className}"
+            binding:itemViewFactory="@{DemoItemViewFactory.className}"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.linear()}"
             binding:loadMoreComplete="@{model.loadMoreComplete}"

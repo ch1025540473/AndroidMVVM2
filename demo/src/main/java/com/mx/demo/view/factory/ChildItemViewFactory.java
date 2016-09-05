@@ -18,6 +18,11 @@ import com.mx.framework2.viewmodel.AbsItemViewModel;
  * Created by liuyuxuan on 16/8/24.
  */
 public class ChildItemViewFactory extends ItemViewFactory<ChildItemViewBean> {
+
+    public static String getClassName() {
+        return ChildItemViewFactory.class.getName();
+    }
+
     @Override
     protected Class<? extends AbsItemViewModel> getViewModelType(ChildItemViewBean item) {
         Log.d("ChildItemView", "getViewModelType=" + item.getClass());

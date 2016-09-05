@@ -19,7 +19,9 @@ import com.mx.demo.R;
  * Created by liuyuxuan on 16/8/9.
  */
 public class PullToRefreshHeaderView extends LoadingLayoutBase {
-
+    public static String getClassName() {
+        return PullToRefreshHeaderView.class.getName();
+    }
 
     private final int ROTATE_ANIM_DURATION = 180;
     private LinearLayout container;

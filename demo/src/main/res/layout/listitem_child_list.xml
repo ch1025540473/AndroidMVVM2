@@ -9,6 +9,8 @@
             type="com.mx.demo.viewmodel.ChildListViewModel" />
 
         <import type="com.mx.framework2.widget.LayoutManagers" />
+
+        <import type="com.mx.demo.view.factory.ChildItemViewFactory" />
     </data>
 
     <LinearLayout
@@ -20,7 +22,7 @@
             android:id="@+id/child_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            binding:itemViewFactory="com.mx.demo.view.factory.ChildItemViewFactory"
+            binding:itemViewFactory="@{ChildItemViewFactory.className}"
             binding:items="@{model.childList}"
             binding:layoutManager="@{LayoutManagers.linear(0,false)}" />
 

@@ -36,7 +36,9 @@ public class DataBindingRecyclerView extends RecyclerView {
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
             itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
-            setItemViewFactory(itemViewFactory);
+            if (itemViewFactory != null) {
+                setItemViewFactory(itemViewFactory);
+            }
             typedArray.recycle();
         }
     }

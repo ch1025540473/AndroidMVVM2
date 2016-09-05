@@ -34,8 +34,8 @@ public class MainViewModel extends LifecycleViewModel {
     private LinkedList<ItemViewBean> items;
     private OnStartRefreshingCommand onStartRefreshingCommand;
     private OnLoadMoreCommand onLoadMoreCommand;
-    private OnScrollCommand onScrollCommand;
     private OnPullDownCommand onPullDownCommand;
+    private OnScrollCommand onScrollCommand;
     boolean isRefreshing = true;
     boolean isLoadMoreComplete = true;
     boolean isLoadMoreEnabled = false;

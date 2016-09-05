@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mx.demo.R;
+import com.mx.demo.view.factory.DemoItemViewFactory;
 import com.mx.engine.utils.ScreenUtils;
 import com.mx.framework2.widget.FooterLoadingView;
 
@@ -17,6 +18,11 @@ import com.mx.framework2.widget.FooterLoadingView;
  * Created by liuyuxuan on 16/8/9.
  */
 public class PullToRefreshFooterView extends FooterLoadingView {
+
+    public static String getClassName() {
+        return PullToRefreshFooterView.class.getName();
+    }
+
     private View layout;
     private ImageView progressImageView;
     private TextView hintView;
