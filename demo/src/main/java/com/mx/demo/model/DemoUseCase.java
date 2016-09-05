@@ -105,6 +105,7 @@ public class DemoUseCase extends UseCase {
                 it.remove();
             }
         }
+        EventProxy.getDefault().post(new UpdatedApiBeanEvent());
     }
 
     private void mockRefreshNetworkApi() {

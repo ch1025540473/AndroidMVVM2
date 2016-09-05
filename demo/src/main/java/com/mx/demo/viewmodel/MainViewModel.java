@@ -123,7 +123,7 @@ public class MainViewModel extends LifecycleViewModel {
                         @Override
                         public void onSuccess(List<ApiBean> apiBeanList) {
                             items.clear();
-                            translate(apiBeanList);
+                            translateList(apiBeanList);
                             setLoadMoreEnabled(true);
                             setLoadMoreComplete(true);
                             notifyChange();
@@ -156,7 +156,7 @@ public class MainViewModel extends LifecycleViewModel {
                         @Override
                         public void onSuccess(List<ApiBean> apiBeanList) {
                             items.clear();
-                            translate(apiBeanList);
+                            translateList(apiBeanList);
                             setRefreshing(false);
                             setLoadMoreEnabled(true);
                             setLoadMoreComplete(true);
@@ -180,7 +180,7 @@ public class MainViewModel extends LifecycleViewModel {
     }
 
 
-    private void translate(List<ApiBean> apiBeanList) {
+    private void translateList(List<ApiBean> apiBeanList) {
         for (ApiBean apiBean : apiBeanList) {
             if (apiBean.type == 1) {
                 ColorItemViewBean viewBean = new ColorItemViewBean();
@@ -230,7 +230,7 @@ public class MainViewModel extends LifecycleViewModel {
         Log.d("PTR", "ClickCommand==> receiveUpdateItems");
         items.clear();
         notifyChange();
-        translate(obtainUseCase(DemoUseCase.class).queryBeanList());
+        translateList(obtainUseCase(DemoUseCase.class).queryBeanList());
         notifyChange();
 
     }
@@ -239,7 +239,6 @@ public class MainViewModel extends LifecycleViewModel {
     public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
         Log.d("PTR", "ClickCommand==> receiveRemove");
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
-        EventProxy.getDefault().post(new UpdatedApiBeanEvent());
     }
 
 }
