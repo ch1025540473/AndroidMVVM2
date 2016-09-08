@@ -10,6 +10,7 @@ import java.util.WeakHashMap;
 /**
  * Created by chenbaocheng on 16/5/5.
  */
+@Deprecated
 public abstract class AbsItemViewModel<DataBindingType extends ViewDataBinding, ItemType> extends ViewModel {
 
     private final Map<View, ItemType> viewDataMapping;

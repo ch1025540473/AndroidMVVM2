@@ -8,6 +8,7 @@ import java.util.Map;
 /**
  * Created by liuyuxuan on 16/4/19.
  */
+@Deprecated
 public class BaseApplication extends MultiDexApplication {
 
     private static BaseApplication baseApplication;

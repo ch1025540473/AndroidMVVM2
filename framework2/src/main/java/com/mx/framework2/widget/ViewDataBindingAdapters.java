@@ -10,7 +10,7 @@ import android.view.View;
  */
 public class ViewDataBindingAdapters {
 
-//    @BindingAdapter({"clickCommand"})
+    //    @BindingAdapter({"clickCommand"})
 //    public static void clickCommandAdapter(View view, final ClickCommand clickCommand) {
 //        Log.d("PTR", "clickCommandAdapter" + clickCommand.getClass());
 //        view.setOnClickListener(new View.OnClickListener() {
@@ -23,7 +23,7 @@ public class ViewDataBindingAdapters {
 //        });
 //    }
     @BindingConversion
-    public static  View.OnClickListener click(final  ClickCommand clickCommand) {
+    public static View.OnClickListener click(final ClickCommand clickCommand) {
 
         return new View.OnClickListener() {
             @Override
@@ -33,6 +33,11 @@ public class ViewDataBindingAdapters {
                 }
             }
         };
+    }
+
+    @BindingConversion
+    public static String classConversion(Class className) {
+        return className.getName();
     }
 
 

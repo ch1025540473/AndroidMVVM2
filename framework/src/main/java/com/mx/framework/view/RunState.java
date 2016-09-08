@@ -3,6 +3,7 @@ package com.mx.framework.view;
 /**
  * Created by liuyuxuan on 16/4/25.
  */
+@Deprecated
 public enum RunState {
     Created(0),
     Started(1),

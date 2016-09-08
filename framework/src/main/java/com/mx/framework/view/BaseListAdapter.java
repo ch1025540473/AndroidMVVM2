@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by chenbaocheng on 16/5/5.
  */
+@Deprecated
 public abstract class BaseListAdapter<ItemType> extends BaseAdapter {
     protected final BaseActivity activity;
     protected final ViewModel viewModel;

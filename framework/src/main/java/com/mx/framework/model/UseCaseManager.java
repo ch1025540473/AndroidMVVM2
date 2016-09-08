@@ -15,7 +15,7 @@ import java.util.Set;
 
 import static com.mx.engine.utils.CheckUtils.checkArgument;
 
-// TODO UseCase spell
+@Deprecated
 public class UseCaseManager {
 
     private Set<Class<? extends UseCase>> useCaseTypes;

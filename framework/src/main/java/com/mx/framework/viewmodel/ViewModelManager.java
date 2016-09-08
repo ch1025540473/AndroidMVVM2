@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
+@Deprecated
 public class ViewModelManager {
 
     private final LinkedHashMap<String, ViewModel> viewModelMap;

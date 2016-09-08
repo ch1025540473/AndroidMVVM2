@@ -30,6 +30,7 @@ import java.util.ListIterator;
  * 2,提供viewModel的共享数据;
  * 3,提供ViewModel的通信;
  */
+@Deprecated
 public class BaseActivity extends FragmentActivity implements DataSourceChangeAware {
 
     // add  get put

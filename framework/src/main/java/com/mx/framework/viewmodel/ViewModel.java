@@ -32,6 +32,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
+@Deprecated
 public abstract class ViewModel implements BaseActivity.ActivityResultListener, DataSourceChangeAware, ActivityAware, ModuleAware, ViewModelManagerAware {
     @Override
     public void setViewModelManager(@NonNull ViewModelManager viewModelManager) {

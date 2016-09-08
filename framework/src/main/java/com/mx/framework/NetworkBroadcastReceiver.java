@@ -12,6 +12,7 @@ import com.mx.engine.event.NetworkBroadcastEvent;
 /**
  * Created by liuyuxuan on 16/5/13.
  */
+@Deprecated
 public final class NetworkBroadcastReceiver extends BroadcastReceiver {
     static int state = NetworkBroadcastEvent.STATE_UNINIT;
 

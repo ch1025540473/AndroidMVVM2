@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
+@Deprecated
 public class BaseFragment extends Fragment implements DataSourceChangeAware {
 
     private ViewModelManager viewModelManager;

@@ -15,6 +15,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/5/17.
  */
+@Deprecated
 public abstract class ViewModelRecyclerViewAdapter<ItemType> extends BaseRecyclerAdapter<ItemType> {
 
     private final List<RecyclerItemViewModel<?, ItemType>> viewModelTypes;

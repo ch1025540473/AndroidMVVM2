@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * Created by liuyuxuan on 16/6/2.
  */
+@Deprecated
 public abstract class ViewModelPagerAdapter<ItemType> extends BaseViewPagerAdapter<ItemType> {
 
     private class ItemView {

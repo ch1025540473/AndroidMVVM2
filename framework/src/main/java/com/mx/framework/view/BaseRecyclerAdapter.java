@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Created by chenbaocheng on 16/5/5.
  */
+@Deprecated
 public abstract class BaseRecyclerAdapter<ItemType> extends RecyclerView.Adapter {
     protected final BaseActivity activity;
     private final List<ItemType> items;

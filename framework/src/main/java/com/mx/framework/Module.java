@@ -18,6 +18,7 @@ import java.util.Set;
  * 5,Module和Module互相不可视
  * 6,启动模块内部的activity;
  */
+@Deprecated
 public abstract class Module {
 
 

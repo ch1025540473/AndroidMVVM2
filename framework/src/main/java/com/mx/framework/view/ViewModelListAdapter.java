@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * Created by chenbaocheng on 16/5/5.
  */
+@Deprecated
 public abstract class ViewModelListAdapter<ItemType> extends BaseListAdapter<ItemType> {
 
 

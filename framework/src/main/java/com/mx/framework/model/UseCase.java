@@ -16,6 +16,7 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
  * 4. 网络访问;
  * 5. 接收,发送广播;
  */
+@Deprecated
 public abstract class UseCase {
 
     UseCaseManager useCaseManager;

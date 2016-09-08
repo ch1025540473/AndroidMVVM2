@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/6/3.
  */
+@Deprecated
 public class BaseFragmentStatePagerAdapter extends FragmentStatePagerAdapter {
 
     List<BaseFragment> fragmentList;

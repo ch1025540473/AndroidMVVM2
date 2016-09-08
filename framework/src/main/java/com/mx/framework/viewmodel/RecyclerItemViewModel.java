@@ -5,6 +5,7 @@ import android.databinding.ViewDataBinding;
 /**
  * Created by chenbaocheng on 16/5/5.
  */
+@Deprecated
 public abstract class RecyclerItemViewModel<DataBindingType extends ViewDataBinding, ItemType> extends AbsItemViewModel<DataBindingType, ItemType> {
 
 

@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/6/2.
  */
+@Deprecated
 public abstract class BaseViewPagerAdapter<ItemType> extends PagerAdapter {
 
     protected final BaseActivity activity;
