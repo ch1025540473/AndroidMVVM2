@@ -113,7 +113,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     @Override
     public void create(Bundle bundle) {
         lifecycleState = LifecycleState.Created;
-        onCreate();
+        onCreate(bundle);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     protected void onAttachedToView() {
     }
 
-    protected void onCreate() {
+    protected void onCreate(Bundle bundle) {
     }
 
     protected void onStart() {

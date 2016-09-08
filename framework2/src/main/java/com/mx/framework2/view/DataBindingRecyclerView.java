@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.View;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
@@ -41,6 +42,21 @@ public class DataBindingRecyclerView extends RecyclerView {
             }
             typedArray.recycle();
         }
+    }
+
+    @Override
+    public void addOnChildAttachStateChangeListener(OnChildAttachStateChangeListener listener) {
+        super.addOnChildAttachStateChangeListener(new OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+
+            }
+        });
     }
 
     @Override
