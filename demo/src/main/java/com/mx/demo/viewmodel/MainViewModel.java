@@ -1,5 +1,6 @@
 package com.mx.demo.viewmodel;
 
+import android.os.Bundle;
 import android.util.Log;
 
 import com.mx.demo.event.RemoveTxtEvent;
@@ -214,8 +215,8 @@ public class MainViewModel extends LifecycleViewModel {
     }
 
     @Override
-    protected void onCreate() {
-        super.onCreate();
+    protected void onCreate(Bundle savedState) {
+        super.onCreate(savedState);
         // 翻译数据
         items = new LinkedList<>();
         notifyChange();
