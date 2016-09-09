@@ -8,7 +8,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Type;
 
 /**
  * Created by liuyuxuan on 16/4/29.
@@ -88,39 +91,47 @@ public class ObjectUtils {
     public static <T> T newInstance(String className) {
 
         try {
-            Class<?> cls = Class.forName(className);
-            T t = (T) cls.newInstance();
-            return t;
+            Class<T> cls = (Class<T>)Class.forName(className);
+            return newInstance(cls);
         } catch (Exception e) {
             return null;
         }
     }
 
     public static <T> T newInstance(Class<T> cls) {
-        try {
-            T t = cls.newInstance();
-            return t;
-        } catch (Exception e) {
-            return null;
-        }
+        return newInstance(cls, null, null);
     }
 
-    public static <T> T newInstance(Class<T> cls, Object object) {
+    public static <T> T newInstance(Class<T> cls, Object... object) {
+        return newInstance(cls, null, object);
+    }
 
-        if (null == object) {
-            return newInstance(cls);
+    public static <T> T newInstance(Class<T> cls, Class<?>[] parameterTypes, Object[] parameters){
+        CheckUtils.checkNotNull(cls);
+        if(parameters == null){
+            parameters = new Object[]{};
         }
 
-        try {
-            cls.getConstructor(object.getClass()).newInstance(object);
-            T value = (T) cls.getConstructors()[0].newInstance(object);
-            return value;
-        } catch (Exception e) {
-
+        if(parameterTypes != null) {
+            try {
+                Constructor<T> constructor = cls.getDeclaredConstructor(parameterTypes);
+                constructor.setAccessible(true);
+                return constructor.newInstance(parameters);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            for (Constructor<?> constructor : cls.getDeclaredConstructors()) {
+                try {
+                    constructor.setAccessible(true);
+                    return (T) constructor.newInstance(parameters);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
-        return newInstance(cls);
-
+        return null;
     }
 
     /**
