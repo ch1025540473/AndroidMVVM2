@@ -22,12 +22,21 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
 
     }
 
+    public static <T> T newInstance(Class<T> cls, Object defaultParam){
+        T value = ObjectUtils.newInstance(cls, defaultParam);
+        if(value == null){
+            value = ObjectUtils.newInstance(cls);
+        }
+
+        return value;
+    }
+
     @Override
     public <T extends LifecycleViewModel> T createViewModel(@NonNull Class<T> viewModelClassType, @NonNull BaseFragment baseFragment) {
         CheckUtils.checkNotNull(viewModelClassType);
         CheckUtils.checkNotNull(baseFragment);
         CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created, baseFragment.getString(R.string.activity_msg));
-        T value = ObjectUtils.newInstance(viewModelClassType, baseFragment);
+        T value = newInstance(viewModelClassType, baseFragment);
         if (null != value) {
             if (value instanceof ModuleAware) {
                 value.setModule(module);
@@ -46,7 +55,7 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
         CheckUtils.checkNotNull(baseActivity);
         CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created, baseActivity.getString(R.string.activity_msg));
         CheckUtils.checkNotNull(viewModelClassType);
-        T value = ObjectUtils.newInstance(viewModelClassType, baseActivity);
+        T value = newInstance(viewModelClassType, baseActivity);
 
         if (null != value) {
             if (value instanceof ModuleAware) {
