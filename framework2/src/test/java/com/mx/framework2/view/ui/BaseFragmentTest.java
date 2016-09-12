@@ -1,14 +1,31 @@
 package com.mx.framework2.view.ui;
 
+
+
+
+import android.app.Fragment;
+
+import com.mx.framework2.BuildConfig;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.Robolectric;
+import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.annotation.Config;
+import org.robolectric.util.ActivityController;
+import org.robolectric.util.FragmentController;
+
+import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
 
 /**
  * Created by wwish on 16/9/12.
  */
+@RunWith(RobolectricGradleTestRunner.class)
+@Config(constants = BuildConfig.class)
 public class BaseFragmentTest {
 
     @Before
@@ -18,6 +35,17 @@ public class BaseFragmentTest {
 
     @After
     public void tearDown() throws Exception {
+
+    }
+
+    /**
+     * fragment生命周期测试
+     */
+    @Test
+    public void testLifecycle() throws Exception{
+
+        FragmentController<Fragment> fragmentController = Robolectric.buildFragment(Fragment.class).create();
+        Fragment fragment = fragmentController.get();
 
     }
 

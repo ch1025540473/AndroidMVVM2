@@ -1,5 +1,6 @@
 package com.mx.framework2.view.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.SparseArray;
@@ -16,8 +17,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.robolectric.Robolectric;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
+import org.robolectric.util.ActivityController;
 
 import java.lang.reflect.Field;
 
@@ -48,6 +51,42 @@ public class BaseActivityTest {
     @After
     public void tearDown() throws Exception {
 
+    }
+
+    /**
+     * Activity生命周期测试
+     */
+    @Test
+    public void testLifecycle() throws Exception{
+
+        ActivityController<BaseActivity> activityController = Robolectric.buildActivity(BaseActivity.class).create();
+        Activity activity = activityController.get();
+
+        Field field = BaseActivity.class.getDeclaredField("runState");
+        field.setAccessible(true);
+        RunState runState=(RunState)field.get(activity);
+
+        assertEquals(RunState.Created, runState);
+
+        activityController.start();
+        runState=(RunState)field.get(activity);
+        assertEquals(RunState.Started, runState);
+
+        activityController.resume();
+        runState=(RunState)field.get(activity);
+        assertEquals(RunState.Resumed, runState);
+
+        activityController.pause();
+        runState=(RunState)field.get(activity);
+        assertEquals(RunState.Paused, runState);
+
+        activityController.stop();
+        runState=(RunState)field.get(activity);
+        assertEquals(RunState.Stoped, runState);
+
+        activityController.destroy();
+        runState=(RunState)field.get(activity);
+        assertEquals(RunState.Destroyed, runState);
     }
 
     @Test
