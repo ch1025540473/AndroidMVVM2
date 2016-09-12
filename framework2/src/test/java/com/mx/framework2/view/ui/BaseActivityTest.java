@@ -1,9 +1,13 @@
 package com.mx.framework2.view.ui;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.SparseArray;
 
 import com.mx.framework2.BuildConfig;
+import com.mx.framework2.ReflectUtil;
+import com.mx.framework2.viewmodel.LifecycleViewModel;
+import com.mx.framework2.viewmodel.ViewModelManager;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -71,17 +75,35 @@ public class BaseActivityTest {
 
     @Test
     public void testOnWindowFocusChanged() throws Exception {
+        Field field = BaseActivity.class.getDeclaredField("isHasFocus");
+        field.setAccessible(true);
+        boolean isHasFocus=(boolean)field.get(mBaseActivity);
 
-    }
-
-    @Test
-    public void testGetRunState() throws Exception {
-
+//        Field field1 = BaseActivity.class.getDeclaredField("viewModelManager");
+//        field1.setAccessible(true);
+//        ViewModelManager vm=(ViewModelManager)field1.get(mBaseActivity);
+//        field1.set(mBaseActivity,vm);
+        System.out.println(isHasFocus);
+        assertEquals(isHasFocus,false);
+        ReflectUtil.invoke(mBaseActivity,"init",new Class []{Bundle.class},new Object[]{null});
+        mBaseActivity.onWindowFocusChanged(true);
+        System.out.println(isHasFocus);
+        assertEquals(true,isHasFocus);
     }
 
     @Test
     public void testOnCreate() throws Exception {
 
+    }
+
+    @Test
+    public void testInit() throws Exception {
+        ReflectUtil.invoke(mBaseActivity,"init",new Class []{Bundle.class},new Object[]{null});
+        Field field = BaseActivity.class.getDeclaredField("runState");
+        field.setAccessible(true);
+        RunState runState=(RunState)field.get(mBaseActivity);
+
+        assertEquals(RunState.Created,runState);
     }
 
     @Test
@@ -131,7 +153,9 @@ public class BaseActivityTest {
 
     @Test
     public void testAddViewModel() throws Exception {
-
+        LifecycleViewModel lifecycleViewModel=new LifecycleViewModel();
+        mBaseActivity.addViewModel(lifecycleViewModel);
+//        addViewModel
     }
 
     @Test

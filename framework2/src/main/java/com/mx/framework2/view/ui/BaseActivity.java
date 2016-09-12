@@ -122,6 +122,10 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         } else {
             uuid = UUID.randomUUID().toString();
         }
+        init(savedInstanceState);
+    }
+
+    private void init(Bundle savedInstanceState) {
         viewModelManager = new ViewModelManager(savedInstanceState);
         viewModelManager.create();
         this.runState = RunState.Created;
