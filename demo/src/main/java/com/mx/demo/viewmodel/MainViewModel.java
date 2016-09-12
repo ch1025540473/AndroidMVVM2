@@ -1,6 +1,5 @@
 package com.mx.demo.viewmodel;
 
-import android.os.Bundle;
 import android.util.Log;
 
 import com.mx.demo.event.RemoveTxtEvent;

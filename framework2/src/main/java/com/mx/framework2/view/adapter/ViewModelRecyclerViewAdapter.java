@@ -22,7 +22,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public ViewModelRecyclerViewAdapter(Context context) {
         super(context);
         this.viewModelTypes = new ArrayList<>();
-        setHasStableIds(false);
+        setHasStableIds(true);
     }
 
     @Override

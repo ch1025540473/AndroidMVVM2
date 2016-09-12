@@ -32,10 +32,8 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     }
 
     private final void init() {
-        Log.d("ViewModel", "thisHashCode=" + hashCode());
         eventProxy = EventProxy.getDefault();
         eventProxy.register(this);
-        System.out.print(eventProxy.isRegistered(this));
     }
 
     private final void recycle() {
@@ -60,6 +58,10 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     public void startActivityForResult(Intent intent, int requestCode) {
         getActivity().registerActivityResultListener(requestCode, this);
         getActivity().startActivityForResult(intent, requestCode);
+    }
+
+    public void startActivity(Intent intent) {
+        getActivity().startActivity(intent);
     }
 
     private BaseActivity getActivity() {

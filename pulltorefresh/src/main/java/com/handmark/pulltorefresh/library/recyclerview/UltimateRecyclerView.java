@@ -503,11 +503,13 @@ public class UltimateRecyclerView extends PullToRefreshBase<WrapRecyclerView> {
             } else {
                 // 最后一个条目View是否展示
                 int lastVisiblePosition = getLastVisiblePosition();
+                int index = mRefreshableView.getAdapter().getItemCount() - lastVisiblePosition;
 
                 // 最后一个显示出来了
-                if (mRefreshableView.getAdapter().getItemCount() - lastVisiblePosition >= 1) {
+                if (index > -1 && index <= 1) {
 
                     if (isLoadMoreComplete && isLoadMoreEnabled) {
+                        Log.d("PTRLoadMore", " isLastItemVisible=true " + " index=" + index);
                         return true;
                     }
                 }
