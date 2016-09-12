@@ -38,7 +38,7 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.0"
+            pom.version = "1.0.1"
             pom.artifactId = "pulltorefresh-alpha"
             pom.groupId = "com.mx.architecture"
             pom.name = "pulltorefresh-alpha"

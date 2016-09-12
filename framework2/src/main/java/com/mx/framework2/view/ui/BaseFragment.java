@@ -1,4 +1,3 @@
-
 package com.mx.framework2.view.ui;
 
 import android.content.Context;
@@ -27,6 +26,7 @@ import java.util.Collection;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
+//TODO 监测生命状态
 public class BaseFragment extends Fragment implements ViewModelScope {
     private ViewModelManager viewModelManager;
     private RunState runState;

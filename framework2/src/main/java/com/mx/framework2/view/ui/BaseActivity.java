@@ -39,6 +39,7 @@ import java.util.UUID;
  * 2,提供viewModel的共享数据;
  * 3,提供ViewModel的通信;
  */
+//TODO 监测生命状态
 public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
