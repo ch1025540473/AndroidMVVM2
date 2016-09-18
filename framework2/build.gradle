@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 7
-        versionName "1.0.7"
+        versionCode 11
+        versionName "1.0.11"
     }
 
     sourceSets {
@@ -46,8 +46,8 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
+    compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
 
-    compile project(':pulltorefresh')
     provided project(':framework')
     provided project(':engine')
 
@@ -70,7 +70,7 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.10"
+            pom.version = "1.0.11"
             pom.artifactId = "framework2-alpha"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
