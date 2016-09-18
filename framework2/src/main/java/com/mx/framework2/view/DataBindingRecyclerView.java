@@ -72,7 +72,7 @@ public class DataBindingRecyclerView extends RecyclerView {
                 public void putItems(Collection<?> items) {
                     super.putItems(items);
 
-                    if (this.items != null && !this.items.equals(items)) {
+                    if (this.items == null||!this.items.equals(items)) {
                         getLayoutManager().scrollToPosition((length / 2) / items.size());
                         this.items = items;
                     }
