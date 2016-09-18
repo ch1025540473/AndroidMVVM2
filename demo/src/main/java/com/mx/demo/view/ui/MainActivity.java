@@ -15,9 +15,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel(MainViewModel.class, this);
         mainBinding.setModel(viewModel);
+        mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
 
     }
 

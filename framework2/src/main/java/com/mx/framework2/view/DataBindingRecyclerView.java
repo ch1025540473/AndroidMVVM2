@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
-import android.view.View;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
@@ -14,7 +13,6 @@ import com.mx.framework2.view.factory.ItemViewFactory;
 import com.mx.framework2.widget.LayoutManagers;
 
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -22,6 +20,7 @@ import java.util.Collections;
 public class DataBindingRecyclerView extends RecyclerView {
     private ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
+    private boolean isLooped = false;
 
     public DataBindingRecyclerView(Context context) {
         this(context, null);
@@ -33,30 +32,55 @@ public class DataBindingRecyclerView extends RecyclerView {
 
     public DataBindingRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        adapter = new ViewModelRecyclerViewAdapter(context);
+
         if (attrs != null) {
-            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
+            TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.DataBindingRecyclerView);
+            if (typedArray != null) {
+                isLooped = typedArray.getBoolean(R.styleable.DataBindingRecyclerView_looped, false);
+                typedArray.recycle();
+            }
+            initAdapter();
+            typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
             itemViewFactory = typedArray.getString(R.styleable.ItemizedView_itemViewFactory);
             if (itemViewFactory != null) {
                 setItemViewFactory(itemViewFactory);
             }
             typedArray.recycle();
+        } else {
+            initAdapter();
         }
     }
 
-    @Override
-    public void addOnChildAttachStateChangeListener(OnChildAttachStateChangeListener listener) {
-        super.addOnChildAttachStateChangeListener(new OnChildAttachStateChangeListener() {
-            @Override
-            public void onChildViewAttachedToWindow(View view) {
+    private void initAdapter() {
+        if (isLooped) {
+            adapter = new ViewModelRecyclerViewAdapter(getContext()) {
+                private int length = 100000000;
+                Collection<?> items;
 
-            }
+                @Override
+                public int getItemCount() {
+                    return length == 0 ? 0 : length;
+                }
 
-            @Override
-            public void onChildViewDetachedFromWindow(View view) {
+                @Override
+                public Object getItem(int position) {
+                    position = getCount() == 0 ? 0 : position % getCount();
+                    return super.getItem(position);
+                }
 
-            }
-        });
+                @Override
+                public void putItems(Collection<?> items) {
+                    super.putItems(items);
+
+                    if (this.items != null && !this.items.equals(items)) {
+                        getLayoutManager().scrollToPosition((length / 2) / items.size());
+                        this.items = items;
+                    }
+                }
+            };
+        } else {
+            adapter = new ViewModelRecyclerViewAdapter(getContext());
+        }
     }
 
     @Override

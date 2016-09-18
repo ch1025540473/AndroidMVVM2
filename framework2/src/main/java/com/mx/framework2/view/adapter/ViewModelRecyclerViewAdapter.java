@@ -22,7 +22,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public ViewModelRecyclerViewAdapter(Context context) {
         super(context);
         this.viewModelTypes = new ArrayList<>();
-        setHasStableIds(true);
+        setHasStableIds(false);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     }
 
     @Override
-    public final int getItemCount() {
+    public int getItemCount() {
         return getCount();
     }
 

@@ -126,6 +126,12 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     }
 
     @Override
+    public final void restart() {
+        lifecycleState = LifecycleState.Started;
+
+    }
+
+    @Override
     public final void resume() {
         lifecycleState = LifecycleState.Resumed;
         onResume();
@@ -151,6 +157,9 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     }
 
     protected void onStart() {
+    }
+
+    protected void onRestart() {
     }
 
     protected void onResume() {

@@ -70,6 +70,12 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        viewModelManager.restart();
+    }
+
+    @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
 
@@ -203,28 +209,5 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     public void removeViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().removeViewModel(lifecycle);
     }
-
-    /**
-     * 显示进度条
-     */
-    public void showLoadingDialog() {
-
-    }
-
-    /**
-     * @param message    ： 提示信息
-     * @param cancelable ：是否可取消
-     */
-    public void showLoadingDialog(String message, boolean cancelable) {
-
-    }
-
-    /**
-     * 隐藏进度条
-     */
-    public void dismissLoadingDialog() {
-
-    }
-
 
 }

@@ -25,6 +25,8 @@ public interface Lifecycle {
 
     void start();
 
+    void restart();
+
     void stop();
 
     void resume();

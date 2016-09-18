@@ -1,5 +1,6 @@
 package com.mx.framework2.viewmodel;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.mx.engine.utils.CheckUtils;
@@ -29,7 +30,12 @@ public class ViewModelManager {
             vm.start();
         }
     };
-
+    private Visitor<LifecycleViewModel> onRestartVisitor = new Visitor<LifecycleViewModel>() {
+        @Override
+        public void visit(LifecycleViewModel vm) {
+            vm.restart();
+        }
+    };
     private Visitor<LifecycleViewModel> onResumeVisitor = new Visitor<LifecycleViewModel>() {
         @Override
         public void visit(LifecycleViewModel vm) {
@@ -151,6 +157,14 @@ public class ViewModelManager {
         }
     }
 
+    public void restart() {
+        visitors.add(onRestartVisitor);
+        lifecycleState = LifecycleState.Started;
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(onRestartVisitor);
+        }
+    }
+
     public void resume() {
         lifecycleState = LifecycleState.Resumed;
         visitors.add(onResumeVisitor);
@@ -180,6 +194,12 @@ public class ViewModelManager {
         visitors.add(onSaveInstanceState);
         for (Lifecycle lifecycle : lifecycleViewModelList) {
             lifecycle.accept(onSaveInstanceState);
+        }
+    }
+
+    public void onAttachContext(Context context) {
+        for (LifecycleViewModel lifecycle : lifecycleViewModelList) {
+            lifecycle.setContext(context);
         }
     }
 

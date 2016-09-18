@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 
 /**
  * Created by liuyuxuan on 16/4/29.
@@ -91,7 +89,7 @@ public class ObjectUtils {
     public static <T> T newInstance(String className) {
 
         try {
-            Class<T> cls = (Class<T>)Class.forName(className);
+            Class<T> cls = (Class<T>) Class.forName(className);
             return newInstance(cls);
         } catch (Exception e) {
             return null;
@@ -106,13 +104,13 @@ public class ObjectUtils {
         return newInstance(cls, null, object);
     }
 
-    public static <T> T newInstance(Class<T> cls, Class<?>[] parameterTypes, Object[] parameters){
+    public static <T> T newInstance(Class<T> cls, Class<?>[] parameterTypes, Object[] parameters) {
         CheckUtils.checkNotNull(cls);
-        if(parameters == null){
+        if (parameters == null) {
             parameters = new Object[]{};
         }
 
-        if(parameterTypes != null) {
+        if (parameterTypes != null) {
             try {
                 Constructor<T> constructor = cls.getDeclaredConstructor(parameterTypes);
                 constructor.setAccessible(true);
@@ -120,13 +118,13 @@ public class ObjectUtils {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             for (Constructor<?> constructor : cls.getDeclaredConstructors()) {
                 try {
                     constructor.setAccessible(true);
                     return (T) constructor.newInstance(parameters);
-                }catch (Exception e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    // 此处不处理
                 }
             }
         }

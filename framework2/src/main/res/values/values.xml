@@ -15,4 +15,8 @@
         <attr name="loadMoreComplete" format="boolean" />
         <attr name="loadMoreEnabled" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="DataBindingRecyclerView">
+        <attr name="looped" format="boolean" />
+    </declare-styleable>
 </resources>

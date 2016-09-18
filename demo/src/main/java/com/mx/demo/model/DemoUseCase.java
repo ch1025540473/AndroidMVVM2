@@ -155,7 +155,7 @@ public class DemoUseCase extends UseCase {
     }
 
     private int getType() {
-        return 3;
+        return (random.nextInt()>>>1)%3;
     }
 
     private String getColor() {

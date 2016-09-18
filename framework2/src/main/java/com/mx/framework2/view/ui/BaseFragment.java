@@ -36,10 +36,10 @@ public class BaseFragment extends Fragment implements ViewModelScope {
         return viewModelManager;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        viewModelManager.onAttachContext(context);
     }
 
     @Override
