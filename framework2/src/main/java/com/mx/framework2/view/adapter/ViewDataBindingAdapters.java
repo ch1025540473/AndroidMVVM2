@@ -1,35 +1,35 @@
-package com.mx.framework2.widget;
+package com.mx.framework2.view.adapter;
 
-import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
-import android.util.Log;
 import android.view.View;
+
+import com.mx.framework2.viewmodel.command.OnClickCommand;
 
 /**
  * Created by liuyuxuan on 16/8/23.
  */
 public class ViewDataBindingAdapters {
 
-    //    @BindingAdapter({"clickCommand"})
-//    public static void clickCommandAdapter(View view, final ClickCommand clickCommand) {
-//        Log.d("PTR", "clickCommandAdapter" + clickCommand.getClass());
+    //    @BindingAdapter({"onClickCommand"})
+//    public static void clickCommandAdapter(View view, final OnClickCommand onClickCommand) {
+//        Log.d("PTR", "clickCommandAdapter" + onClickCommand.getClass());
 //        view.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                if (clickCommand != null) {
-//                    clickCommand.execute(v.getUseCaseHolderId());
+//                if (onClickCommand != null) {
+//                    onClickCommand.execute(v.getUseCaseHolderId());
 //                }
 //            }
 //        });
 //    }
     @BindingConversion
-    public static View.OnClickListener click(final ClickCommand clickCommand) {
+    public static View.OnClickListener click(final OnClickCommand onClickCommand) {
 
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (clickCommand != null) {
-                    clickCommand.execute(view.getId());
+                if (onClickCommand != null) {
+                    onClickCommand.execute(view.getId());
                 }
             }
         };

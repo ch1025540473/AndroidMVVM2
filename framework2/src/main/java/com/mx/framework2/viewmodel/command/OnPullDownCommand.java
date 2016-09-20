@@ -1,4 +1,4 @@
-package com.mx.framework2.widget;
+package com.mx.framework2.viewmodel.command;
 
 import com.handmark.pulltorefresh.library.PullToRefreshHeaderListener;
 

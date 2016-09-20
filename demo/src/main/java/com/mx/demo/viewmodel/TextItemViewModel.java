@@ -2,12 +2,11 @@ package com.mx.demo.viewmodel;
 
 import android.util.Log;
 
-import com.mx.demo.R;
 import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
-import com.mx.framework2.widget.ClickCommand;
+import com.mx.framework2.viewmodel.command.OnClickCommand;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -15,11 +14,11 @@ import com.mx.framework2.widget.ClickCommand;
 public class TextItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
     TextItemViewBean item;
 
-    public ClickCommand getClickCommand() {
-        return new ClickCommand() {
+    public OnClickCommand getClickCommand() {
+        return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
-                Log.d("PTR", "ClickCommand==> " + item.getText());
+                Log.d("PTR", "OnClickCommand==> " + item.getText());
                 RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
                 removeTxtEvent.setId(item.getId());
                 postEvent(removeTxtEvent);

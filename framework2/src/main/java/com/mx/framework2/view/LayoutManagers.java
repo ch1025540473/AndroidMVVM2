@@ -1,4 +1,4 @@
-package com.mx.framework2.widget;
+package com.mx.framework2.view;
 
 import android.support.annotation.IntDef;
 import android.support.v7.widget.GridLayoutManager;

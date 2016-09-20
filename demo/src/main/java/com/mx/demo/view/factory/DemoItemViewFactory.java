@@ -1,12 +1,6 @@
 package com.mx.demo.view.factory;
 
-import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.databinding.tool.util.L;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.mx.demo.R;
 import com.mx.demo.databinding.ListitemChildListBinding;
@@ -15,15 +9,12 @@ import com.mx.demo.databinding.ListitemTextBinding;
 import com.mx.demo.viewmodel.ChildListViewModel;
 import com.mx.demo.viewmodel.ColorItemViewModel;
 import com.mx.demo.viewmodel.TextItemViewModel;
-import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.view.factory.ItemViewFactory;
 import com.mx.framework2.viewmodel.AbsItemViewModel;
-import com.mx.framework2.viewmodel.ViewModel;
-import com.mx.framework2.widget.ClickCommand;
 
 /**
  * Created by chenbaocheng on 16/8/14.

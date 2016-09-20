@@ -1,4 +1,4 @@
-package com.mx.framework2.widget;
+package com.mx.framework2.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -13,6 +13,8 @@ import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
 import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
 import com.mx.framework2.view.factory.ItemViewFactory;
+import com.mx.framework2.viewmodel.command.OnScrollCommand;
+import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -26,6 +28,15 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     private String itemViewFactory;
     private RecyclerView.OnScrollListener onScrollListener;
     private OnScrollCommand onScrollCommand;
+    private boolean isInitialized = false;
+
+    public boolean isInitialized() {
+        return isInitialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        isInitialized = initialized;
+    }
 
     public PullToRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -106,6 +117,11 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     public void setItems(Collection items) {
         adapter.putItems(items);
     }
+
+    public void setPtrProxy(PTRRecyclerViewProxy recyclerViewProxy) {
+        recyclerViewProxy.attachPTRRecyclerView(this);
+    }
+
 
     public void setOnScrollCommand(
             final OnScrollCommand onScrollCommand) {

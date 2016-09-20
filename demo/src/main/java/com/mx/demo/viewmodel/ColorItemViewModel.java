@@ -6,7 +6,7 @@ import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
-import com.mx.framework2.widget.ClickCommand;
+import com.mx.framework2.viewmodel.command.OnClickCommand;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -14,8 +14,8 @@ import com.mx.framework2.widget.ClickCommand;
 public class ColorItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
     ItemViewBean item;
 
-    public ClickCommand getClickCommand() {
-        return new ClickCommand() {
+    public OnClickCommand getClickCommand() {
+        return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
                 RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();

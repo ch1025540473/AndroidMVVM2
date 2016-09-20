@@ -18,11 +18,17 @@ import java.util.List;
 public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     private final List<Class<?>> viewModelTypes;
     private ItemViewFactory itemViewFactory;
+    private boolean isLooped;
+    private int maxLength = 10000000;
 
     public ViewModelRecyclerViewAdapter(Context context) {
         super(context);
         this.viewModelTypes = new ArrayList<>();
         setHasStableIds(false);
+    }
+
+    public void setLooped(boolean looped) {
+        isLooped = looped;
     }
 
     @Override
@@ -84,7 +90,21 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
 
     @Override
     public int getItemCount() {
+        if (isLooped) {
+            if (getCount() > 0) {
+                return maxLength;
+            }
+        }
         return getCount();
+    }
+
+    @Override
+    public Object getItem(int position) {
+
+        if (isLooped) {
+            position = getCount() == 0 ? 0 : position % getCount();
+        }
+        return super.getItem(position);
     }
 
     public ItemViewFactory getItemViewFactory() {

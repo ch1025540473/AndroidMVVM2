@@ -1,4 +1,4 @@
-package com.mx.framework2.widget;
+package com.mx.framework2.view;
 
 import android.content.Context;
 import android.util.AttributeSet;

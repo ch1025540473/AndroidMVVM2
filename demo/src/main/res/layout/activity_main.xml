@@ -8,7 +8,7 @@
             name="model"
             type="com.mx.demo.viewmodel.MainViewModel" />
 
-        <import type="com.mx.framework2.widget.LayoutManagers" />
+        <import type="com.mx.framework2.view.LayoutManagers" />
 
         <import type="com.mx.demo.view.PullToRefreshFooterView" />
 
@@ -25,7 +25,7 @@
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin">
 
-        <com.mx.framework2.widget.PullToRefreshRecyclerView
+        <com.mx.framework2.view.PullToRefreshRecyclerView
             android:id="@+id/demo_mylist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -34,13 +34,7 @@
             binding:itemViewFactory="@{DemoItemViewFactory.className}"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:loadMoreComplete="@{model.loadMoreComplete}"
-            binding:loadMoreEnabled="@{model.loadMoreEnabled}"
-            binding:onLoadMoreCommand="@{model.onLoadMoreCommand}"
-            binding:onPullDownCommand="@{model.onPullDownCommand}"
-            binding:onScrollCommand="@{model.onScrollCommand}"
-            binding:onStartRefreshingCommand="@{model.onStartRefreshingCommand}"
-            binding:refreshing="@{model.refreshing}" />
+            binding:ptrProxy="@{model.ptrRecyclerViewProxy}" />
 
     </RelativeLayout>
 </layout>

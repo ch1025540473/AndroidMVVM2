@@ -10,9 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mx.demo.R;
-import com.mx.demo.view.factory.DemoItemViewFactory;
 import com.mx.engine.utils.ScreenUtils;
-import com.mx.framework2.widget.FooterLoadingView;
+import com.mx.framework2.view.FooterLoadingView;
 
 /**
  * Created by liuyuxuan on 16/8/9.

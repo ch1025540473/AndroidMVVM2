@@ -32,7 +32,6 @@ public abstract class ItemViewFactory<ItemType> {
         Class<?> type = getViewModelType(item);
         AbsItemViewModel<ItemType> vm = (AbsItemViewModel<ItemType>) ObjectUtils.newInstance(type); //TODO use factory here
         cacheViewModel(vm);
-
         return vm;
     }
 
@@ -41,7 +40,9 @@ public abstract class ItemViewFactory<ItemType> {
     protected abstract ViewDataBinding createViewDataBinding(AbsItemViewModel<ItemType> viewModel);
 
     public final ViewDataBinding getViewDataBinding(AbsItemViewModel<ItemType> viewModel) {
-        return createViewDataBinding(viewModel);
+        ViewDataBinding viewDataBinding = createViewDataBinding(viewModel);
+        viewModel.setContext(viewDataBinding.getRoot().getContext());
+        return viewDataBinding;
     }
 
     public void setContext(Context context) {

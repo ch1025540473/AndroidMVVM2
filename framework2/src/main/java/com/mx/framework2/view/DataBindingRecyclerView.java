@@ -10,7 +10,6 @@ import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
 import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
 import com.mx.framework2.view.factory.ItemViewFactory;
-import com.mx.framework2.widget.LayoutManagers;
 
 import java.util.Collection;
 
@@ -52,35 +51,8 @@ public class DataBindingRecyclerView extends RecyclerView {
     }
 
     private void initAdapter() {
-        if (isLooped) {
-            adapter = new ViewModelRecyclerViewAdapter(getContext()) {
-                private int length = 100000000;
-                Collection<?> items;
-
-                @Override
-                public int getItemCount() {
-                    return length == 0 ? 0 : length;
-                }
-
-                @Override
-                public Object getItem(int position) {
-                    position = getCount() == 0 ? 0 : position % getCount();
-                    return super.getItem(position);
-                }
-
-                @Override
-                public void putItems(Collection<?> items) {
-                    super.putItems(items);
-
-                    if (this.items == null||!this.items.equals(items)) {
-                        getLayoutManager().scrollToPosition((length / 2) / items.size());
-                        this.items = items;
-                    }
-                }
-            };
-        } else {
-            adapter = new ViewModelRecyclerViewAdapter(getContext());
-        }
+        adapter = new ViewModelRecyclerViewAdapter(getContext());
+        adapter.setLooped(isLooped);
     }
 
     @Override

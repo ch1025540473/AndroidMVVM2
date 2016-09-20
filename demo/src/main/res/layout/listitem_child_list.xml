@@ -8,7 +8,7 @@
             name="model"
             type="com.mx.demo.viewmodel.ChildListViewModel" />
 
-        <import type="com.mx.framework2.widget.LayoutManagers" />
+        <import type="com.mx.framework2.view.LayoutManagers" />
 
         <import type="com.mx.demo.view.factory.ChildItemViewFactory" />
     </data>

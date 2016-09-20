@@ -4,16 +4,11 @@
         <attr name="items" format="string" />
         <attr name="itemViewFactory" format="string" />
     </declare-styleable>
+
     <declare-styleable name="PullToRefreshRecyclerView">
         <attr name="headerClassName" format="string" />
         <attr name="footerClassName" format="string" />
-        <attr name="onStartRefreshingCommand" format="reference" />
-        <attr name="onLoadMoreCommand" format="reference" />
-        <attr name="onPullDownCommand" format="reference" />
-        <attr name="onScrollCommand" format="reference" />
-        <attr name="refreshing" format="boolean" />
-        <attr name="loadMoreComplete" format="boolean" />
-        <attr name="loadMoreEnabled" format="boolean" />
+        <attr name="ptrProxy" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="DataBindingRecyclerView">

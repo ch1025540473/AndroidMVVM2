@@ -1,12 +1,15 @@
 package com.mx.demo.viewmodel;
 
-import android.os.Bundle;
-import android.util.Log;
+import android.databinding.Bindable;
 
+import com.mx.demo.BR;
 import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
+import com.mx.demo.view.PullToRefreshFooterView;
+import com.mx.demo.view.PullToRefreshHeaderView;
+import com.mx.demo.view.factory.DemoItemViewFactory;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -14,13 +17,12 @@ import com.mx.demo.viewmodel.viewbean.ChildTextItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
-import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.SubscriberResult;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.widget.OnLoadMoreCommand;
-import com.mx.framework2.widget.OnPullDownCommand;
-import com.mx.framework2.widget.OnStartRefreshingCommand;
-import com.mx.framework2.widget.OnScrollCommand;
+import com.mx.framework2.view.LayoutManagers;
+import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
+import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
+import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,152 +34,81 @@ import java.util.List;
  * Created by chenbaocheng on 16/8/18.
  */
 public class MainViewModel extends LifecycleViewModel {
-    private LinkedList<ItemViewBean> items;
-    private OnStartRefreshingCommand onStartRefreshingCommand;
-    private OnLoadMoreCommand onLoadMoreCommand;
-    private OnPullDownCommand onPullDownCommand;
-    private OnScrollCommand onScrollCommand;
-    boolean isRefreshing = true;
-    boolean isLoadMoreComplete = true;
-    boolean isLoadMoreEnabled = false;
-
-    public boolean isLoadMoreEnabled() {
-        return isLoadMoreEnabled;
+    public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
+        this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
     }
 
-    public void setLoadMoreEnabled(boolean loadMoreEnabled) {
-        isLoadMoreEnabled = loadMoreEnabled;
-    }
-
-    public boolean isLoadMoreComplete() {
-        return isLoadMoreComplete;
-    }
-
-    public void setLoadMoreComplete(boolean isLoadingComplated) {
-        this.isLoadMoreComplete = isLoadingComplated;
-    }
-
-    public boolean isRefreshing() {
-        return isRefreshing;
-    }
-
-    public void setRefreshing(boolean refreshing) {
-        isRefreshing = refreshing;
-    }
-
-    public OnScrollCommand getOnScrollCommand() {
-        if (null == onScrollCommand) {
-            onScrollCommand = new OnScrollCommand() {
-                @Override
-                public void onScrollStateChanged(int id, int state) {
-                    Log.d("PTR", "onScrollStateChanged id=" + id + " state=" + state);
-                }
-
-                @Override
-                public void onScrolled(int id, int v, int h, int dx, int dy) {
-                    Log.d("PTR", "onScrolled id=" + id + " v=" + v + " h=" + h + " dx=" + dx + " dy=" + dy);
-                }
-            };
-        }
-        return onScrollCommand;
-    }
-
-    public OnPullDownCommand getOnPullDownCommand() {
-        if (null == onPullDownCommand) {
-            onPullDownCommand = new OnPullDownCommand() {
-                @Override
-                public void pullToRefresh() {
-                    Log.d("PTR", "pullToRefresh");
-                }
-
-                @Override
-                public void releaseToRefresh() {
-                    Log.d("PTR", "releaseToRefresh");
-                }
-
-                @Override
-                public void onPull(float scaleOfLayout) {
-                    Log.d("PTR", "onPull>> scaleOfLayout=" + scaleOfLayout);
-                }
-
-                @Override
-                public void refreshing() {
-                    Log.d("PTR", "refreshing");
-                }
-
-                @Override
-                public void reset() {
-                    Log.d("PTR", "reset");
-                }
-            };
-        }
-        return onPullDownCommand;
+    @Bindable
+    public List<ItemViewBean> getItems() {
+        return items;
     }
 
 
-    public OnLoadMoreCommand getOnLoadMoreCommand() {
-        if (onLoadMoreCommand == null) {
-            onLoadMoreCommand = new OnLoadMoreCommand() {
-                @Override
-                public void onLoadMore() {
-                    obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
-                        @Override
-                        public void onSuccess(List<ApiBean> apiBeanList) {
-                            items.clear();
-                            translateList(apiBeanList);
-                            setLoadMoreEnabled(true);
-                            setLoadMoreComplete(true);
-                            notifyChange();
-                        }
+    private List<ItemViewBean> items = new LinkedList<>();
+    private PTRRecyclerViewProxy
+            ptrRecyclerViewProxy = new PTRRecyclerViewProxy();
 
-                        @Override
-                        public void onError(int i, String s) {
-
-                        }
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-
-                        }
-                    });
-
-                }
-            };
-        }
-        return onLoadMoreCommand;
+    public PTRRecyclerViewProxy getPtrRecyclerViewProxy() {
+        return ptrRecyclerViewProxy;
     }
 
-    public OnStartRefreshingCommand getOnStartRefreshingCommand() {
-        if (onStartRefreshingCommand == null) {
-            onStartRefreshingCommand = new OnStartRefreshingCommand() {
-                @Override
-                public void onStartRefreshing() {
+    public MainViewModel() {
 
-                    obtainUseCase(DemoUseCase.class).refreshApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
-                        @Override
-                        public void onSuccess(List<ApiBean> apiBeanList) {
-                            items.clear();
-                            translateList(apiBeanList);
-                            setRefreshing(false);
-                            setLoadMoreEnabled(true);
-                            setLoadMoreComplete(true);
-                            notifyChange();
-                        }
+        ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.BOTH);
+        ptrRecyclerViewProxy.setRefresh(false);
+        ptrRecyclerViewProxy.setLoadMoreComplete(true);
+        ptrRecyclerViewProxy.setOnLoadMoreCommand(new OnLoadMoreCommand() {
+            @Override
+            public void onLoadMore() {
+                ptrRecyclerViewProxy.setLoadMoreComplete(false);
+                obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
+                    @Override
+                    public void onSuccess(List<ApiBean> apiBeanList) {
+                        translateList(apiBeanList);
+                        ptrRecyclerViewProxy.setLoadMoreComplete(true);
+                        notifyPropertyChanged(BR.items);
+                    }
 
-                        @Override
-                        public void onError(int i, String s) {
+                    @Override
+                    public void onError(int i, String s) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onFailure(Throwable throwable) {
+                    @Override
+                    public void onFailure(Throwable throwable) {
 
-                        }
-                    });
-                }
-            };
-        }
-        return onStartRefreshingCommand;
+                    }
+                });
+            }
+        });
+        ptrRecyclerViewProxy.setOnStartRefreshingCommand(new OnStartRefreshingCommand() {
+            @Override
+            public void onStartRefreshing() {
+                obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
+                    @Override
+                    public void onSuccess(List<ApiBean> apiBeanList) {
+                        items.clear();
+                        translateList(apiBeanList);
+                        ptrRecyclerViewProxy.setLoadMoreComplete(true);
+                        ptrRecyclerViewProxy.setRefresh(false);
+                        notifyPropertyChanged(BR.items);
+                    }
+
+                    @Override
+                    public void onError(int i, String s) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+
+
+                    }
+                });
+
+            }
+        });
+
     }
 
 
@@ -214,31 +145,18 @@ public class MainViewModel extends LifecycleViewModel {
         }
     }
 
-    @Override
-    protected void onCreate(Bundle savedState) {
-        super.onCreate(savedState);
-        // 翻译数据
-        items = new LinkedList<>();
-        notifyChange();
-    }
-
-    public List<ItemViewBean> getItems() {
-        return items;
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveUpdateItems(UpdatedApiBeanEvent updatedApiBeanEvent) {
-        Log.d("PTR", "ClickCommand==> receiveUpdateItems");
         items.clear();
-        notifyChange();
         translateList(obtainUseCase(DemoUseCase.class).queryBeanList());
-        notifyChange();
+        ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.TOP);
+        notifyPropertyChanged(BR.items);
 
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
-        Log.d("PTR", "ClickCommand==> receiveRemove");
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
     }
 
