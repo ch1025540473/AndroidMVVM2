@@ -43,9 +43,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     }
 
     private List<BaseFragment> getFragments() {
-
         List<BaseFragment> baseFragments = new LinkedList<>();
-
         ListIterator<Reference<BaseFragment>> listIterator = fragments.listIterator();
 
         while (listIterator.hasNext()) {
@@ -125,7 +123,8 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     }
 
     private void init(Bundle savedInstanceState) {
-        viewModelManager = new ViewModelManager(savedInstanceState);
+        viewModelManager = new ViewModelManager();
+        viewModelManager.setSavedInstanceState(savedInstanceState);
         viewModelManager.create();
         this.runState = RunState.Created;
         EventProxy.getDefault().register(this);

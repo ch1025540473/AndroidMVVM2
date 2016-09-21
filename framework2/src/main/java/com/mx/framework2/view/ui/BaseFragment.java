@@ -40,8 +40,8 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModelManager = new ViewModelManager(savedInstanceState);
         runState = RunState.Created;
+        viewModelManager.setSavedInstanceState(savedInstanceState);
         viewModelManager.create();
     }
 

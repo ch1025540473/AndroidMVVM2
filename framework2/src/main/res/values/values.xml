@@ -8,7 +8,7 @@
     <declare-styleable name="PullToRefreshRecyclerView">
         <attr name="headerClassName" format="string" />
         <attr name="footerClassName" format="string" />
-        <attr name="ptrProxy" format="reference" />
+        <attr name="proxy" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="DataBindingRecyclerView">

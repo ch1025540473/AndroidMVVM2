@@ -28,19 +28,14 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     private String itemViewFactory;
     private RecyclerView.OnScrollListener onScrollListener;
     private OnScrollCommand onScrollCommand;
-    private boolean isInitialized = false;
-
-    public boolean isInitialized() {
-        return isInitialized;
-    }
-
-    public void setInitialized(boolean initialized) {
-        isInitialized = initialized;
-    }
+    private PTRRecyclerViewProxy recyclerViewProxy;
+    private String headerClassName = "";
+    private String footerClassName = "";
 
     public PullToRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         adapter = new ViewModelRecyclerViewAdapter(context);
+        getRefreshableView().setAdapter(adapter);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
 
@@ -67,23 +62,34 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
         }
         setMode(Mode.PULL_FROM_START);
+
     }
 
     public void setHeaderClassName(String headerClassName) {
+        if (headerClassName == null
+                || this.headerClassName.equals(headerClassName)) {
+            return;
+        }
         try {
             Constructor c = Class.forName(headerClassName).getDeclaredConstructor(new Class[]{Context.class});
             LoadingLayoutBase headerLayout = (LoadingLayoutBase) c.newInstance(new Object[]{getContext()});
             setHeaderLayout(headerLayout);
+            this.headerClassName = headerClassName;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void setFooterClassName(String footerClassName) {
+        if (footerClassName == null
+                || this.footerClassName.equals(footerClassName)) {
+            return;
+        }
         try {
             Constructor c = Class.forName(footerClassName).getDeclaredConstructor(new Class[]{Context.class});
             FooterLoadingView footerLayout = (FooterLoadingView) c.newInstance(new Object[]{getContext()});
             setSecondFooterLayout(footerLayout);
+            this.footerClassName = footerClassName;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,13 +97,7 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
     @Override
     protected WrapRecyclerView createRefreshableView(Context context, AttributeSet attrs) {
-        WrapRecyclerView recyclerView = new InternalWrapRecyclerView(context, attrs) {
-            @Override
-            public void setLayoutManager(LayoutManager layout) {
-                super.setLayoutManager(layout);
-                setAdapter(adapter);
-            }
-        };
+        WrapRecyclerView recyclerView = new InternalWrapRecyclerView(context, attrs);
         recyclerView.setId(com.handmark.pulltorefresh.library.R.id.ultimate_recycler_view);
         recyclerView.setScrollingTouchSlop(RecyclerView.TOUCH_SLOP_PAGING);
         return recyclerView;
@@ -118,27 +118,37 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
         adapter.putItems(items);
     }
 
-    public void setPtrProxy(PTRRecyclerViewProxy recyclerViewProxy) {
-        recyclerViewProxy.attachPTRRecyclerView(this);
+    public void setProxy(PTRRecyclerViewProxy recyclerViewProxy) {
+        if (recyclerViewProxy == null) {
+            return;
+        }
+        if (recyclerViewProxy != this.recyclerViewProxy) {
+            recyclerViewProxy.attach(this);
+            this.recyclerViewProxy = recyclerViewProxy;
+        }
     }
 
 
     public void setOnScrollCommand(
             final OnScrollCommand onScrollCommand) {
-        Log.d("PTR", "onScrollCommand=" + onScrollCommand.getClass());
         this.onScrollCommand = onScrollCommand;
         if (onScrollListener == null) {
             onScrollListener = new RecyclerView.OnScrollListener() {
                 @Override
                 public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                    PullToRefreshRecyclerView.this.onScrollCommand.onScrollStateChanged(recyclerView.getId(), newState);
+                    if (onScrollCommand != null) {
+                        onScrollCommand.onScrollStateChanged(recyclerView.getId(), newState);
+                    }
                 }
 
                 @Override
                 public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    PullToRefreshRecyclerView.this.onScrollCommand.onScrolled(recyclerView.getId(),
-                            recyclerView.computeVerticalScrollOffset(),
-                            recyclerView.computeHorizontalScrollOffset(), dx, dy);
+                    if (onScrollCommand != null) {
+                        onScrollCommand.onScrolled(recyclerView.getId(),
+                                recyclerView.computeVerticalScrollOffset(),
+                                recyclerView.computeHorizontalScrollOffset(), dx, dy);
+                    }
+
                 }
             };
             getRefreshableView().addOnScrollListener(onScrollListener);

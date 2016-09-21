@@ -14,16 +14,31 @@ import com.mx.framework2.view.LayoutManagers;
 import com.mx.framework2.view.PullToRefreshRecyclerView;
 import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
 
+import java.util.Collection;
+
 /**
  * Created by liuyuxuan on 16/8/22.
  */
 public class PullToRefreshRecyclerViewDataBindingAdapters {
 
-    @BindingAdapter({"layoutManager"})
-    public static void setLayoutManager(PullToRefreshRecyclerView pullToRefreshRecyclerView,
-                                        LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
-        Log.d("PTR", "setLayoutManager=" + layoutManagerFactory);
+    @BindingAdapter(value = {"layoutManager", "items", "footerClassName", "headerClassName", "itemViewFactory", "proxy"}, requireAll = true)
+    public static void buildPTR(PullToRefreshRecyclerView pullToRefreshRecyclerView,
+                                LayoutManagers.LayoutManagerFactory layoutManagerFactory,
+                                Collection items,
+                                String footViewClassName,
+                                String headViewClassName,
+                                String itemViewFactoryClassName,
+                                PTRRecyclerViewProxy proxy) {
+        Log.d("PTR", "buildPTR= ======");
+
         RecyclerView recyclerView = pullToRefreshRecyclerView.getRefreshableView();
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
+        pullToRefreshRecyclerView.setHeaderClassName(headViewClassName);
+        pullToRefreshRecyclerView.setFooterClassName(footViewClassName);
+        pullToRefreshRecyclerView.setItemViewFactory(itemViewFactoryClassName);
+        pullToRefreshRecyclerView.setItems(items);
+        pullToRefreshRecyclerView.setProxy(proxy);
     }
+
+
 }

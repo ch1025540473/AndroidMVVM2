@@ -20,6 +20,7 @@ import static com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy.PTRMode.NON
  */
 
 public class PTRRecyclerViewProxy {
+
     public enum PTRMode {
         NONE, BOTH, TOP, BOTTOM
     }
@@ -28,30 +29,17 @@ public class PTRRecyclerViewProxy {
     private OnStartRefreshingCommand onStartRefreshingCommand;
     private OnPullDownCommand onPullDownCommand;
     private OnLoadMoreCommand onLoadMoreCommand;
-    private boolean isRefresh = false;
     private boolean isLoadMoreComplete = false;
     private OnScrollCommand onScrollCommand;
     private PullToRefreshRecyclerView ptrRecyclerView;
 
-    public final void attachPTRRecyclerView(PullToRefreshRecyclerView ptrRecyclerView) {
+    public final void attach(PullToRefreshRecyclerView ptrRecyclerView) {
         this.ptrRecyclerView = ptrRecyclerView;
-        if (onPullDownCommand != null) {
-            setOnPullDownCommand(onPullDownCommand);
-        }
-        if (onScrollCommand != null) {
-            setOnScrollCommand(onScrollCommand);
-        }
-        if (ptrMode != null) {
-            setPtrMode(ptrMode);
-        }
-        if (onStartRefreshingCommand != null) {
-            setOnStartRefreshingCommand(onStartRefreshingCommand);
-        }
-
-        if (onLoadMoreCommand != null) {
-            setOnLoadMoreCommand(onLoadMoreCommand);
-        }
-        setRefresh(isRefresh);
+        setOnPullDownCommand(onPullDownCommand);
+        setOnScrollCommand(onScrollCommand);
+        setPtrMode(ptrMode);
+        setOnStartRefreshingCommand(onStartRefreshingCommand);
+        setOnLoadMoreCommand(onLoadMoreCommand);
         setLoadMoreComplete(isLoadMoreComplete);
     }
 
@@ -134,11 +122,13 @@ public class PTRRecyclerViewProxy {
     }
 
     public boolean isRefresh() {
-        return isRefresh;
+        if (ptrRecyclerView != null) {
+            return ptrRecyclerView.isRefreshing();
+        }
+        return false;
     }
 
     public void setRefresh(boolean isRefresh) {
-        this.isRefresh = isRefresh;
         if (ptrRecyclerView != null) {
             if (isRefresh) {
                 ptrRecyclerView.setRefreshing();

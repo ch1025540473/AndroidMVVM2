@@ -34,7 +34,7 @@
             binding:itemViewFactory="@{DemoItemViewFactory.className}"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:ptrProxy="@{model.ptrRecyclerViewProxy}" />
+            binding:proxy="@{model.ptrRecyclerViewProxy}" />
 
     </RelativeLayout>
 </layout>

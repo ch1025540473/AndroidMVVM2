@@ -19,7 +19,7 @@ import com.mx.demo.R;
  * Created by liuyuxuan on 16/8/9.
  */
 public class PullToRefreshHeaderView extends LoadingLayoutBase {
-    public static String getClassName() {
+    public static String className() {
         return PullToRefreshHeaderView.class.getName();
     }
 

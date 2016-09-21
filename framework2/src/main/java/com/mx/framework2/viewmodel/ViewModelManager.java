@@ -104,10 +104,12 @@ public class ViewModelManager {
                 }
             };
 
-    public ViewModelManager(Bundle savedInstanceState) {
+    public ViewModelManager() {
         lifecycleViewModelList = new LinkedList<>();
-        this.savedInstanceState = savedInstanceState;
+    }
 
+    public void setSavedInstanceState(Bundle savedInstanceState) {
+        this.savedInstanceState = savedInstanceState;
     }
 
     public void addViewModel(LifecycleViewModel lifecycle) {
