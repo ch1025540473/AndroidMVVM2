@@ -25,7 +25,7 @@ import java.util.Collection;
 public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
     private final ViewModelRecyclerViewAdapter adapter;
-    private String itemViewFactory = "";
+    private String itemViewFactory;
     private RecyclerView.OnScrollListener onScrollListener;
     private OnScrollCommand onScrollCommand;
     private PTRRecyclerViewProxy recyclerViewProxy;
@@ -66,7 +66,6 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     }
 
     public void setHeaderClassName(String headerClassName) {
-        Log.d("PTR", " setHeaderClassName= ");
         if (headerClassName == null
                 || this.headerClassName.equals(headerClassName)) {
             return;
@@ -110,15 +109,9 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     }
 
     public void setItemViewFactory(String className) {
-        if (className == null
-                && itemViewFactory.equals(className)) {
-            return;
-        }
-
         ItemViewFactory factory = ObjectUtils.newInstance(className);
         factory.setContext(getContext());
         adapter.setItemViewFactory(factory);
-        itemViewFactory = className;
     }
 
     public void setItems(Collection items) {
