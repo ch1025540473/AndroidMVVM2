@@ -29,12 +29,12 @@
             android:id="@+id/demo_mylist"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            binding:footerClassName="@{PullToRefreshFooterView.className}"
-            binding:headerClassName="@{PullToRefreshHeaderView.className}"
-            binding:itemViewFactory="@{DemoItemViewFactory.className}"
             binding:items="@{model.items}"
             binding:layoutManager="@{LayoutManagers.linear()}"
-            binding:proxy="@{model.ptrRecyclerViewProxy}" />
+            binding:proxy="@{model.ptrRecyclerViewProxy}"
+            binding:footerClassName="@{PullToRefreshFooterView.className}"
+            binding:headerClassName="@{PullToRefreshHeaderView.className}"
+            binding:itemViewFactory="@{DemoItemViewFactory.className}"/>
 
     </RelativeLayout>
 </layout>
