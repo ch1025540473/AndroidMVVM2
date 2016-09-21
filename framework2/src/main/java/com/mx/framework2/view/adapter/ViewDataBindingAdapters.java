@@ -1,5 +1,6 @@
 package com.mx.framework2.view.adapter;
 
+import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.view.View;
 
@@ -41,4 +42,8 @@ public class ViewDataBindingAdapters {
     }
 
 
+    @BindingAdapter("showOrHide")
+    public static void showOrHide(View view, boolean showOrHide) {
+        view.setVisibility(showOrHide ? View.VISIBLE : View.GONE);
+    }
 }
