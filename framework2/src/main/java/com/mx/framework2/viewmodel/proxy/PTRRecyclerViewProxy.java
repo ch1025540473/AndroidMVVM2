@@ -1,7 +1,5 @@
 package com.mx.framework2.viewmodel.proxy;
 
-import android.util.Log;
-
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.recyclerview.WrapRecyclerView;
 import com.mx.framework2.view.FooterLoadingView;
@@ -62,13 +60,13 @@ public class PTRRecyclerViewProxy {
     public void setPtrMode(PTRMode ptrMode) {
         this.ptrMode = ptrMode;
         if (ptrRecyclerView != null) {
-            boolean enabled = (this.ptrMode.equals(BOTH)
+            boolean footerEnable = (this.ptrMode.equals(BOTH)
                     || this.ptrMode.equals(PTRMode.BOTTOM));
-            Log.d("proxy", "ptrMode=" + enabled);
             FooterLoadingView footer = (FooterLoadingView) ptrRecyclerView.getSecondFooterLayout();
-            footer.onLoading(enabled);
-            ptrRecyclerView.setLoadMoreEnabled(enabled);
-
+            if (footer != null) {
+                footer.onLoading(footerEnable);
+                ptrRecyclerView.setLoadMoreEnabled(footerEnable);
+            }
             if (this.ptrMode.equals(NONE) || this.ptrMode.equals(BOTTOM)) {
                 ptrRecyclerView.onRefreshComplete();
                 ptrRecyclerView.setMode(PullToRefreshBase.Mode.DISABLED);

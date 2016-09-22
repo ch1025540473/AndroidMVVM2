@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:binding="http://schemas.android.com/apk/res-auto">
-
     <data>
-
         <variable
             name="model"
             type="com.mx.demo.viewmodel.MainViewModel" />
-
         <import type="com.mx.framework2.view.LayoutManagers" />
-
         <import type="com.mx.demo.view.PullToRefreshFooterView" />
-
         <import type="com.mx.demo.view.PullToRefreshHeaderView" />
+        <import type="com.mx.demo.view.factory.DemoItemViewFactory"/>
 
-        <import type="com.mx.demo.view.factory.DemoItemViewFactory" />
     </data>
 
     <RelativeLayout

@@ -22,9 +22,23 @@ import java.util.Collection;
 public class PullToRefreshRecyclerViewDataBindingAdapters {
     @BindingAdapter({"layoutManager"})
     public static void setLayoutManager(PullToRefreshRecyclerView pullToRefreshRecyclerView, LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
-        Log.d("PTR", "buildPTR= ====== setLayoutManager");
         RecyclerView recyclerView = pullToRefreshRecyclerView.getRefreshableView();
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
+    }
+
+    @BindingAdapter(value = {"items", "footerClassName", "headerClassName", "itemViewFactory", "proxy"}, requireAll = true)
+    public static void bindingPullToRefresh(PullToRefreshRecyclerView pullToRefreshRecyclerView,
+                                            Collection items,
+                                            String footViewClassName,
+                                            String headViewClassName,
+                                            String itemViewFactoryClassName,
+                                            PTRRecyclerViewProxy proxy) {
+        Log.d("PTR", "BindingAdapter setLayoutManager= ====== bindingPullToRefresh");
+        pullToRefreshRecyclerView.setHeaderClassName(headViewClassName);
+        pullToRefreshRecyclerView.setFooterClassName(footViewClassName);
+        pullToRefreshRecyclerView.setItemViewFactory(itemViewFactoryClassName);
+        pullToRefreshRecyclerView.setItems(items);
+        pullToRefreshRecyclerView.setProxy(proxy);
     }
 
 }

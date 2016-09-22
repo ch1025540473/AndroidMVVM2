@@ -150,7 +150,6 @@ public class MainViewModel extends LifecycleViewModel {
     public void receiveUpdateItems(UpdatedApiBeanEvent updatedApiBeanEvent) {
         items.clear();
         translateList(obtainUseCase(DemoUseCase.class).queryBeanList());
-        ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.TOP);
         notifyPropertyChanged(BR.items);
 
     }
