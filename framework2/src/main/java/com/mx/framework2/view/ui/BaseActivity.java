@@ -2,30 +2,22 @@ package com.mx.framework2.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.SparseArray;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
-import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCaseHolder;
-import com.mx.framework2.viewmodel.Lifecycle;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 import com.mx.framework2.viewmodel.ViewModelScope;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.io.Serializable;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -40,7 +32,7 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
+public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope,GomeShowDialog {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
     private final SparseArray<ActivityResultListener> activityResultListeners = new SparseArray<>();
@@ -208,6 +200,16 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public void removeViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().removeViewModel(lifecycle);
+    }
+
+    @Override
+    public void showDialog(DialogFragment dialogFragment, String tag) {
+        dialogFragment.show(getSupportFragmentManager(), tag);
+    }
+
+    @Override
+    public int showDialog(DialogFragment dialogFragment, FragmentTransaction transaction, String tag) {
+        return dialogFragment.show(transaction,tag);
     }
 
 }

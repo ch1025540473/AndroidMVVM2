@@ -3,32 +3,27 @@ package com.mx.framework2.view.ui;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.event.Events;
-import com.mx.framework2.viewmodel.Lifecycle;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.viewmodel.ViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 import com.mx.framework2.viewmodel.ViewModelScope;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.Collection;
 
 /**
  * Created by liuyuxuan on 16/4/20.
  */
 //TODO 监测生命状态
+
 public class BaseFragment extends Fragment implements ViewModelScope {
     private ViewModelManager viewModelManager;
+
     private RunState runState;
 
     public final ViewModelManager getViewModelManager() {
@@ -133,4 +128,5 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     public void removeViewModel(LifecycleViewModel lifecycleViewModel) {
         getViewModelManager().removeViewModel(lifecycleViewModel);
     }
+
 }
