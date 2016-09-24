@@ -3,12 +3,11 @@ package com.mx.framework2.viewmodel;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.mx.engine.event.EventProxy;
-import com.mx.engine.utils.SystemUtils;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCase;
+import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
 
@@ -20,12 +19,13 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/8/18.
  */
-public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActivity.ActivityResultListener, ModuleAware {
+public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAware, ActivityStarter {
     private LifecycleState lifecycleState;
     private EventProxy eventProxy;
     private Reference<ViewModelScope> scopeRef;
     private Module module;
     private boolean isAttachedToView = false;
+    private String id;
 
     protected LifecycleState getLifecycleState() {
         return lifecycleState;
@@ -55,16 +55,19 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
         this.scopeRef = new WeakReference<>(viewModelScope);
     }
 
+    @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        getActivity().registerActivityResultListener(requestCode, this);
-        getActivity().startActivityForResult(intent, requestCode);
+        getViewModelScope().registerActivityResultReceiver(requestCode, getId());
+        getViewModelScope().startActivityForResult(intent, requestCode);
     }
 
+    @Override
     public void startActivity(Intent intent) {
-        getActivity().startActivity(intent);
+        getViewModelScope().startActivity(intent);
     }
 
     private BaseActivity getActivity() {
+        //TODO: This method can be refined someway
         BaseActivity baseActivity;
         ViewModelScope viewModelScope = getViewModelScope();
         if (viewModelScope instanceof BaseActivity) {
@@ -81,9 +84,12 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
         return scopeRef.get();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void setId(String id) {
+        this.id = id;
+    }
 
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -128,7 +134,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     @Override
     public final void restart() {
         lifecycleState = LifecycleState.Started;
-
+        onRestart();
     }
 
     @Override
@@ -145,7 +151,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
 
     @Override
     public final void stop() {
-        lifecycleState = lifecycleState.Stopped;
+        lifecycleState = LifecycleState.Stopped;
         onStop();
         recycle();
     }
@@ -181,11 +187,12 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, BaseActi
     }
 
     public void onRestoreInstanceState(Bundle savedInstanceState) {
+    }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
     }
 
     public void setUserVisibleHint(boolean userVisibleHint) {
-
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.mx.framework2.viewmodel;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 /**
@@ -18,6 +19,8 @@ public interface Lifecycle {
     void onRestoreInstanceState(Bundle bundle);
 
     void setUserVisibleHint(boolean isVisibleToUser);
+
+    void onActivityResult(int requestCode, int resultCode, Intent intent);
 
     void accept(Visitor viewModelVisitor);
 

@@ -1,8 +1,5 @@
 package com.mx.framework2.viewmodel;
 
-import android.content.Intent;
-import android.util.SparseArray;
-
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.BuildConfig;
 import com.mx.framework2.ReflectUtil;
@@ -13,19 +10,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyInt;
 
 /**
  * Created by wwish on 16/8/30.
@@ -52,20 +44,20 @@ public class LifecycleViewModelTest {
 
     }
 
-    @Test
-    public void testStartActivityForResult() throws Exception {
-        Mockito.when(baseActivity.getRunState()).thenReturn(RunState.Created);
-        TestModel testModel = new TestModel();
-        testModel.setViewModelScope(baseActivity);
-        Field field = BaseActivity.class.getDeclaredField("activityResultListeners");
-        field.setAccessible(true);
-        field.set(baseActivity, new SparseArray<BaseActivity.ActivityResultListener>());
-        testModel.startActivityForResult(Mockito.mock(Intent.class), 22);
-        Mockito.verify(baseActivity).startActivityForResult(ArgumentCaptor.forClass(Intent.class).capture(),
-                ArgumentCaptor.forClass(Integer.class).capture());
-
-
-    }
+//    @Test
+//    public void testStartActivityForResult() throws Exception {
+//        Mockito.when(baseActivity.getRunState()).thenReturn(RunState.Created);
+//        TestModel testModel = new TestModel();
+//        testModel.setViewModelScope(baseActivity);
+//        Field field = BaseActivity.class.getDeclaredField("activityResultListeners");
+//        field.setAccessible(true);
+//        field.set(baseActivity, new SparseArray<BaseActivity.ActivityResultListener>());
+//        testModel.startActivityForResult(Mockito.mock(Intent.class), 22);
+//        Mockito.verify(baseActivity).startActivityForResult(ArgumentCaptor.forClass(Intent.class).capture(),
+//                ArgumentCaptor.forClass(Integer.class).capture());
+//
+//
+//    }
 
     @Test
     public void testGetActivity() throws Exception {

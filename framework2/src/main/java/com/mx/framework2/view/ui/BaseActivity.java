@@ -2,11 +2,8 @@ package com.mx.framework2.view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.util.SparseArray;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
@@ -35,12 +32,7 @@ import java.util.UUID;
 public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope,GomeShowDialog {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
-    private final SparseArray<ActivityResultListener> activityResultListeners = new SparseArray<>();
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
-
-    public interface ActivityResultListener {
-        void onActivityResult(int requestCode, int resultCode, Intent intent);
-    }
 
     private List<BaseFragment> getFragments() {
         List<BaseFragment> baseFragments = new LinkedList<>();
@@ -74,19 +66,15 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         }
     }
 
-
-    public final void registerActivityResultListener(int requestCode, ActivityResultListener activityResultListener) {
-        activityResultListeners.put(requestCode, activityResultListener);
+    @Override
+    public final void registerActivityResultReceiver(int requestCode, String receiverId) {
+        viewModelManager.registerActivityResultReceiver(requestCode, receiverId);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        ActivityResultListener activityResultListener = activityResultListeners.get(requestCode);
-        if (null != activityResultListener) {
-            activityResultListener.onActivityResult(requestCode, resultCode, data);
-            activityResultListeners.remove(requestCode);
-        }
         super.onActivityResult(requestCode, resultCode, data);
+        viewModelManager.onActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -163,7 +151,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     protected void onDestroy() {
         this.runState = RunState.Destroyed;
         super.onDestroy();
-        activityResultListeners.clear();
         EventProxy.getDefault().post(new Events.ActivityDestroyEvent(this));
     }
 

@@ -1,11 +1,12 @@
 package com.mx.framework2.viewmodel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.SparseArray;
 
 import com.mx.engine.utils.CheckUtils;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,9 +15,27 @@ import java.util.List;
  */
 public class ViewModelManager {
     private final List<LifecycleViewModel> lifecycleViewModelList;
-    Bundle savedInstanceState;
-    LifecycleState lifecycleState;
+    private Bundle savedInstanceState;
+    private LifecycleState lifecycleState;
     private List<Visitor<LifecycleViewModel>> visitors = new LinkedList<>();
+
+    private SparseArray<String> activityResultReceivers = new SparseArray<>();
+
+    private abstract class ParameterVisitor<Parameter> implements Visitor<LifecycleViewModel> {
+        Parameter parameter;
+
+        public ParameterVisitor(Parameter parameter) {
+            this.parameter = parameter;
+        }
+
+        public Parameter getParameter() {
+            return parameter;
+        }
+
+        public void setParameter(Parameter parameter) {
+            this.parameter = parameter;
+        }
+    }
 
     private Visitor<LifecycleViewModel> onCreateVisitor = new Visitor<LifecycleViewModel>() {
         @Override
@@ -39,7 +58,7 @@ public class ViewModelManager {
     private Visitor<LifecycleViewModel> onResumeVisitor = new Visitor<LifecycleViewModel>() {
         @Override
         public void visit(LifecycleViewModel vm) {
-            vm.onResume();
+            vm.resume();
         }
     };
     private Visitor<LifecycleViewModel> onPauseVisitor = new Visitor<LifecycleViewModel>() {
@@ -55,22 +74,6 @@ public class ViewModelManager {
             vm.stop();
         }
     };
-
-    private abstract class ParameterVisitor<Parameter> implements Visitor<LifecycleViewModel> {
-        Parameter parameter;
-
-        public ParameterVisitor(Parameter parameter) {
-            this.parameter = parameter;
-        }
-
-        public Parameter getParameter() {
-            return parameter;
-        }
-
-        public void setParameter(Parameter parameter) {
-            this.parameter = parameter;
-        }
-    }
 
     private ParameterVisitor<Boolean> onUserVisibleHintVisitor =
             new ParameterVisitor<Boolean>(null) {
@@ -114,11 +117,17 @@ public class ViewModelManager {
 
     public void addViewModel(LifecycleViewModel lifecycle) {
         CheckUtils.checkNotNull(lifecycle);
-        if (!lifecycleViewModelList.contains(lifecycle)) {
-            lifecycleViewModelList.add(lifecycle);
-            for (Visitor<LifecycleViewModel> visitor : visitors) {
-                lifecycle.accept(visitor);
-            }
+
+        if (lifecycleViewModelList.contains(lifecycle)) {
+            return;
+        }
+        if (lifecycle.getId() != null && findViewModelById(lifecycle.getId()) != null) {
+            throw new RuntimeException("Duplicated view model ID: " + lifecycle.getId());
+        }
+        lifecycleViewModelList.add(lifecycle);
+
+        for (Visitor<LifecycleViewModel> visitor : visitors) {
+            lifecycle.accept(visitor);
         }
     }
 
@@ -148,6 +157,39 @@ public class ViewModelManager {
         lifecycleState = LifecycleState.Created;
         for (Lifecycle lifecycle : lifecycleViewModelList) {
             lifecycle.accept(onCreateVisitor);
+        }
+    }
+
+    public LifecycleViewModel findViewModelById(String id) {
+        CheckUtils.checkNotNull(id);
+        for (LifecycleViewModel viewModel : lifecycleViewModelList) {
+            if (id.equals(viewModel.getId())) {
+                return viewModel;
+            }
+        }
+
+        return null;
+    }
+
+    public void registerActivityResultReceiver(int requestCode, String viewModelId) {
+        activityResultReceivers.put(requestCode, viewModelId);
+    }
+
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
+        Visitor<LifecycleViewModel> visitor = new Visitor<LifecycleViewModel>() {
+            @Override
+            public void visit(LifecycleViewModel vm) {
+                String id = activityResultReceivers.get(requestCode);
+                if (id != null && id.equals(vm.getId())) {
+                    activityResultReceivers.remove(requestCode);
+                    vm.onActivityResult(requestCode, resultCode, intent);
+                }
+            }
+        };
+        visitors.add(visitor);
+
+        for (Lifecycle lifecycle : lifecycleViewModelList) {
+            lifecycle.accept(visitor);
         }
     }
 

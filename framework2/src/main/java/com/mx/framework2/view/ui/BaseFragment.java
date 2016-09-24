@@ -1,11 +1,11 @@
 package com.mx.framework2.view.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,4 +129,14 @@ public class BaseFragment extends Fragment implements ViewModelScope {
         getViewModelManager().removeViewModel(lifecycleViewModel);
     }
 
+    @Override
+    public void registerActivityResultReceiver(int requestCode, String receiverId) {
+        getViewModelManager().registerActivityResultReceiver(requestCode, receiverId);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        getViewModelManager().onActivityResult(requestCode, resultCode, data);
+    }
 }
