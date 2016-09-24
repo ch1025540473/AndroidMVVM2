@@ -29,7 +29,7 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope,GomeShowDialog {
+public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
@@ -186,16 +186,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public void removeViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().removeViewModel(lifecycle);
-    }
-
-    @Override
-    public void showDialog(DialogFragment dialogFragment, String tag) {
-        dialogFragment.show(getSupportFragmentManager(), tag);
-    }
-
-    @Override
-    public int showDialog(DialogFragment dialogFragment, FragmentTransaction transaction, String tag) {
-        return dialogFragment.show(transaction,tag);
     }
 
 }
