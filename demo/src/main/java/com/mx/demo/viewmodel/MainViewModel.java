@@ -1,5 +1,6 @@
 package com.mx.demo.viewmodel;
 
+import android.content.Intent;
 import android.databinding.Bindable;
 
 import com.mx.demo.BR;
@@ -7,9 +8,7 @@ import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
-import com.mx.demo.view.PullToRefreshFooterView;
-import com.mx.demo.view.PullToRefreshHeaderView;
-import com.mx.demo.view.factory.DemoItemViewFactory;
+import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -19,7 +18,7 @@ import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.engine.utils.SubscriberResult;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
-import com.mx.framework2.view.LayoutManagers;
+import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
 import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
 import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
@@ -159,4 +158,22 @@ public class MainViewModel extends LifecycleViewModel {
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
     }
 
+    private static final int REQUEST_CODE = 101;
+
+    public OnClickCommand getOnClickSecondActivity() {
+        return new OnClickCommand() {
+            @Override
+            public void execute(int viewId) {
+                startActivityForResult(new Intent(getContext(), SecondActivity.class), REQUEST_CODE);
+            }
+        };
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == REQUEST_CODE) {
+            System.out.println("MainActivity:onActivityResult result=" + requestCode);
+        }
+    }
 }

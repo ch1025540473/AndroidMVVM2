@@ -15,15 +15,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
-        MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel(MainViewModel.class, this);
+        MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
         mainBinding.setModel(viewModel);
         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
-
-   /*     setContentView(R.layout.fragment_content_dialog);
-        fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_content,new TestDialogFragment());
-        ft.commit();*/
     }
 
     @Override
