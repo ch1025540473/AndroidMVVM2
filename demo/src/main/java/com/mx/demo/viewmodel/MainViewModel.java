@@ -21,6 +21,7 @@ import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
 import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
+import com.mx.framework2.viewmodel.proxy.DialogProxy;
 import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +34,8 @@ import java.util.List;
  * Created by chenbaocheng on 16/8/18.
  */
 public class MainViewModel extends LifecycleViewModel {
+
+    private DialogProxy dialogProxy1;
     public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
         this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
     }
@@ -86,6 +89,10 @@ public class MainViewModel extends LifecycleViewModel {
                 obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
                     @Override
                     public void onSuccess(List<ApiBean> apiBeanList) {
+                        if (dialogProxy1 != null) {
+                            //test dialog
+                            dialogProxy1.show();
+                        }
                         items.clear();
                         translateList(apiBeanList);
                         ptrRecyclerViewProxy.setLoadMoreComplete(true);
@@ -158,6 +165,9 @@ public class MainViewModel extends LifecycleViewModel {
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
     }
 
+    public void setDialogProxy(DialogProxy dialogProxy) {
+        dialogProxy1 = dialogProxy;
+    }
     private static final int REQUEST_CODE = 101;
 
     public OnClickCommand getOnClickSecondActivity() {

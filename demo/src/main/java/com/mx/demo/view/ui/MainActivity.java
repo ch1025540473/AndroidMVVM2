@@ -16,6 +16,10 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
+        //test dialogproxy
+//        DialogProxy dialogProxy = new DialogProxy(getSupportFragmentManager(), new GomeDialogFragment(), "tag");
+//        viewModel.setDialogProxy(dialogProxy);
+
         mainBinding.setModel(viewModel);
         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
     }
