@@ -20,6 +20,7 @@ import org.robolectric.util.FragmentController;
 import java.lang.reflect.Field;
 
 import static org.junit.Assert.*;
+import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 /**
  * Created by wwish on 16/9/12.
@@ -47,6 +48,14 @@ public class BaseFragmentTest {
         FragmentController<Fragment> fragmentController = Robolectric.buildFragment(Fragment.class).create();
         Fragment fragment = fragmentController.get();
 
+    }
+
+    @Test
+    public void shouldNotNull() throws Exception
+    {
+        BaseFragment fragment = new BaseFragment();
+        startFragment( fragment );
+        assertNotNull( fragment );
     }
 
     @Test
