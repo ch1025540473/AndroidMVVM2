@@ -3,6 +3,7 @@ package com.mx.framework2.model;
 import android.content.Context;
 
 import com.mx.framework2.BuildConfig;
+import com.mx.framework2.MyRunner;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,7 +19,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by wwish on 16/8/26.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(MyRunner.class)
 @Config(constants = BuildConfig.class)
 public class UseCaseTest {
     static class TestUseCase extends UseCase {

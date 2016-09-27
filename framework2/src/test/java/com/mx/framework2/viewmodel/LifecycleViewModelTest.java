@@ -5,6 +5,7 @@ import android.util.SparseArray;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.BuildConfig;
+import com.mx.framework2.MyRunner;
 import com.mx.framework2.ReflectUtil;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.RunState;
@@ -30,7 +31,7 @@ import static org.mockito.Matchers.anyInt;
 /**
  * Created by wwish on 16/8/30.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(MyRunner.class)
 @Config(constants = BuildConfig.class)
 public class LifecycleViewModelTest {
 

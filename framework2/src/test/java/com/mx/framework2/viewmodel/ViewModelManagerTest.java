@@ -3,6 +3,7 @@ package com.mx.framework2.viewmodel;
 import android.os.Bundle;
 
 import com.mx.framework2.BuildConfig;
+import com.mx.framework2.MyRunner;
 import com.mx.framework2.ReflectUtil;
 import com.mx.framework2.view.ui.BaseActivity;
 
@@ -25,7 +26,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by wwish on 16/8/29.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(MyRunner.class)
 @Config(constants = BuildConfig.class)
 public class ViewModelManagerTest {
 

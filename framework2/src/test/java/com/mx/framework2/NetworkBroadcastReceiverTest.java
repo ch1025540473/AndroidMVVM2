@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * Created by wwish on 16/8/29.
  */
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(MyRunner.class)
 @Config(constants = BuildConfig.class)
 public class NetworkBroadcastReceiverTest {
     Application application;
