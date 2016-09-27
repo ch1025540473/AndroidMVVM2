@@ -17,6 +17,7 @@ import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.engine.utils.SubscriberResult;
+import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
@@ -168,13 +169,17 @@ public class MainViewModel extends LifecycleViewModel {
     public void setDialogProxy(DialogProxy dialogProxy) {
         dialogProxy1 = dialogProxy;
     }
-    private static final int REQUEST_CODE = 101;
 
     public OnClickCommand getOnClickSecondActivity() {
         return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
-                startActivityForResult(new Intent(getContext(), SecondActivity.class), REQUEST_CODE);
+                startActivityForResult(new Intent(getContext(), SecondActivity.class), new ActivityResultCallback() {
+                    @Override
+                    public void onActivityResult(int resultCode, Intent data) {
+                        System.out.println("ActivityResultCallback:onActivityResult result=" + resultCode);
+                    }
+                });
             }
         };
     }
@@ -182,8 +187,6 @@ public class MainViewModel extends LifecycleViewModel {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-        if (requestCode == REQUEST_CODE) {
-            System.out.println("MainActivity:onActivityResult result=" + requestCode);
-        }
+        System.out.println("MainActivity:onActivityResult request=" + requestCode);
     }
 }
