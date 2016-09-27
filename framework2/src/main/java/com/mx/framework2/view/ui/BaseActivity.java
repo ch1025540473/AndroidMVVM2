@@ -32,7 +32,12 @@ import java.util.UUID;
 public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
+    private RunState runState = null;
+    private boolean isHasFocus = false;
+
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
+
+    private ViewModelManager viewModelManager;
 
     private List<BaseFragment> getFragments() {
         List<BaseFragment> baseFragments = new LinkedList<>();
@@ -77,11 +82,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         viewModelManager.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    private RunState runState = null;
-
-    private boolean isHasFocus = false;
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -94,9 +94,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     public RunState getRunState() {
         return this.runState;
     }
-
-
-    private ViewModelManager viewModelManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

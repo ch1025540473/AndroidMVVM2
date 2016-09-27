@@ -10,13 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mx.framework2.viewmodel.LifecycleViewModel;
+import com.mx.framework2.viewmodel.ViewModelScope;
 
 /**
  * Created by zhulianggang on 16/9/21.
  */
 
-public class BaseDialogFragment extends DialogFragment {
-
+public class BaseDialogFragment extends DialogFragment implements ViewModelScope {
     private FragmentDelegate fragmentDelegate = new FragmentDelegate();
 
     @Override
@@ -98,18 +98,22 @@ public class BaseDialogFragment extends DialogFragment {
     }
 
 
+    @Override
     public void addViewModel(LifecycleViewModel lifecycleViewModel) {
         fragmentDelegate.addViewModel(lifecycleViewModel);
     }
 
+    @Override
     public void removeViewModel(LifecycleViewModel lifecycleViewModel) {
         fragmentDelegate.removeViewModel(lifecycleViewModel);
     }
 
+    @Override
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
         fragmentDelegate.registerActivityResultReceiver(requestCode,receiverId);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragmentDelegate.onActivityResult(requestCode, resultCode, data);

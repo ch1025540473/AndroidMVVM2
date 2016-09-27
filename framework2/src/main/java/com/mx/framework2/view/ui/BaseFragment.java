@@ -19,10 +19,6 @@ import com.mx.framework2.viewmodel.ViewModelScope;
 //TODO 监测生命状态
 
 public class BaseFragment extends Fragment implements ViewModelScope {
-    private ViewModelManager viewModelManager;
-
-    private RunState runState;
-
     private FragmentDelegate fragmentDelegate = new FragmentDelegate();
 
     public final ViewModelManager getViewModelManager() {
@@ -120,6 +116,7 @@ public class BaseFragment extends Fragment implements ViewModelScope {
         fragmentDelegate.registerActivityResultReceiver(requestCode,receiverId);
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragmentDelegate.onActivityResult(requestCode, resultCode, data);

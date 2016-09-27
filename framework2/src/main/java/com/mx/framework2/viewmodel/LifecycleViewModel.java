@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCase;
+import com.mx.framework2.view.ui.ActivityResultCallback;
+import com.mx.framework2.view.ui.ActivityResultManager;
 import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
@@ -26,6 +28,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     private Module module;
     private boolean isAttachedToView = false;
     private String id;
+    private ActivityResultManager activityResultManager = ActivityResultManager.getInstance();
 
     protected LifecycleState getLifecycleState() {
         return lifecycleState;
@@ -59,6 +62,11 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     public void startActivityForResult(Intent intent, int requestCode) {
         getViewModelScope().registerActivityResultReceiver(requestCode, getId());
         getViewModelScope().startActivityForResult(intent, requestCode);
+    }
+
+    public void startActivityForResult(Intent intent, ActivityResultCallback callback) {
+        int requestCode = activityResultManager.generateRequestCodeForCallback(callback);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -180,18 +188,24 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     protected void onDetachedFromView() {
     }
 
+    @Override
     public void onWindowFocusChanged(boolean hasFocus) {
     }
 
+    @Override
     public void onSaveInstanceState(Bundle outState) {
     }
 
+    @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        activityResultManager.onActivityResult(requestCode, resultCode, intent);
     }
 
+    @Override
     public void setUserVisibleHint(boolean userVisibleHint) {
     }
 
