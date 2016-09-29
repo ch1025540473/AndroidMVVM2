@@ -1,5 +1,7 @@
 package com.mx.framework2.viewmodel.proxy;
 
+import android.view.View;
+
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.recyclerview.WrapRecyclerView;
 import com.mx.framework2.view.FooterLoadingView;
@@ -8,6 +10,8 @@ import com.mx.framework2.viewmodel.command.OnPullDownCommand;
 import com.mx.framework2.viewmodel.command.OnScrollCommand;
 import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
 import com.mx.framework2.view.PullToRefreshRecyclerView;
+
+import java.lang.ref.WeakReference;
 
 import static com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy.PTRMode.BOTH;
 import static com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy.PTRMode.BOTTOM;
@@ -29,16 +33,18 @@ public class PTRRecyclerViewProxy {
     private OnLoadMoreCommand onLoadMoreCommand;
     private boolean isLoadMoreComplete = false;
     private OnScrollCommand onScrollCommand;
-    private PullToRefreshRecyclerView ptrRecyclerView;
+    private WeakReference<PullToRefreshRecyclerView> ptrRecyclerViewRef;
+    private int scrollPosition;
 
     public final void attach(PullToRefreshRecyclerView ptrRecyclerView) {
-        this.ptrRecyclerView = ptrRecyclerView;
+        this.ptrRecyclerViewRef = new WeakReference<PullToRefreshRecyclerView>(ptrRecyclerView);
         setOnPullDownCommand(onPullDownCommand);
         setOnScrollCommand(onScrollCommand);
         setPtrMode(ptrMode);
         setOnStartRefreshingCommand(onStartRefreshingCommand);
         setOnLoadMoreCommand(onLoadMoreCommand);
         setLoadMoreComplete(isLoadMoreComplete);
+        setScrollPosition(scrollPosition);
     }
 
     public OnScrollCommand getOnScrollCommand() {
@@ -47,9 +53,17 @@ public class PTRRecyclerViewProxy {
 
     public void setOnScrollCommand(OnScrollCommand onScrollCommand) {
         this.onScrollCommand = onScrollCommand;
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
             ptrRecyclerView.setOnScrollCommand(onScrollCommand);
         }
+    }
+
+    private PullToRefreshRecyclerView getPtrRecyclerView() {
+        if (ptrRecyclerViewRef != null) {
+            return ptrRecyclerViewRef.get();
+        }
+        return null;
     }
 
 
@@ -59,6 +73,7 @@ public class PTRRecyclerViewProxy {
 
     public void setPtrMode(PTRMode ptrMode) {
         this.ptrMode = ptrMode;
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
             boolean footerEnable = (this.ptrMode.equals(BOTH)
                     || this.ptrMode.equals(PTRMode.BOTTOM));
@@ -82,8 +97,10 @@ public class PTRRecyclerViewProxy {
 
     public void setOnStartRefreshingCommand(OnStartRefreshingCommand onStartRefreshingCommand) {
         this.onStartRefreshingCommand = onStartRefreshingCommand;
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
-            ptrRecyclerView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<WrapRecyclerView>() {
+            ptrRecyclerView.setOnRefreshListener(new PullToRefreshBase
+                    .OnRefreshListener<WrapRecyclerView>() {
                 @Override
                 public void onRefresh(PullToRefreshBase<WrapRecyclerView> refreshView) {
                     PTRRecyclerViewProxy.this.onStartRefreshingCommand.onStartRefreshing();
@@ -98,6 +115,7 @@ public class PTRRecyclerViewProxy {
 
     public void setOnPullDownCommand(OnPullDownCommand onPullDownCommand) {
         this.onPullDownCommand = onPullDownCommand;
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
             ptrRecyclerView.setPullToRefreshHeaderListener(onPullDownCommand);
         }
@@ -109,8 +127,10 @@ public class PTRRecyclerViewProxy {
 
     public void setOnLoadMoreCommand(OnLoadMoreCommand onLoadMoreCommand) {
         this.onLoadMoreCommand = onLoadMoreCommand;
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
-            ptrRecyclerView.setOnLastItemVisibleListener(new PullToRefreshBase.OnLastItemVisibleListener() {
+            ptrRecyclerView.setOnLastItemVisibleListener(new PullToRefreshBase
+                    .OnLastItemVisibleListener() {
                 @Override
                 public void onLastItemVisible() {
                     PTRRecyclerViewProxy.this.onLoadMoreCommand.onLoadMore();
@@ -120,6 +140,7 @@ public class PTRRecyclerViewProxy {
     }
 
     public boolean isRefresh() {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
             return ptrRecyclerView.isRefreshing();
         }
@@ -127,6 +148,7 @@ public class PTRRecyclerViewProxy {
     }
 
     public void setRefresh(boolean isRefresh) {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         if (ptrRecyclerView != null) {
             if (isRefresh) {
                 ptrRecyclerView.setRefreshing();
@@ -141,6 +163,7 @@ public class PTRRecyclerViewProxy {
     }
 
     public void setLoadMoreComplete(boolean loadMoreComplete) {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
         isLoadMoreComplete = loadMoreComplete;
         if (ptrRecyclerView != null) {
             if (isLoadMoreComplete) {
@@ -148,6 +171,24 @@ public class PTRRecyclerViewProxy {
             } else {
                 ptrRecyclerView.setStartLoading();
             }
+        }
+    }
+
+    public int getScrollPosition() {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
+        if (ptrRecyclerView != null) {
+            View startView = ptrRecyclerView.getRefreshableView().getLayoutManager().getChildAt(0);
+            return ptrRecyclerView.getRefreshableView().getLayoutManager().getPosition(startView);
+        }
+        return 0;
+    }
+
+    public void setScrollPosition(int scrollPosition) {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
+        this.scrollPosition = scrollPosition;
+        if (ptrRecyclerView != null) {
+            ptrRecyclerView.getRefreshableView().getLayoutManager().scrollToPosition
+                    (scrollPosition);
         }
     }
 }

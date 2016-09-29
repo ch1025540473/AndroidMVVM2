@@ -37,6 +37,7 @@ import java.util.List;
 public class MainViewModel extends LifecycleViewModel {
 
     private DialogProxy dialogProxy1;
+
     public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
         this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
     }
@@ -137,7 +138,8 @@ public class MainViewModel extends LifecycleViewModel {
                 List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
                 for (int i = 0; i < 20; i++) {
                     if (i % 3 == 0) {
-                        ChildColorItemViewBean childColorItemViewBean = new ChildColorItemViewBean();
+                        ChildColorItemViewBean childColorItemViewBean = new
+                                ChildColorItemViewBean();
                         list.add(childColorItemViewBean);
                     } else {
                         ChildTextItemViewBean childTextItemViewBean = new ChildTextItemViewBean();
@@ -174,10 +176,14 @@ public class MainViewModel extends LifecycleViewModel {
         return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
-                startActivityForResult(new Intent(getContext(), SecondActivity.class), new ActivityResultCallback() {
+                System.out.println("ActivityResultCallback:onActivityResult execute=" + ">>>>" +
+                        MainViewModel.this);
+                startActivityForResult(new Intent(getContext(), SecondActivity.class), new
+                        ActivityResultCallback() {
                     @Override
                     public void onActivityResult(int resultCode, Intent data) {
-                        System.out.println("ActivityResultCallback:onActivityResult result=" + resultCode);
+                        System.out.println("ActivityResultCallback:onActivityResult result=" +
+                                resultCode + ">>>>" + MainViewModel.this);
                     }
                 });
             }
