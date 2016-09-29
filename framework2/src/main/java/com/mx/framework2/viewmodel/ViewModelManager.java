@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * Created by liuyuxuan on 16/4/20.
  */
+// TODO 1 visit 优化, 2 savedInstenceState  于viewModel 一一对应;
 public class ViewModelManager {
     private static final String BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS = "framework_activity_result_receivers";
 

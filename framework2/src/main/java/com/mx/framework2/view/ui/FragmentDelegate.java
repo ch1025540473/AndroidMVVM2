@@ -50,6 +50,7 @@ public class FragmentDelegate implements ViewModelScope {
     }
 
     public void onSaveInstanceState(Bundle outState) {
+        outState.putString(UUID_KEY, uuid);
         getViewModelManager().saveInstanceState(outState);
     }
 
