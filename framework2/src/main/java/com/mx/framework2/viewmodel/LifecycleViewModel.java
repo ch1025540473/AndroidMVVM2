@@ -231,4 +231,12 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
             attachedToView();
         }
     }
+
+    public String getUniqueId() {
+        return generateUniqueId(scopeRef.get(), getId());
+    }
+
+    public static String generateUniqueId(ViewModelScope scope, String viewModelId) {
+        return String.format("%s_%s", scope.getViewModelScopeId(), viewModelId);
+    }
 }

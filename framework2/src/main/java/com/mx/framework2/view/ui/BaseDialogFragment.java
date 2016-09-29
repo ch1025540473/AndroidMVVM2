@@ -110,7 +110,12 @@ public class BaseDialogFragment extends DialogFragment implements ViewModelScope
 
     @Override
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
-        fragmentDelegate.registerActivityResultReceiver(requestCode,receiverId);
+        fragmentDelegate.registerActivityResultReceiver(requestCode, receiverId);
+    }
+
+    @Override
+    public String getViewModelScopeId() {
+        return fragmentDelegate.getViewModelScopeId();
     }
 
     @Override
@@ -119,4 +124,15 @@ public class BaseDialogFragment extends DialogFragment implements ViewModelScope
         fragmentDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        fragmentDelegate.startActivity(intent);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        fragmentDelegate.startActivityForResult(intent, requestCode);
+    }
 }

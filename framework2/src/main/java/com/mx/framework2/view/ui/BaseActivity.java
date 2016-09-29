@@ -34,6 +34,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     private String uuid;
     private RunState runState = null;
     private boolean isHasFocus = false;
+    private List<Integer> receivedRequestCodes = new LinkedList<>();
 
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
 
@@ -77,9 +78,15 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     }
 
     @Override
+    public String getViewModelScopeId() {
+        return uuid;
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         viewModelManager.onActivityResult(requestCode, resultCode, data);
+        receivedRequestCodes.add(requestCode & 0xffff);
     }
 
     @Override
@@ -128,6 +135,12 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         super.onStop();
         getViewModelManager().stop();
         EventProxy.getDefault().unregister(this);
+
+        for (int requestCode : receivedRequestCodes) {
+            ActivityResultManager.getInstance().onRequestCodeConsumed(requestCode);
+        }
+        receivedRequestCodes.clear();
+
         this.runState = RunState.Stoped;
     }
 

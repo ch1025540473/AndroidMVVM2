@@ -1,12 +1,13 @@
 package com.mx.framework2.viewmodel;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.SparseArray;
 
 import com.mx.engine.utils.CheckUtils;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,12 +15,15 @@ import java.util.List;
  * Created by liuyuxuan on 16/4/20.
  */
 public class ViewModelManager {
+    private static final String BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS = "framework_activity_result_receivers";
+
     private final List<LifecycleViewModel> lifecycleViewModelList;
     private Bundle savedInstanceState;
     private LifecycleState lifecycleState;
     private List<Visitor<LifecycleViewModel>> visitors = new LinkedList<>();
 
-    private SparseArray<String> activityResultReceivers = new SparseArray<>();
+    @SuppressLint("UseSparseArrays") // Request codes are too large to fit in a SparseArray
+    private HashMap<Integer, String> activityResultReceivers = new HashMap<>();
 
     private abstract class ParameterVisitor<Parameter> implements Visitor<LifecycleViewModel> {
         Parameter parameter;
@@ -153,6 +157,10 @@ public class ViewModelManager {
     }
 
     public void create() {
+        if (savedInstanceState != null) {
+            activityResultReceivers = (HashMap<Integer, String>) savedInstanceState.getSerializable(BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS);
+        }
+
         visitors.add(onCreateVisitor);
         lifecycleState = LifecycleState.Created;
         for (Lifecycle lifecycle : lifecycleViewModelList) {
@@ -233,12 +241,13 @@ public class ViewModelManager {
         visitors.clear();
     }
 
-    public void saveInstanceState(Bundle outState) {
-        onSaveInstanceState.setParameter(outState);
+    public void saveInstanceState(Bundle savedInstanceState) {
+        onSaveInstanceState.setParameter(savedInstanceState);
         visitors.add(onSaveInstanceState);
         for (Lifecycle lifecycle : lifecycleViewModelList) {
             lifecycle.accept(onSaveInstanceState);
         }
+        savedInstanceState.putSerializable(BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS, activityResultReceivers);
     }
 
     public void onAttachContext(Context context) {

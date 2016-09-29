@@ -11,12 +11,18 @@ import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
+import com.mx.framework2.viewmodel.ViewModelScope;
+
+import java.util.UUID;
 
 /**
  * Created by zhulianggang on 16/9/26.
  */
 
-public class FragmentDelegate {
+public class FragmentDelegate implements ViewModelScope {
+    private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
+    private String uuid;
+
     private ViewModelManager viewModelManager = new ViewModelManager();
     private RunState runState;
 
@@ -31,6 +37,14 @@ public class FragmentDelegate {
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
         runState = RunState.Created;
+
+        if (savedInstanceState != null) {
+            uuid = savedInstanceState.getString(UUID_KEY);
+            CheckUtils.checkNotNull(uuid, "uuid is null");
+        } else {
+            uuid = UUID.randomUUID().toString();
+        }
+
         viewModelManager.setSavedInstanceState(savedInstanceState);
         viewModelManager.create();
     }
@@ -88,21 +102,34 @@ public class FragmentDelegate {
         return runState;
     }
 
+    @Override
     public void addViewModel(LifecycleViewModel lifecycleViewModel) {
         getViewModelManager().addViewModel(lifecycleViewModel);
     }
 
+    @Override
     public void removeViewModel(LifecycleViewModel lifecycleViewModel) {
         getViewModelManager().removeViewModel(lifecycleViewModel);
     }
 
-
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
         getViewModelManager().registerActivityResultReceiver(requestCode, receiverId);
+    }
+
+    @Override
+    public String getViewModelScopeId() {
+        return uuid;
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         getViewModelManager().onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+    }
 }

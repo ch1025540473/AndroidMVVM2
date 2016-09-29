@@ -11,4 +11,6 @@ public interface ViewModelScope extends ActivityStarter {
     void removeViewModel(LifecycleViewModel lifecycleViewModel);
 
     void registerActivityResultReceiver(int requestCode, String viewModelId);
+
+    String getViewModelScopeId();
 }

@@ -10,12 +10,15 @@ import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
 import com.mx.framework2.view.ui.RunState;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 /**
  * Created by liuyuxuan on 16/6/6.
  */
 public class ViewModelFactoryImpl implements ViewModelFactory {
-
-    Module module;
+    private Module module;
+    private Map<String, LifecycleViewModel> viewModelPool = new WeakHashMap<>(10, 1);
 
     public ViewModelFactoryImpl(Module module) {
         this.module = module;
@@ -31,7 +34,14 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
     }
 
     private <T extends LifecycleViewModel> T createViewModel(Context context, ViewModelScope scope, String viewModelId, Class<T> viewModelClass) {
-        T value = newInstance(viewModelClass, scope);
+        T value;
+        String uniqueId = LifecycleViewModel.generateUniqueId(scope, viewModelId);
+        if (viewModelPool.containsKey(uniqueId)) {
+            value = (T) viewModelPool.get(viewModelId);
+        } else {
+            value = newInstance(viewModelClass, scope);
+        }
+
         if (null != value) {
             if (value instanceof ModuleAware) {
                 value.setModule(module);

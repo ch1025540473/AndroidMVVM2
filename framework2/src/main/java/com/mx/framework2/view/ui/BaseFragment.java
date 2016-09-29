@@ -117,8 +117,25 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     }
 
     @Override
+    public String getViewModelScopeId() {
+        return fragmentDelegate.getViewModelScopeId();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         fragmentDelegate.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        fragmentDelegate.startActivity(intent);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        fragmentDelegate.startActivityForResult(intent, requestCode);
     }
 }

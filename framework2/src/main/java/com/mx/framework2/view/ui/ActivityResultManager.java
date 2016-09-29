@@ -67,4 +67,8 @@ public final class ActivityResultManager {
             callback.onActivityResult(resultCode, intent);
         }
     }
+
+    public void onRequestCodeConsumed(int requestCode) {
+        callbackMap.remove(requestCode);
+    }
 }
