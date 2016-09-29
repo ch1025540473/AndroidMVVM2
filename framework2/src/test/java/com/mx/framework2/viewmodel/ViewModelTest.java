@@ -4,6 +4,7 @@ import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.event.NetworkBroadcastEvent;
 import com.mx.framework2.BuildConfig;
+import com.mx.framework2.MyRunner;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.RunState;
 
@@ -23,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by wwish on 16/8/29.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(MyRunner.class)
 @Config(constants = BuildConfig.class)
 public class ViewModelTest {
 
