@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:binding="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="com.mx.demo.viewmodel.MainViewModel" />
+
+        <import type="com.mx.framework2.view.LayoutManagers" />
+
+        <import type="com.mx.demo.view.PullToRefreshFooterView" />
+
+        <import type="com.mx.demo.view.PullToRefreshHeaderView" />
+
+        <import type="com.mx.demo.view.factory.DemoItemViewFactory" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <LinearLayout
+            android:id="@+id/tools_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <Button
+                android:id="@+id/start_second_activity_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:onClick="@{model.onClickSecondActivity}"
+                android:text="Start Another Activity"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+        <com.mx.framework2.view.PullToRefreshRecyclerView
+            android:id="@+id/demo_mylist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/tools_bar"
+            binding:footerClassName="@{PullToRefreshFooterView.className}"
+            binding:headerClassName="@{PullToRefreshHeaderView.className}"
+            binding:itemViewFactory="@{DemoItemViewFactory.className}"
+            binding:items="@{model.items}"
+            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:proxy="@{model.ptrRecyclerViewProxy}" />
+
+    </RelativeLayout>
+</layout>
