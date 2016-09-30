@@ -3,6 +3,7 @@ package com.mx.framework2.viewmodel;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.Module;
@@ -58,6 +59,11 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
             scopeId = null;
             return;
         }
+        // vm 所在scope发生了变化,此时vm被重用 需要于上一次的scope脱离
+        if (viewModelScope != getViewModelScope()) {
+            detachedFromView();
+        }
+
         this.scopeRef = new WeakReference<>(viewModelScope);
         scopeId = viewModelScope.getViewModelScopeId();
     }
@@ -93,7 +99,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     }
 
     private ViewModelScope getViewModelScope() {
-        return scopeRef.get();
+        return scopeRef == null ? null : scopeRef.get();
     }
 
     public void setTag(String tag) {
@@ -126,7 +132,10 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
             isAttachedToView = false;
             recycle();
             onDetachedFromView();
-            getViewModelScope().removeViewModel(this);
+            ViewModelScope viewModelScope = getViewModelScope();
+            if (viewModelScope != null) {
+                viewModelScope.removeViewModel(this);
+            }
         }
     }
 
@@ -226,6 +235,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
                 .contains("ViewDataBinding$WeakPropertyListener")) {
             detachedFromView();
         }
+        Log.d("home>>>", "removeOnPropertyChangedCallback ");
     }
 
     @Override
@@ -236,6 +246,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
                 .contains("ViewDataBinding$WeakPropertyListener")) {
             attachedToView();
         }
+        Log.d("home>>>", "addOnPropertyChangedCallback ");
     }
 
     public String getUniqueId() {
