@@ -2,6 +2,7 @@ package com.mx.demo.viewmodel;
 
 import android.content.Intent;
 import android.databinding.Bindable;
+import android.os.Bundle;
 
 import com.mx.demo.BR;
 import com.mx.demo.event.RemoveTxtEvent;
@@ -57,7 +58,6 @@ public class MainViewModel extends LifecycleViewModel {
     }
 
     public MainViewModel() {
-
         ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.BOTH);
         ptrRecyclerViewProxy.setRefresh(false);
         ptrRecyclerViewProxy.setLoadMoreComplete(true);
@@ -119,6 +119,12 @@ public class MainViewModel extends LifecycleViewModel {
 
     }
 
+    @Override
+    protected void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        System.out.println("ActivityResultCallback:onCreate=" + ">>>>" +
+                MainViewModel.this);
+    }
 
     private void translateList(List<ApiBean> apiBeanList) {
         for (ApiBean apiBean : apiBeanList) {
@@ -180,12 +186,13 @@ public class MainViewModel extends LifecycleViewModel {
                         MainViewModel.this);
                 startActivityForResult(new Intent(getContext(), SecondActivity.class), new
                         ActivityResultCallback() {
-                    @Override
-                    public void onActivityResult(int resultCode, Intent data) {
-                        System.out.println("ActivityResultCallback:onActivityResult result=" +
-                                resultCode + ">>>>" + MainViewModel.this);
-                    }
-                });
+                            @Override
+                            public void onActivityResult(int resultCode, Intent data) {
+                                System.out.println("ActivityResultCallback:onActivityResult " +
+                                        "result=" +
+                                        resultCode + ">>>>" + MainViewModel.this);
+                            }
+                        });
             }
         };
     }

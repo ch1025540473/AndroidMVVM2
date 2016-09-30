@@ -21,13 +21,15 @@ import static com.mx.engine.utils.CheckUtils.checkNotNull;
 /**
  * Created by liuyuxuan on 16/8/18.
  */
-public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAware, ActivityStarter {
+public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAware,
+        ActivityStarter {
     private LifecycleState lifecycleState;
     private EventProxy eventProxy;
     private Reference<ViewModelScope> scopeRef;
     private Module module;
     private boolean isAttachedToView = false;
-    private String id;
+    private String tag;
+    private String scopeId;
     private ActivityResultManager activityResultManager = ActivityResultManager.getInstance();
 
     protected LifecycleState getLifecycleState() {
@@ -53,14 +55,16 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
 
     final void setViewModelScope(ViewModelScope viewModelScope) {
         if (null == viewModelScope) {
+            scopeId = null;
             return;
         }
         this.scopeRef = new WeakReference<>(viewModelScope);
+        scopeId = viewModelScope.getViewModelScopeId();
     }
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        getViewModelScope().registerActivityResultReceiver(requestCode, getId());
+        getViewModelScope().registerActivityResultReceiver(requestCode, getTag());
         getViewModelScope().startActivityForResult(intent, requestCode);
     }
 
@@ -92,12 +96,12 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
         return scopeRef.get();
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
-    public String getId() {
-        return id;
+    public String getTag() {
+        return tag;
     }
 
     @Override
@@ -215,7 +219,8 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     }
 
     @Override
-    public final synchronized void removeOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+    public final synchronized void removeOnPropertyChangedCallback(OnPropertyChangedCallback
+                                                                           callback) {
         super.removeOnPropertyChangedCallback(callback);
         if (null != callback && callback.getClass().getName()
                 .contains("ViewDataBinding$WeakPropertyListener")) {
@@ -224,7 +229,8 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     }
 
     @Override
-    public final synchronized void addOnPropertyChangedCallback(OnPropertyChangedCallback callback) {
+    public final synchronized void addOnPropertyChangedCallback(OnPropertyChangedCallback
+                                                                        callback) {
         super.addOnPropertyChangedCallback(callback);
         if (null != callback && callback.getClass().getName()
                 .contains("ViewDataBinding$WeakPropertyListener")) {
@@ -233,10 +239,10 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     }
 
     public String getUniqueId() {
-        return generateUniqueId(scopeRef.get(), getId());
+        return generateUniqueId(scopeId, getTag());
     }
 
-    public static String generateUniqueId(ViewModelScope scope, String viewModelId) {
-        return String.format("%s_%s", scope.getViewModelScopeId(), viewModelId);
+    public static String generateUniqueId(String scopeId, String viewModelId) {
+        return String.format("%s_%s", scopeId, viewModelId);
     }
 }

@@ -126,8 +126,8 @@ public class ViewModelManager {
         if (lifecycleViewModelList.contains(lifecycle)) {
             return;
         }
-        if (lifecycle.getId() != null && findViewModelById(lifecycle.getId()) != null) {
-            throw new RuntimeException("Duplicated view model ID: " + lifecycle.getId());
+        if (lifecycle.getTag() != null && findViewModelByTag(lifecycle.getTag()) != null) {
+            throw new RuntimeException("Duplicated view model tag: " + lifecycle.getTag());
         }
         lifecycleViewModelList.add(lifecycle);
 
@@ -169,10 +169,10 @@ public class ViewModelManager {
         }
     }
 
-    public LifecycleViewModel findViewModelById(String id) {
-        CheckUtils.checkNotNull(id);
+    public LifecycleViewModel findViewModelByTag(String tag) {
+        CheckUtils.checkNotNull(tag);
         for (LifecycleViewModel viewModel : lifecycleViewModelList) {
-            if (id.equals(viewModel.getId())) {
+            if (tag.equals(viewModel.getTag())) {
                 return viewModel;
             }
         }
@@ -188,8 +188,8 @@ public class ViewModelManager {
         Visitor<LifecycleViewModel> visitor = new Visitor<LifecycleViewModel>() {
             @Override
             public void visit(LifecycleViewModel vm) {
-                String id = activityResultReceivers.get(requestCode);
-                if (id != null && id.equals(vm.getId())) {
+                String tag = activityResultReceivers.get(requestCode);
+                if (tag != null && tag.equals(vm.getTag())) {
                     activityResultReceivers.remove(requestCode);
                     vm.onActivityResult(requestCode, resultCode, intent);
                 }

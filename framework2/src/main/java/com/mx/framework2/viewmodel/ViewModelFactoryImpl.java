@@ -1,6 +1,7 @@
 package com.mx.framework2.viewmodel;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.mx.engine.utils.CheckUtils;
 import com.mx.engine.utils.ObjectUtils;
@@ -10,6 +11,10 @@ import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
 import com.mx.framework2.view.ui.RunState;
 
+import java.lang.ref.WeakReference;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -18,7 +23,7 @@ import java.util.WeakHashMap;
  */
 public class ViewModelFactoryImpl implements ViewModelFactory {
     private Module module;
-    private Map<String, LifecycleViewModel> viewModelPool = new WeakHashMap<>(10, 1);
+    private List<WeakReference<LifecycleViewModel>> viewModelPool = new LinkedList<>();
 
     public ViewModelFactoryImpl(Module module) {
         this.module = module;
@@ -33,44 +38,63 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
         return value;
     }
 
-    private <T extends LifecycleViewModel> T createViewModel(Context context, ViewModelScope scope, String viewModelId, Class<T> viewModelClass) {
-        T value;
-        String uniqueId = LifecycleViewModel.generateUniqueId(scope, viewModelId);
-        if (viewModelPool.containsKey(uniqueId)) {
-            value = (T) viewModelPool.get(viewModelId);
-        } else {
-            value = newInstance(viewModelClass, scope);
+    private <T extends LifecycleViewModel> T getViewModelFromPool(@NonNull String uniqueId) {
+        CheckUtils.checkNotNull(uniqueId);
+        ListIterator<WeakReference<LifecycleViewModel>> listIterator = viewModelPool.listIterator();
+        while (listIterator.hasNext()) {
+            WeakReference<LifecycleViewModel> vmRef = listIterator.next();
+            if (vmRef.get() == null) {
+                listIterator.remove();
+            }
         }
 
+        for (WeakReference<LifecycleViewModel> vmRef : viewModelPool) {
+            LifecycleViewModel viewModel = vmRef.get();
+            if (viewModel != null && viewModel.getUniqueId().equals(uniqueId)) {
+                return (T) viewModel;
+            }
+        }
+        return null;
+    }
+
+
+    private <T extends LifecycleViewModel> T createViewModel(Context context, ViewModelScope
+            scope, String viewModelTag, Class<T> viewModelClass) {
+        String uniqueId = LifecycleViewModel.generateUniqueId(scope.getViewModelScopeId(), viewModelTag);
+        T value = getViewModelFromPool(uniqueId);
+        if (value == null) {
+            value = newInstance(viewModelClass, scope);
+            viewModelPool.add(new WeakReference<LifecycleViewModel>(value));
+        }
         if (null != value) {
             if (value instanceof ModuleAware) {
                 value.setModule(module);
             }
-
             value.setViewModelScope(scope);
             value.setContext(context);
-            value.setId(viewModelId);
+            value.setTag(viewModelTag);
         }
-
         return value;
     }
 
     @Override
-    public <T extends LifecycleViewModel> T createViewModel(String viewModelId, Class<T> viewModelClass, BaseFragment baseFragment) {
+    public <T extends LifecycleViewModel> T createViewModel(String viewModelTag, Class<T>
+            viewModelClass, BaseFragment baseFragment) {
         CheckUtils.checkNotNull(viewModelClass);
         CheckUtils.checkNotNull(baseFragment);
         //TODO: R.string.activity_msg means ambiguously
-        CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created, baseFragment.getString(R.string.activity_msg));
-
-        return createViewModel(baseFragment.getContext(), baseFragment, viewModelId, viewModelClass);
+        CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created,
+                baseFragment.getString(R.string.activity_msg));
+        return createViewModel(baseFragment.getContext(), baseFragment, viewModelTag, viewModelClass);
     }
 
     @Override
-    public <T extends LifecycleViewModel> T createViewModel(String viewModelId, Class<T> viewModelClass, BaseActivity baseActivity) {
+    public <T extends LifecycleViewModel> T createViewModel(String viewModelTag, Class<T>
+            viewModelClass, BaseActivity baseActivity) {
         CheckUtils.checkNotNull(viewModelClass);
         CheckUtils.checkNotNull(baseActivity);
-        CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created, baseActivity.getString(R.string.activity_msg));
-
-        return createViewModel(baseActivity, baseActivity, viewModelId, viewModelClass);
+        CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created,
+                baseActivity.getString(R.string.activity_msg));
+        return createViewModel(baseActivity, baseActivity, viewModelTag, viewModelClass);
     }
 }

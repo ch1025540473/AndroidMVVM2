@@ -7,6 +7,7 @@ import com.mx.demo.DemoModule;
 import com.mx.demo.R;
 import com.mx.demo.databinding.ActivityMainBinding;
 import com.mx.demo.viewmodel.MainViewModel;
+import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.view.ui.BaseActivity;
 
 public class MainActivity extends BaseActivity {
@@ -14,14 +15,14 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMainBinding mainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        ActivityMainBinding mainBinding = DataBindingFactory.setContentView(this, R.layout.activity_main);
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
         //test dialogproxy
 //        DialogProxy dialogProxy = new DialogProxy(getSupportFragmentManager(), new GomeDialogFragment(), "tag");
 //        viewModel.setDialogProxy(dialogProxy);
 
         mainBinding.setModel(viewModel);
-        mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
+         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
     }
 
     @Override
