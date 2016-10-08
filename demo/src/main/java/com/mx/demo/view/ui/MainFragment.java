@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.mx.demo.DemoModule;
 import com.mx.demo.R;
-import com.mx.demo.databinding.ActivityMainBinding;
 import com.mx.demo.databinding.FragmentMainBinding;
 import com.mx.demo.viewmodel.MainViewModel;
 import com.mx.framework2.view.DataBindingFactory;
