@@ -1,6 +1,7 @@
 package com.mx.framework2.view.adapter;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -69,12 +70,15 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
             super(viewDataBinding.getRoot());
             this.recyclerItemViewModel = recyclerItemViewModel;
             this.viewDataBinding = viewDataBinding;
+            this.recyclerItemViewModel.setView(viewDataBinding.getRoot());
         }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        DataBindingUtil.findBinding(parent);
+
         RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.obtainViewModel(viewModelTypes.get(viewType));
         return new ViewHolder(vm, itemViewFactory.getViewDataBinding(vm));
     }

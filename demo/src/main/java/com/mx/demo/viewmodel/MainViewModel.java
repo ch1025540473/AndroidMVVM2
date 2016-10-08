@@ -3,6 +3,7 @@ package com.mx.demo.viewmodel;
 import android.content.Intent;
 import android.databinding.Bindable;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.mx.demo.BR;
 import com.mx.demo.event.RemoveTxtEvent;
@@ -171,6 +172,7 @@ public class MainViewModel extends LifecycleViewModel {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
+        Log.d("receiveRemove", "removeTxtEvent=" + removeTxtEvent.getActivityStarter());
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
     }
 

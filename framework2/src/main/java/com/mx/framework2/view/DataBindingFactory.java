@@ -10,6 +10,7 @@ import android.view.View;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.viewmodel.Lifecycle;
 import com.mx.framework2.viewmodel.LifecycleState;
+import com.mx.framework2.viewmodel.ViewModel;
 
 import java.lang.reflect.Field;
 import java.util.LinkedList;
@@ -43,22 +44,30 @@ public class DataBindingFactory {
         return value;
     }
 
+    public static List<ViewModel> getViewModelsFromDataBinding(ViewDataBinding viewDataBinding){
+        return findByClass(viewDataBinding, ViewModel.class);
+    }
+
     private static List<Lifecycle> getLifecycleListFromDataBinding(ViewDataBinding viewDataBinding) {
-        List<Lifecycle> lifecycleList = new LinkedList<>();
+        return findByClass(viewDataBinding, Lifecycle.class);
+    }
+
+    private static <T> List<T> findByClass(ViewDataBinding viewDataBinding, Class<T> clazz){
+        List<T> list = new LinkedList<>();
         try {
             Field[] fields = viewDataBinding.getClass().getDeclaredFields();
             for (Field field : fields) {
                 field.setAccessible(true);
                 Object obj = field.get(viewDataBinding);
-                if (obj != null && obj instanceof Lifecycle) {
-                    lifecycleList.add((Lifecycle) obj);
+                if (clazz.isInstance(obj)) {
+                    list.add(clazz.cast(obj));
                 }
             }
         } catch (IllegalAccessException e) {
-
+            e.printStackTrace();
         }
 
-        return lifecycleList;
+        return list;
     }
 
 

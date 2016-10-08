@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.Module;
+import com.mx.framework2.event.BroadcastEvent;
 import com.mx.framework2.model.UseCase;
 import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.view.ui.ActivityResultManager;
@@ -255,5 +256,11 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
 
     public static String generateUniqueId(String scopeId, String viewModelId) {
         return String.format("%s_%s", scopeId, viewModelId);
+    }
+
+    @Override
+    public <T extends BroadcastEvent> void postEvent(T event) {
+        event.setActivityStarter(this);
+        super.postEvent(event);
     }
 }

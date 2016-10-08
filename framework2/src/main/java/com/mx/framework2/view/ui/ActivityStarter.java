@@ -6,8 +6,7 @@ import android.content.Intent;
  * Created by chenbaocheng on 16/9/22.
  */
 
-public interface ActivityStarter {
-    void startActivity(Intent intent);
+public interface ActivityStarter extends RawActivityStarter {
 
-    void startActivityForResult(Intent intent, int requestCode);
+    void startActivityForResult(Intent intent, ActivityResultCallback callback);
 }

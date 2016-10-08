@@ -1,7 +1,7 @@
 package com.mx.demo.event;
 
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
-import com.mx.engine.event.BroadcastEvent;
+import com.mx.framework2.event.BroadcastEvent;
 
 /**
  * Created by liuyuxuan on 16/8/26.

@@ -197,5 +197,4 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     public void removeViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().removeViewModel(lifecycle);
     }
-
 }

@@ -113,7 +113,7 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     }
 
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
-        fragmentDelegate.registerActivityResultReceiver(requestCode,receiverId);
+        fragmentDelegate.registerActivityResultReceiver(requestCode, receiverId);
     }
 
     @Override
