@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.FrameLayout;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
@@ -77,10 +78,12 @@ public class DataBindingRecyclerView extends RecyclerView {
 
     public void setItems(Collection items) {
         adapter.putItems(items);
-        if (this.items != items) {
-            getLayoutManager().scrollToPosition((length / 2) / items.size());
+        if (isLooped && getLayoutManager() != null) {
+            if (this.items != items) {
+                getLayoutManager().scrollToPosition((length / 2) / items.size());
+            }
+            this.items = items;
         }
-        this.items = items;
     }
 
 }
