@@ -1,5 +1,6 @@
 package com.mx.framework2.view.ui;
 
+import android.content.Context;
 import android.content.Intent;
 
 /**
@@ -9,4 +10,6 @@ public interface RawActivityStarter {
     void startActivity(Intent intent);
 
     void startActivityForResult(Intent intent, int requestCode);
+
+    Context getContext();
 }

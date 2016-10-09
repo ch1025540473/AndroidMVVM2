@@ -13,7 +13,10 @@ import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 import com.mx.framework2.viewmodel.ViewModelScope;
 
+import java.lang.ref.WeakReference;
 import java.util.UUID;
+
+import kotlin.NotImplementedError;
 
 /**
  * Created by zhulianggang on 16/9/26.
@@ -22,7 +25,7 @@ import java.util.UUID;
 public class FragmentDelegate implements ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
-
+    private WeakReference<Context> context;
     private ViewModelManager viewModelManager = new ViewModelManager();
     private RunState runState;
 
@@ -33,6 +36,7 @@ public class FragmentDelegate implements ViewModelScope {
 
     public void onAttach(Context context) {
         viewModelManager.onAttachContext(context);
+        this.context = new WeakReference<>(context);
     }
 
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -132,5 +136,10 @@ public class FragmentDelegate implements ViewModelScope {
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
+    }
+
+    @Override
+    public Context getContext() {
+        return context == null ? null : context.get();
     }
 }

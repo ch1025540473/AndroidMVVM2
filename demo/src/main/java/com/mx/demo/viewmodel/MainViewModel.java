@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.mx.demo.BR;
+import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
@@ -184,17 +185,7 @@ public class MainViewModel extends LifecycleViewModel {
         return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
-                System.out.println("ActivityResultCallback:onActivityResult execute=" + ">>>>" +
-                        MainViewModel.this);
-                startActivityForResult(new Intent(getContext(), SecondActivity.class), new
-                        ActivityResultCallback() {
-                            @Override
-                            public void onActivityResult(int resultCode, Intent data) {
-                                System.out.println("ActivityResultCallback:onActivityResult " +
-                                        "result=" +
-                                        resultCode + ">>>>" + MainViewModel.this);
-                            }
-                        });
+                postEvent(new GotoAnotherEvent());
             }
         };
     }

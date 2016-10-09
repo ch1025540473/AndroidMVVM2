@@ -1,5 +1,6 @@
 package com.mx.framework2.view.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -196,5 +197,10 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public void removeViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().removeViewModel(lifecycle);
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 }

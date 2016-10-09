@@ -131,12 +131,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     public final void detachedFromView() {
         if (isAttachedToView) {
             isAttachedToView = false;
-            recycle();
             onDetachedFromView();
-            ViewModelScope viewModelScope = getViewModelScope();
-            if (viewModelScope != null) {
-                viewModelScope.removeViewModel(this);
-            }
         }
     }
 
@@ -179,6 +174,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     }
 
     protected void onAttachedToView() {
+
     }
 
     protected void onCreate(Bundle bundle) {

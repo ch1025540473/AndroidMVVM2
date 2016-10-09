@@ -11,6 +11,7 @@ import com.mx.framework2.view.factory.ItemViewFactory;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -34,7 +35,6 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
 
     @Override
     protected final void onDataChange() {
-        Log.d("onDataChange", "notifyDataSetChanged");
         notifyDataSetChanged();
     }
 
@@ -104,7 +104,6 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
 
     @Override
     public Object getItem(int position) {
-
         if (isLooped) {
             position = getCount() == 0 ? 0 : position % getCount();
         }
@@ -118,4 +117,6 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public void setItemViewFactory(ItemViewFactory itemViewFactory) {
         this.itemViewFactory = itemViewFactory;
     }
+
+
 }

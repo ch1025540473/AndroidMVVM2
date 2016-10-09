@@ -1,8 +1,15 @@
 package com.mx.demo;
 
+import android.content.Intent;
+
+import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.model.DemoUseCase;
+import com.mx.demo.view.ui.SecondActivity;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCaseManager;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -10,13 +17,13 @@ import com.mx.framework2.model.UseCaseManager;
 public class DemoModule extends Module {
     private static volatile DemoModule instance = null;
 
-    public static DemoModule get(){
-        if(instance != null){
+    public static DemoModule get() {
+        if (instance != null) {
             return instance;
         }
 
-        synchronized (DemoModule.class){
-            if(instance == null){
+        synchronized (DemoModule.class) {
+            if (instance == null) {
                 instance = new DemoModule();
             }
         }
@@ -28,4 +35,14 @@ public class DemoModule extends Module {
     protected void onStart(UseCaseManager userCaseManager) {
         userCaseManager.register(DemoUseCase.class);
     }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public final void receiveEvent(GotoAnotherEvent gotoAnotherEvent) {
+        Intent intent = new Intent(gotoAnotherEvent.getActivityStarter().getContext(), SecondActivity.class);
+        gotoAnotherEvent.getActivityStarter().startActivity(intent);
+
+    }
+
+
 }

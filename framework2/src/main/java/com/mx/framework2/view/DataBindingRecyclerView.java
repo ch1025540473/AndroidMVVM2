@@ -3,8 +3,10 @@ package com.mx.framework2.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.R;
@@ -20,6 +22,8 @@ public class DataBindingRecyclerView extends RecyclerView {
     private ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
     private boolean isLooped = false;
+    private int length = 100000000;
+    Collection<?> items;
 
     public DataBindingRecyclerView(Context context) {
         this(context, null);
@@ -73,5 +77,10 @@ public class DataBindingRecyclerView extends RecyclerView {
 
     public void setItems(Collection items) {
         adapter.putItems(items);
+        if (this.items != items) {
+            getLayoutManager().scrollToPosition((length / 2) / items.size());
+        }
+        this.items = items;
     }
+
 }

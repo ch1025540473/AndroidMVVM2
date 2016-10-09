@@ -24,6 +24,7 @@
             android:layout_height="match_parent"
             binding:itemViewFactory="@{ChildItemViewFactory.className}"
             binding:items="@{model.childList}"
+            binding:looped="true"
             binding:layoutManager="@{LayoutManagers.linear(0,false)}" />
 
     </LinearLayout>
