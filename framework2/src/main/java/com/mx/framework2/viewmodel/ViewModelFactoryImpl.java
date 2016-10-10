@@ -8,6 +8,7 @@ import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.Module;
 import com.mx.framework2.R;
 import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.framework2.view.ui.BaseDialogFragment;
 import com.mx.framework2.view.ui.BaseFragment;
 import com.mx.framework2.view.ui.RunState;
 
@@ -27,6 +28,16 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
 
     public ViewModelFactoryImpl(Module module) {
         this.module = module;
+    }
+
+    @Override
+    public <T extends LifecycleViewModel> T createViewModel(String viewModelTag, Class<T> viewModelClassType, BaseDialogFragment baseDialogFragment) {
+        CheckUtils.checkNotNull(viewModelClassType);
+        CheckUtils.checkNotNull(baseDialogFragment);
+        //TODO: R.string.activity_msg means ambiguously
+        CheckUtils.checkArgument(baseDialogFragment.getRunState() == RunState.Created,
+                baseDialogFragment.getString(R.string.activity_msg));
+        return createViewModel(baseDialogFragment.getContext(), baseDialogFragment, viewModelTag, viewModelClassType);
     }
 
     public static <T> T newInstance(Class<T> cls, Object defaultParam) {
