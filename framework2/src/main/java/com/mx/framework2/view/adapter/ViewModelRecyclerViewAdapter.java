@@ -1,17 +1,14 @@
 package com.mx.framework2.view.adapter;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.ViewGroup;
 
 import com.mx.framework2.view.factory.ItemViewFactory;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,15 +41,9 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     }
 
     @SuppressWarnings("unchecked")
-    protected RecyclerItemViewModel getViewModel(int position) {
-        RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.getViewModel(getItem(position));
-        return vm;
-    }
-
     @Override
     public final int getItemViewType(int position) {
-        RecyclerItemViewModel vm = getViewModel(position);
-        Class<?> type = vm.getClass();
+        Class<?> type = itemViewFactory.getViewModelClass(getItem(position));
         int index = viewModelTypes.indexOf(type);
         if (index == -1) {
             viewModelTypes.add(type);
@@ -77,9 +68,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public final RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        DataBindingUtil.findBinding(parent);
-
-        RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.obtainViewModel(viewModelTypes.get(viewType));
+        RecyclerItemViewModel vm = (RecyclerItemViewModel) itemViewFactory.getViewModel(viewModelTypes.get(viewType));
         return new ViewHolder(vm, itemViewFactory.getViewDataBinding(vm));
     }
 
@@ -117,6 +106,4 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public void setItemViewFactory(ItemViewFactory itemViewFactory) {
         this.itemViewFactory = itemViewFactory;
     }
-
-
 }

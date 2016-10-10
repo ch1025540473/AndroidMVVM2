@@ -4,12 +4,12 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.viewmodel.Lifecycle;
-import com.mx.framework2.viewmodel.LifecycleState;
 import com.mx.framework2.viewmodel.ViewModel;
 
 import java.lang.reflect.Field;
@@ -44,15 +44,21 @@ public class DataBindingFactory {
         return value;
     }
 
-    public static List<ViewModel> getViewModelsFromDataBinding(ViewDataBinding viewDataBinding){
+    public static
+    @NonNull
+    List<ViewModel> getViewModelsFromDataBinding(ViewDataBinding viewDataBinding) {
         return findByClass(viewDataBinding, ViewModel.class);
     }
 
-    private static List<Lifecycle> getLifecycleListFromDataBinding(ViewDataBinding viewDataBinding) {
+    private static
+    @NonNull
+    List<Lifecycle> getLifecycleListFromDataBinding(ViewDataBinding viewDataBinding) {
         return findByClass(viewDataBinding, Lifecycle.class);
     }
 
-    private static <T> List<T> findByClass(ViewDataBinding viewDataBinding, Class<T> clazz){
+    private static
+    @NonNull
+    <T> List<T> findByClass(ViewDataBinding viewDataBinding, Class<T> clazz) {
         List<T> list = new LinkedList<>();
         try {
             Field[] fields = viewDataBinding.getClass().getDeclaredFields();
@@ -69,7 +75,6 @@ public class DataBindingFactory {
 
         return list;
     }
-
 
     public static final <T extends ViewDataBinding> T inflate(Context context, @LayoutRes int layoutId) {
         final T value = DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, null, false);

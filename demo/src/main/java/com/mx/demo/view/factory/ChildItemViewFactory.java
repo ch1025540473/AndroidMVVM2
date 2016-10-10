@@ -1,7 +1,6 @@
 package com.mx.demo.view.factory;
 
 import android.databinding.ViewDataBinding;
-import android.util.Log;
 
 import com.mx.demo.R;
 import com.mx.demo.databinding.ListitemChildColorBinding;
@@ -25,7 +24,6 @@ public class ChildItemViewFactory extends ItemViewFactory<ChildItemViewBean> {
 
     @Override
     protected Class<? extends AbsItemViewModel> getViewModelType(ChildItemViewBean item) {
-        Log.d("ChildItemView", "getViewModelType=" + item.getClass());
         if (item instanceof ChildTextItemViewBean) {
             return ChildTextItemViewModel.class;
         } else if (item instanceof ChildColorItemViewBean) {
