@@ -11,6 +11,7 @@ import com.mx.demo.databinding.FragmentMainBinding;
 import com.mx.demo.viewmodel.MainViewModel;
 import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.view.ui.BaseFragment;
+import com.mx.framework2.viewmodel.proxy.DialogProxy;
 
 
 public class MainFragment extends BaseFragment {
@@ -30,6 +31,9 @@ public class MainFragment extends BaseFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         FragmentMainBinding mainBinding = DataBindingFactory.inflate(getContext(), R.layout.fragment_main);
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
+        //test dialogproxy
+        DialogProxy dialogProxy = new DialogProxy(getFragmentManager(), new GomeDialogFragment(), "tag");
+        viewModel.setDialogProxy(dialogProxy);
 
         mainBinding.setModel(viewModel);
         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);

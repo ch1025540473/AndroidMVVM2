@@ -11,12 +11,12 @@ import java.lang.ref.WeakReference;
  * Created by zhulianggang on 16/9/23.
  */
 
-public class DialogProxy {
+public class DialogProxy <T extends BaseDialogFragment>{
     private final WeakReference<FragmentManager> fragmentManager;
-    private final BaseDialogFragment dialogFragment;
+    private final T dialogFragment ;
     private final String tag;
 
-    public DialogProxy(FragmentManager fragmentManager, BaseDialogFragment dialogFragment, String tag) {
+    public DialogProxy(FragmentManager fragmentManager,  T dialogFragment, String tag) {
         this.fragmentManager = new WeakReference<>(fragmentManager);
         this.dialogFragment = dialogFragment;
         this.tag = tag;
@@ -27,7 +27,6 @@ public class DialogProxy {
         CheckUtils.checkNotNull(fragmentManager.get());
         dialogFragment.show(fragmentManager.get(), tag);
     }
-
     public void dismiss() {
         CheckUtils.checkNotNull(dialogFragment);
         CheckUtils.checkNotNull(fragmentManager.get());
