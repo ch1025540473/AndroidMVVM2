@@ -130,8 +130,8 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
 
 
     public void setOnScrollCommand(
-            final OnScrollCommand onScrollCommand) {
-        this.onScrollCommand = onScrollCommand;
+            OnScrollCommand command) {
+        this.onScrollCommand = command;
         if (onScrollListener == null) {
             onScrollListener = new RecyclerView.OnScrollListener() {
                 @Override

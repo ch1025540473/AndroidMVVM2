@@ -1,5 +1,9 @@
 package com.mx.framework2.viewmodel.proxy;
 
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -181,6 +185,49 @@ public class PTRRecyclerViewProxy {
             return ptrRecyclerView.getRefreshableView().getLayoutManager().getPosition(startView);
         }
         return 0;
+    }
+
+
+    public int findFirstVisibleItemPosition() {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
+        if (ptrRecyclerView != null) {
+            RecyclerView.LayoutManager layoutManager = ptrRecyclerView.getRefreshableView().getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            if (layoutManager instanceof GridLayoutManager) {
+                return ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+            }
+            if (layoutManager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager lm = (StaggeredGridLayoutManager) layoutManager;
+                int[] viewsIds = lm.findFirstCompletelyVisibleItemPositions(null);
+                RecyclerView.ViewHolder firstViewHolder = ptrRecyclerView.getRefreshableView().findViewHolderForLayoutPosition(viewsIds[0]);
+                View itemView = firstViewHolder.itemView;
+                return lm.getPosition(itemView);
+            }
+        }
+        return -1;
+    }
+
+    public int findLastVisibleItemPosition() {
+        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
+        if (ptrRecyclerView != null) {
+            RecyclerView.LayoutManager layoutManager = ptrRecyclerView.getRefreshableView().getLayoutManager();
+            if (layoutManager instanceof LinearLayoutManager) {
+                return ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+            if (layoutManager instanceof GridLayoutManager) {
+                return ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+            if (layoutManager instanceof StaggeredGridLayoutManager) {
+                StaggeredGridLayoutManager lm = (StaggeredGridLayoutManager) layoutManager;
+                int[] viewsIds = lm.findLastCompletelyVisibleItemPositions(null);
+                RecyclerView.ViewHolder firstViewHolder = ptrRecyclerView.getRefreshableView().findViewHolderForLayoutPosition(viewsIds[0]);
+                View itemView = firstViewHolder.itemView;
+                return lm.getPosition(itemView);
+            }
+        }
+        return -1;
     }
 
     public void setScrollPosition(int scrollPosition) {
