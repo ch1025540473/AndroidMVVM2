@@ -18,7 +18,7 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     private final List<Class<?>> viewModelTypes;
     private ItemViewFactory itemViewFactory;
     private boolean isLooped;
-    private int maxLength = 10000000;
+    private final int LOOP_COUNT = 10000000;
 
     public ViewModelRecyclerViewAdapter(Context context) {
         super(context);
@@ -30,13 +30,15 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
         isLooped = looped;
     }
 
-    @Override
     protected final void onDataChange() {
         notifyDataSetChanged();
     }
 
     @Override
     public long getItemId(int position) {
+        if (isLooped) {
+            position = getCount() == 0 ? 0 : position % getCount();
+        }
         return position;
     }
 
@@ -85,11 +87,12 @@ public class ViewModelRecyclerViewAdapter extends BaseRecyclerAdapter {
     public int getItemCount() {
         if (isLooped) {
             if (getCount() > 0) {
-                return maxLength;
+                return LOOP_COUNT;
             }
         }
         return getCount();
     }
+
 
     @Override
     public Object getItem(int position) {

@@ -15,6 +15,7 @@ import com.mx.framework2.view.adapter.ViewModelRecyclerViewAdapter;
 import com.mx.framework2.view.factory.ItemViewFactory;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -23,7 +24,6 @@ public class DataBindingRecyclerView extends RecyclerView {
     private ViewModelRecyclerViewAdapter adapter;
     private String itemViewFactory;
     private boolean isLooped = false;
-    private int length = 100000000;
     Collection<?> items;
 
     public DataBindingRecyclerView(Context context) {
@@ -76,14 +76,16 @@ public class DataBindingRecyclerView extends RecyclerView {
         setAdapter(adapter);
     }
 
-    public void setItems(Collection items) {
+    public void setItems(final Collection items) {
         adapter.putItems(items);
+        adapter.notifyDataSetChanged();
         if (isLooped && getLayoutManager() != null) {
-            if (this.items != items) {
-                getLayoutManager().scrollToPosition((length / 2) / items.size());
+            if (DataBindingRecyclerView.this.items != items) {
+                int index = (adapter.getItemCount() / 2);
+                index = index - index % items.size();
+                getLayoutManager().scrollToPosition(index);
             }
             this.items = items;
         }
     }
-
 }

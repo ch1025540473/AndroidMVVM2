@@ -30,7 +30,6 @@ public class PTRRecyclerViewProxy {
     public enum PTRMode {
         NONE, BOTH, TOP, BOTTOM
     }
-
     private PTRMode ptrMode = BOTH;
     private OnStartRefreshingCommand onStartRefreshingCommand;
     private OnPullDownCommand onPullDownCommand;
@@ -38,7 +37,6 @@ public class PTRRecyclerViewProxy {
     private boolean isLoadMoreComplete = false;
     private OnScrollCommand onScrollCommand;
     private WeakReference<PullToRefreshRecyclerView> ptrRecyclerViewRef;
-    private int scrollPosition;
 
     public final void attach(PullToRefreshRecyclerView ptrRecyclerView) {
         this.ptrRecyclerViewRef = new WeakReference<PullToRefreshRecyclerView>(ptrRecyclerView);
@@ -48,7 +46,6 @@ public class PTRRecyclerViewProxy {
         setOnStartRefreshingCommand(onStartRefreshingCommand);
         setOnLoadMoreCommand(onLoadMoreCommand);
         setLoadMoreComplete(isLoadMoreComplete);
-        setScrollPosition(scrollPosition);
     }
 
     public OnScrollCommand getOnScrollCommand() {
@@ -178,15 +175,6 @@ public class PTRRecyclerViewProxy {
         }
     }
 
-    public int getScrollPosition() {
-        PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
-        if (ptrRecyclerView != null) {
-            View startView = ptrRecyclerView.getRefreshableView().getLayoutManager().getChildAt(0);
-            return ptrRecyclerView.getRefreshableView().getLayoutManager().getPosition(startView);
-        }
-        return 0;
-    }
-
 
     public int findFirstVisibleItemPosition() {
         PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
@@ -230,12 +218,13 @@ public class PTRRecyclerViewProxy {
         return -1;
     }
 
-    public void setScrollPosition(int scrollPosition) {
+    public void scrollToPositionWithOffset(int position, int offset) {
         PullToRefreshRecyclerView ptrRecyclerView = getPtrRecyclerView();
-        this.scrollPosition = scrollPosition;
         if (ptrRecyclerView != null) {
-            ptrRecyclerView.getRefreshableView().getLayoutManager().scrollToPosition
-                    (scrollPosition);
+            if (ptrRecyclerView.getRefreshableView().getLayoutManager() instanceof LinearLayoutManager) {
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) ptrRecyclerView.getRefreshableView().getLayoutManager();
+                linearLayoutManager.scrollToPositionWithOffset(position, offset);
+            }
         }
     }
 }

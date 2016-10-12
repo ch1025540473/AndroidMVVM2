@@ -1,6 +1,12 @@
 package com.mx.demo.view.factory;
 
+import android.content.Context;
+import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.v7.widget.LinearLayoutCompat;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.mx.demo.R;
 import com.mx.demo.databinding.ListitemChildListBinding;
@@ -50,7 +56,12 @@ public class DemoItemViewFactory extends ItemViewFactory<ItemViewBean> {
             binding.setModel((TextItemViewModel) viewModel);
             return binding;
         } else if (viewModel instanceof ChildListViewModel) {
-            ListitemChildListBinding binding = inflate(R.layout.listitem_child_list);
+            LayoutInflater mInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = mInflater.from(getContext()).inflate(R.layout.listitem_child_list, null
+                    , false);
+            LinearLayoutCompat.LayoutParams layoutParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            view.setLayoutParams(layoutParams);
+            ListitemChildListBinding binding = DataBindingUtil.bind(view);
             binding.setModel((ChildListViewModel) viewModel);
             return binding;
         }

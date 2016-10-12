@@ -64,15 +64,23 @@ public class MainViewModel extends LifecycleViewModel {
         ptrRecyclerViewProxy.setRefresh(false);
         ptrRecyclerViewProxy.setLoadMoreComplete(true);
         ptrRecyclerViewProxy.setOnLoadMoreCommand(new OnLoadMoreCommand() {
-            @Override
+            int count = 0;
+
             public void onLoadMore() {
                 ptrRecyclerViewProxy.setLoadMoreComplete(false);
                 obtainUseCase(DemoUseCase.class).loadMoreApiBeanFromNetwork(new SubscriberResult<List<ApiBean>>() {
+
+
                     @Override
                     public void onSuccess(List<ApiBean> apiBeanList) {
+                        count++;
                         translateList(apiBeanList);
                         ptrRecyclerViewProxy.setLoadMoreComplete(true);
                         notifyPropertyChanged(BR.items);
+                        if (count > 3) {
+                            ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.TOP);
+                        }
+
                     }
 
                     @Override
@@ -144,7 +152,7 @@ public class MainViewModel extends LifecycleViewModel {
             } else if (apiBean.type == 3) {
                 ChildListViewBean childListViewBean = new ChildListViewBean();
                 List<ChildItemViewBean> list = new LinkedList<ChildItemViewBean>();
-                for (int i = 0; i < 20; i++) {
+                for (int i = 0; i < 3; i++) {
                     if (i % 3 == 0) {
                         ChildColorItemViewBean childColorItemViewBean = new
                                 ChildColorItemViewBean();
