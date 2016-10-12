@@ -32,5 +32,8 @@ public class DialogProxy <T extends BaseDialogFragment>{
         CheckUtils.checkNotNull(fragmentManager.get());
         dialogFragment.dismiss();
     }
+    protected T getDialogFragment() {
+        return dialogFragment;
+    }
 
 }
