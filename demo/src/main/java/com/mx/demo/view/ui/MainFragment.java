@@ -1,6 +1,7 @@
 package com.mx.demo.view.ui;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,7 @@ public class MainFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("onCreate");
+        Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
     }
 
     @Override

@@ -132,8 +132,7 @@ public class MainViewModel extends LifecycleViewModel {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        System.out.println("ActivityResultCallback:onCreate=" + ">>>>" +
-                MainViewModel.this);
+        Log.d("MainViewModel", "onCreate bundle>>" + bundle);
     }
 
     private void translateList(List<ApiBean> apiBeanList) {
@@ -171,6 +170,73 @@ public class MainViewModel extends LifecycleViewModel {
     }
 
 
+    @Override
+    protected void onAttachedToView() {
+        super.onAttachedToView();
+        Log.d("MainViewModel", "onAttachedToView>>");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d("MainViewModel", "onStart>>");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("MainViewModel", "onRestart>>");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d("MainViewModel", "onResume>>");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("MainViewModel", "onPause>>");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d("MainViewModel", "onStop>>");
+    }
+
+    @Override
+    protected void onDetachedFromView() {
+        super.onDetachedFromView();
+        Log.d("MainViewModel", "onDetachedFromView>>");
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        Log.d("MainViewModel", "onWindowFocusChanged>>");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("viewModel", "test");
+        super.onSaveInstanceState(outState);
+        Log.d("MainViewModel", "onSaveInstanceState>>" + outState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        Log.d("MainViewModel", "onRestoreInstanceState>>" + savedInstanceState);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean userVisibleHint) {
+        super.setUserVisibleHint(userVisibleHint);
+        Log.d("MainViewModel", "setUserVisibleHint>>");
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveUpdateItems(UpdatedApiBeanEvent updatedApiBeanEvent) {
         items.clear();
@@ -196,11 +262,5 @@ public class MainViewModel extends LifecycleViewModel {
                 postEvent(new GotoAnotherEvent());
             }
         };
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-        System.out.println("MainActivity:onActivityResult request=" + requestCode);
     }
 }
