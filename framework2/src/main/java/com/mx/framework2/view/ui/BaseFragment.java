@@ -2,6 +2,8 @@ package com.mx.framework2.view.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,9 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mx.engine.utils.CheckUtils;
+import com.mx.framework2.R;
+import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 import com.mx.framework2.viewmodel.ViewModelScope;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by liuyuxuan on 16/4/20.
@@ -20,6 +27,11 @@ import com.mx.framework2.viewmodel.ViewModelScope;
 
 public class BaseFragment extends Fragment implements ViewModelScope {
     private FragmentDelegate fragmentDelegate = new FragmentDelegate();
+    private WeakReference<View> contentView;
+
+    private View getContentView() {
+        return contentView == null ? null : contentView.get();
+    }
 
     public final ViewModelManager getViewModelManager() {
         return fragmentDelegate.getViewModelManager();
@@ -57,6 +69,13 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        contentView = new WeakReference<>(view);
+        DataBindingFactory.checkViewDatabinding(view);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         fragmentDelegate.onActivityCreated(savedInstanceState);
@@ -72,6 +91,7 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     public void onStop() {
         super.onStop();
         fragmentDelegate.onStop();
+        DataBindingFactory.checkViewDatabinding(getContentView());
     }
 
     @Override

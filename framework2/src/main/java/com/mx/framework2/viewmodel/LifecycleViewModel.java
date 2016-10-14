@@ -256,7 +256,6 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
 
     @Override
     public <T extends BroadcastEvent> void postEvent(T event) {
-        event.setActivityStarter(this);
         super.postEvent(event);
     }
 }

@@ -247,7 +247,6 @@ public class MainViewModel extends LifecycleViewModel {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
-        Log.d("receiveRemove", "removeTxtEvent=" + removeTxtEvent.getActivityStarter());
         obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
     }
 

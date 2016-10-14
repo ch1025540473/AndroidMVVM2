@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.mx.framework2.R;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.viewmodel.Lifecycle;
 import com.mx.framework2.viewmodel.ViewModel;
@@ -23,42 +24,22 @@ public class DataBindingFactory {
 
     public static <T extends ViewDataBinding> T setContentView(BaseActivity baseActivity, @LayoutRes int layout) {
         final T value = DataBindingUtil.setContentView(baseActivity, layout);
-        value.getRoot().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-            @Override
-            public void onViewAttachedToWindow(View view) {
-                List<Lifecycle> lifecycleList = getLifecycleListFromDataBinding(value);
-                for (Lifecycle lifecycle : lifecycleList) {
-                    lifecycle.attachedToView();
-                }
-            }
-
-            @Override
-            public void onViewDetachedFromWindow(View view) {
-                List<Lifecycle> lifecycleList = getLifecycleListFromDataBinding(value);
-                for (Lifecycle lifecycle : lifecycleList) {
-                    lifecycle.detachedFromView();
-                }
-
-            }
-        });
+        value.getRoot().addOnAttachStateChangeListener(createOnAttachStateChangeListener(value));
         return value;
     }
 
-    public static
     @NonNull
-    List<ViewModel> getViewModelsFromDataBinding(ViewDataBinding viewDataBinding) {
+    public static List<ViewModel> getViewModelsFromDataBinding(ViewDataBinding viewDataBinding) {
         return findByClass(viewDataBinding, ViewModel.class);
     }
 
-    private static
     @NonNull
-    List<Lifecycle> getLifecycleListFromDataBinding(ViewDataBinding viewDataBinding) {
+    private static List<Lifecycle> getLifecycleListFromDataBinding(ViewDataBinding viewDataBinding) {
         return findByClass(viewDataBinding, Lifecycle.class);
     }
 
-    private static
     @NonNull
-    <T> List<T> findByClass(ViewDataBinding viewDataBinding, Class<T> clazz) {
+    private static <T> List<T> findByClass(ViewDataBinding viewDataBinding, Class<T> clazz) {
         List<T> list = new LinkedList<>();
         try {
             Field[] fields = viewDataBinding.getClass().getDeclaredFields();
@@ -78,7 +59,13 @@ public class DataBindingFactory {
 
     public static final <T extends ViewDataBinding> T inflate(Context context, @LayoutRes int layoutId) {
         final T value = DataBindingUtil.inflate(LayoutInflater.from(context), layoutId, null, false);
-        value.getRoot().addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+        value.getRoot().addOnAttachStateChangeListener(createOnAttachStateChangeListener(value));
+        return value;
+    }
+
+    private static final <T extends ViewDataBinding> View.OnAttachStateChangeListener createOnAttachStateChangeListener(final T value) {
+
+        View.OnAttachStateChangeListener listener = new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View view) {
                 List<Lifecycle> lifecycleList = getLifecycleListFromDataBinding(value);
@@ -94,7 +81,20 @@ public class DataBindingFactory {
                     lifecycle.detachedFromView();
                 }
             }
-        });
-        return value;
+        };
+        value.getRoot().setTag(R.integer.databinding_factory_key, listener);
+        return listener;
     }
+
+    public static void checkViewDatabinding(View view) {
+        if (view == null) {
+            return;
+        }
+        ViewDataBinding viewDataBinding = DataBindingUtil.findBinding(view);
+        if (viewDataBinding != null) {
+            viewDataBinding.getRoot().getTag(R.integer.databinding_factory_key);
+
+        }
+    }
+
 }

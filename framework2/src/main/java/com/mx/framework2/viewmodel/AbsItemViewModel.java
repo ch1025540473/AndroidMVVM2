@@ -17,28 +17,6 @@ public abstract class AbsItemViewModel<ItemType> extends ViewModel {
         this.view = view;
     }
 
-    @Override
-    public final <T extends BroadcastEvent> void postEvent(T event) {
-        View v = view;
-        if(v == null){
-            super.postEvent(event);
-            return;
-        }
-
-        ViewDataBinding binding = DataBindingUtil.findBinding((View)v.getParent());
-        if(binding == null){
-            super.postEvent(event);
-            return;
-        }
-
-        for (ViewModel viewModel : DataBindingFactory.getViewModelsFromDataBinding(binding)) {
-            viewModel.postEvent(event);
-            return;
-        }
-
-        super.postEvent(event);
-    }
-
     private ItemType item = null;
 
     protected abstract void onItemChange(ItemType oldItem, ItemType item);
