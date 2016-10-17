@@ -2,9 +2,6 @@ package com.mx.framework2.view.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.DatabaseUtils;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -13,7 +10,6 @@ import android.view.View;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.FrameworkModule;
-import com.mx.framework2.R;
 import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCaseHolder;
 import com.mx.framework2.view.DataBindingFactory;
@@ -42,21 +38,21 @@ import java.util.UUID;
 public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
-    private RunState runState = null;
+    private RunState runState;
     private boolean isHasFocus = false;
     private List<Integer> receivedRequestCodes = new LinkedList<>();
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
     private ViewModelManager viewModelManager;
-    private static WeakReference<ActivityStartViewModel> activityStartViewModel;
+    private static WeakReference<ActivityStartViewModel> activityStartViewModelRef;
+    private ActivityStartViewModel activityStartViewModel;
 
     public static ActivityStarter getActivityStarter() {
-        return activityStartViewModel == null ? null : activityStartViewModel.get();
+        return activityStartViewModelRef == null ? null : activityStartViewModelRef.get();
     }
 
     private List<BaseFragment> getFragments() {
         List<BaseFragment> baseFragments = new LinkedList<>();
         ListIterator<Reference<BaseFragment>> listIterator = fragments.listIterator();
-
         while (listIterator.hasNext()) {
             Reference<BaseFragment> fragmentReference = listIterator.next();
             BaseFragment baseFragment = fragmentReference.get();
@@ -66,7 +62,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
                 baseFragments.add(baseFragment);
             }
         }
-
         return baseFragments;
     }
 
@@ -79,9 +74,8 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-
         if (fragment instanceof BaseFragment) {
-            fragments.add(new SoftReference<BaseFragment>((BaseFragment) fragment));
+            fragments.add(new SoftReference<>((BaseFragment) fragment));
         }
     }
 
@@ -124,19 +118,19 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         } else {
             uuid = UUID.randomUUID().toString();
         }
+        this.runState = RunState.Created;
         init(savedInstanceState);
-        ActivityStartViewModel activityStartViewModel = FrameworkModule.getInstance().getViewModelFactory()
-                .createViewModel("activity_start_view_model", ActivityStartViewModel.class, this);
-        addViewModel(activityStartViewModel);
-        BaseActivity.activityStartViewModel = new WeakReference<ActivityStartViewModel>(activityStartViewModel);
     }
 
     private void init(Bundle savedInstanceState) {
         viewModelManager = new ViewModelManager();
         viewModelManager.setSavedInstanceState(savedInstanceState);
         viewModelManager.create();
-        this.runState = RunState.Created;
         EventProxy.getDefault().register(this);
+        activityStartViewModel = FrameworkModule.getInstance().getViewModelFactory()
+                .createViewModel("activity_start_view_model", ActivityStartViewModel.class, this);
+        addViewModel(activityStartViewModel);
+        BaseActivity.activityStartViewModelRef = new WeakReference<>(activityStartViewModel);
     }
 
     @Override
@@ -147,21 +141,18 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         EventProxy.getDefault().register(this);
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         getViewModelManager().stop();
         EventProxy.getDefault().unregister(this);
-
         for (int requestCode : receivedRequestCodes) {
             ActivityResultManager.getInstance().onRequestCodeConsumed(requestCode);
         }
         receivedRequestCodes.clear();
         this.runState = RunState.Stoped;
-
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
-        DataBindingFactory.checkViewDatabinding(view);
+        DataBindingFactory.checkViewDataBinding(view);
     }
 
     @Override
@@ -189,8 +180,9 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         this.runState = RunState.Resumed;
         super.onResume();
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
-        DataBindingFactory.checkViewDatabinding(view);
+        DataBindingFactory.checkViewDataBinding(view);
         getViewModelManager().resume();
+        BaseActivity.activityStartViewModelRef = new WeakReference<>(activityStartViewModel);
     }
 
     @Override

@@ -5,18 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
+import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
 import com.mx.framework2.viewmodel.ViewModelScope;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
-
-import kotlin.NotImplementedError;
 
 /**
  * Created by zhulianggang on 16/9/26.
@@ -28,6 +28,7 @@ public class FragmentDelegate implements ViewModelScope {
     private WeakReference<Context> context;
     private ViewModelManager viewModelManager = new ViewModelManager();
     private RunState runState;
+    private WeakReference<View> contentView;
 
     public final ViewModelManager getViewModelManager() {
         CheckUtils.checkNotNull(viewModelManager);
@@ -68,8 +69,16 @@ public class FragmentDelegate implements ViewModelScope {
         runState = RunState.Created;
     }
 
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        contentView = new WeakReference<>(view);
+    }
+
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
+    }
+
+    private View getContentView() {
+        return contentView == null ? null : contentView.get();
     }
 
     public void onStart() {
@@ -82,6 +91,7 @@ public class FragmentDelegate implements ViewModelScope {
         getViewModelManager().stop();
         runState = RunState.Stoped;
         EventProxy.getDefault().unregister(this);
+        DataBindingFactory.checkViewDataBinding(getContentView());
 
     }
 
@@ -101,6 +111,7 @@ public class FragmentDelegate implements ViewModelScope {
     public void onResume() {
         runState = RunState.Resumed;
         getViewModelManager().resume();
+        DataBindingFactory.checkViewDataBinding(getContentView());
     }
 
     public RunState getRunState() {

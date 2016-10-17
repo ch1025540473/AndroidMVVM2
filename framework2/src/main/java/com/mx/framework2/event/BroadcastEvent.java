@@ -7,4 +7,13 @@ import com.mx.framework2.view.ui.ActivityStarter;
  */
 
 public class BroadcastEvent extends com.mx.engine.event.BroadcastEvent {
+    private ActivityStarter activityStarter;
+
+    public ActivityStarter getActivityStarter() {
+        return activityStarter;
+    }
+
+    public void setActivityStarter(ActivityStarter activityStarter) {
+        this.activityStarter = activityStarter;
+    }
 }

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.event.BroadcastEvent;
+import com.mx.framework2.view.ui.BaseActivity;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -44,6 +45,7 @@ public abstract class ViewModel extends BaseObservable {
     }
 
     public <T extends BroadcastEvent> void postEvent(T event) {
+        event.setActivityStarter(BaseActivity.getActivityStarter());
         EventProxy.getDefault().post(event);
     }
 

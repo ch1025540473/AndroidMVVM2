@@ -27,11 +27,7 @@ import java.lang.ref.WeakReference;
 
 public class BaseFragment extends Fragment implements ViewModelScope {
     private FragmentDelegate fragmentDelegate = new FragmentDelegate();
-    private WeakReference<View> contentView;
 
-    private View getContentView() {
-        return contentView == null ? null : contentView.get();
-    }
 
     public final ViewModelManager getViewModelManager() {
         return fragmentDelegate.getViewModelManager();
@@ -71,8 +67,7 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        contentView = new WeakReference<>(view);
-        DataBindingFactory.checkViewDatabinding(view);
+        fragmentDelegate.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -91,7 +86,6 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     public void onStop() {
         super.onStop();
         fragmentDelegate.onStop();
-        DataBindingFactory.checkViewDatabinding(getContentView());
     }
 
     @Override

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.R;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.viewmodel.Lifecycle;
@@ -86,14 +87,14 @@ public class DataBindingFactory {
         return listener;
     }
 
-    public static void checkViewDatabinding(View view) {
+    public static void checkViewDataBinding(View view) {
         if (view == null) {
             return;
         }
         ViewDataBinding viewDataBinding = DataBindingUtil.findBinding(view);
         if (viewDataBinding != null) {
-            viewDataBinding.getRoot().getTag(R.integer.databinding_factory_key);
-
+            Object obj = viewDataBinding.getRoot().getTag(R.integer.databinding_factory_key);
+            CheckUtils.checkNotNull(obj);
         }
     }
 

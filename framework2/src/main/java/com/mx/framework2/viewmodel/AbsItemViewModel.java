@@ -31,4 +31,5 @@ public abstract class AbsItemViewModel<ItemType> extends ViewModel {
     public final ItemType getItem() {
         return item;
     }
+
 }

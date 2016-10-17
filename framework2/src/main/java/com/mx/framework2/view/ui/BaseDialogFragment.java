@@ -38,6 +38,11 @@ public class BaseDialogFragment extends DialogFragment implements ViewModelScope
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        fragmentDelegate.onViewCreated(view, savedInstanceState);
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {

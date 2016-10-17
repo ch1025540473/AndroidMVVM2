@@ -19,7 +19,7 @@ public class ViewModelManager {
     private static final String BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS = "framework_activity_result_receivers";
     private final List<LifecycleViewModel> lifecycleViewModelList;
     private Bundle savedInstanceState;
-    private LifecycleState lifecycleState;
+    private LifecycleState lifecycleState = LifecycleState.Init;
     private List<Visitor<LifecycleViewModel>> visitors = new LinkedList<>();
     @SuppressLint("UseSparseArrays") // Request codes are too large to fit in a SparseArray
     private HashMap<Integer, String> activityResultReceivers = new HashMap<>();
@@ -82,8 +82,7 @@ public class ViewModelManager {
     }
 
     public void create() {
-        CheckUtils.checkState(lifecycleState == null || lifecycleState == LifecycleState.Stopped);
-
+        CheckUtils.checkState(lifecycleState == LifecycleState.Init || lifecycleState == LifecycleState.Stopped);
         if (savedInstanceState != null) {
             activityResultReceivers = (HashMap<Integer, String>) savedInstanceState.getSerializable(BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS);
         }
@@ -135,8 +134,7 @@ public class ViewModelManager {
 
     public void start() {
         CheckUtils.checkState(lifecycleState == LifecycleState.Created ||
-                lifecycleState == LifecycleState.Started
-                || lifecycleState == LifecycleState.Stopped);
+                lifecycleState == LifecycleState.Restarted);
         Visitor<LifecycleViewModel> onStartVisitor = new Visitor<LifecycleViewModel>() {
             @Override
             public void visit(LifecycleViewModel vm) {
@@ -159,7 +157,7 @@ public class ViewModelManager {
             }
         };
         visitors.add(onRestartVisitor);
-        lifecycleState = LifecycleState.Started;
+        lifecycleState = LifecycleState.Restarted;
         for (Lifecycle lifecycle : lifecycleViewModelList) {
             lifecycle.accept(onRestartVisitor);
         }
