@@ -3,6 +3,7 @@ package com.mx.framework2.view.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -40,11 +41,10 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     private String uuid;
     private RunState runState;
     private boolean isHasFocus = false;
-    private List<Integer> receivedRequestCodes = new LinkedList<>();
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
     private ViewModelManager viewModelManager;
-    private static WeakReference<ActivityStartViewModel> activityStartViewModelRef;
-    private ActivityStartViewModel activityStartViewModel;
+    private static WeakReference<LifecycleViewModel> activityStartViewModelRef;
+    private LifecycleViewModel activityStartViewModel;
 
     public static ActivityStarter getActivityStarter() {
         return activityStartViewModelRef == null ? null : activityStartViewModelRef.get();
@@ -82,6 +82,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public final void registerActivityResultReceiver(int requestCode, String receiverId) {
         viewModelManager.registerActivityResultReceiver(requestCode, receiverId);
+        EventProxy.getDefault().post(new Events.RequestCodeRegisterEvent(requestCode, getActivityId()));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         viewModelManager.onActivityResult(requestCode, resultCode, data);
-        receivedRequestCodes.add(requestCode & 0xffff);
+        ActivityStack.getInstance().onActivityResult(requestCode, this);
     }
 
     @Override
@@ -120,6 +121,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         }
         this.runState = RunState.Created;
         init(savedInstanceState);
+        ActivityStack.getInstance().onActivityCreate(this);
     }
 
     private void init(Bundle savedInstanceState) {
@@ -127,10 +129,19 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         viewModelManager.setSavedInstanceState(savedInstanceState);
         viewModelManager.create();
         EventProxy.getDefault().register(this);
-        activityStartViewModel = FrameworkModule.getInstance().getViewModelFactory()
-                .createViewModel("activity_start_view_model", ActivityStartViewModel.class, this);
+        activityStartViewModel = createStartActivityViewModel();
         addViewModel(activityStartViewModel);
         BaseActivity.activityStartViewModelRef = new WeakReference<>(activityStartViewModel);
+    }
+
+    public String getActivityId() {
+        return uuid;
+    }
+
+    @NonNull
+    protected LifecycleViewModel createStartActivityViewModel() {
+        return FrameworkModule.getInstance().getViewModelFactory()
+                .createViewModel("activity_start_view_model", ActivityStartViewModel.class, this);
     }
 
     @Override
@@ -139,6 +150,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         getViewModelManager().start();
         this.runState = RunState.Started;
         EventProxy.getDefault().register(this);
+        ActivityStack.getInstance().onActivityStart(this);
     }
 
     @Override
@@ -146,13 +158,10 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         super.onStop();
         getViewModelManager().stop();
         EventProxy.getDefault().unregister(this);
-        for (int requestCode : receivedRequestCodes) {
-            ActivityResultManager.getInstance().onRequestCodeConsumed(requestCode);
-        }
-        receivedRequestCodes.clear();
-        this.runState = RunState.Stoped;
+        this.runState = RunState.Stopped;
         View view = getWindow().getDecorView().findViewById(android.R.id.content);
         DataBindingFactory.checkViewDataBinding(view);
+        ActivityStack.getInstance().onActivityStop(this);
     }
 
     @Override
@@ -170,9 +179,9 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
 
     @Override
     protected void onDestroy() {
-        this.runState = RunState.Destroyed;
+        this.runState = isFinishing() ? RunState.Destroyed : RunState.Suspend;
         super.onDestroy();
-        EventProxy.getDefault().post(new Events.ActivityDestroyEvent(this));
+        ActivityStack.getInstance().onActivityDestroy(this);
     }
 
     @Override
@@ -183,6 +192,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         DataBindingFactory.checkViewDataBinding(view);
         getViewModelManager().resume();
         BaseActivity.activityStartViewModelRef = new WeakReference<>(activityStartViewModel);
+        ActivityStack.getInstance().onActivityResume(this);
     }
 
     @Override
@@ -190,6 +200,7 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         this.runState = RunState.Paused;
         super.onPause();
         getViewModelManager().pause();
+        ActivityStack.getInstance().onActivityPause(this);
     }
 
     public final ViewModelManager getViewModelManager() {

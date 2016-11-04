@@ -7,6 +7,7 @@ import com.mx.framework2.model.UseCaseHolder;
 import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.viewmodel.ViewModelFactory;
 import com.mx.framework2.viewmodel.ViewModelFactoryImpl;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -24,12 +25,9 @@ import java.util.Set;
  * 6,启动模块内部的activity;
  */
 public abstract class Module {
-
-
     private EventProxy eventProxy;
     private UseCaseManager userCaseManager;
     private ViewModelFactory viewModelFactory;
-
     private static Set<Class<? extends Module>> instances = new HashSet<>();
 
     protected Module() {
@@ -46,8 +44,9 @@ public abstract class Module {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityDestroy(Events.ActivityDestroyEvent event) {
-        if (event.getActivity().isFinishing()) {
-            userCaseManager.onUseCaseHolderDestroy((UseCaseHolder)event.getActivity());
+        if (event.getActivityInfo().isFinished()) {
+            Logger.t("module").d("onActivityDestroy " + event.getActivityInfo().getActivityName());
+            userCaseManager.onUseCaseHolderDestroy(event.getActivityInfo().getUseCaseHolder());
         }
     }
 

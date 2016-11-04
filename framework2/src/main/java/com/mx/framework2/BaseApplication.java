@@ -1,6 +1,9 @@
 package com.mx.framework2;
 
-import android.support.multidex.MultiDexApplication;
+import android.support.multidex.*;
+import android.util.Log;
+
+import com.orhanobut.logger.*;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,7 +21,20 @@ public class BaseApplication extends com.mx.framework.BaseApplication {
         super.onCreate();
         baseApplication = this;
         modules = new LinkedHashMap<>();
+        Log.d("BaseApplication", "BuildConfig.BUILD_TYPE=" + BuildConfig.BUILD_TYPE);
+        Log.d("BaseApplication", "BuildConfig.logger_debug=" + BuildConfig.logger_debug);
         // install modules
+        if (BuildConfig.logger_debug) {
+            Logger.init().methodCount(3)
+                    .logLevel(LogLevel.FULL)
+                    .methodOffset(2);
+        } else {
+            Logger.init().methodCount(3)
+                    .logLevel(LogLevel.NONE)
+                    .methodOffset(2);
+        }
+
+
     }
 
     public void installModule(Module module) {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.mx.engine.utils.CheckUtils;
+import com.orhanobut.logger.Logger;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -59,6 +60,7 @@ public class ViewModelManager {
                     @Override
                     public void visit(LifecycleViewModel data) {
                         data.setUserVisibleHint(isVisibleToUser);
+                        Logger.t("ViewModelManager").d("setUserVisibleHint>>=" + isVisibleToUser);
                     }
                 };
         visitors.add(onUserVisibleHintVisitor);
@@ -73,6 +75,7 @@ public class ViewModelManager {
                     @Override
                     public void visit(LifecycleViewModel data) {
                         data.onWindowFocusChanged(hasFocus);
+                        Logger.t("ViewModelManager").d("onWindowFocusChanged>>=" + hasFocus);
                     }
                 };
         visitors.add(onWindowFocusChanged);
@@ -91,6 +94,7 @@ public class ViewModelManager {
             public void visit(LifecycleViewModel vm) {
                 Bundle bundle = savedInstanceState == null ? null : savedInstanceState.getBundle(vm.getTag());
                 vm.create(bundle);
+                Logger.t("ViewModelManager").d("create>>=" + bundle);
             }
         };
         visitors.add(onCreateVisitor);
@@ -122,6 +126,7 @@ public class ViewModelManager {
                 if (tag != null && tag.equals(vm.getTag())) {
                     activityResultReceivers.remove(requestCode);
                     vm.onActivityResult(requestCode, resultCode, intent);
+                    Logger.t("ViewModelManager").d("onActivityResult>>=requestCode" + requestCode);
                 }
             }
         };
@@ -133,12 +138,16 @@ public class ViewModelManager {
     }
 
     public void start() {
-        CheckUtils.checkState(lifecycleState == LifecycleState.Created ||
-                lifecycleState == LifecycleState.Restarted);
+        Logger.t("ViewModelManager").d("start lifecycleState=" + lifecycleState);
+        CheckUtils.checkState(
+                lifecycleState == LifecycleState.Created ||
+                lifecycleState == LifecycleState.Restarted ||
+                lifecycleState == LifecycleState.Stopped);
         Visitor<LifecycleViewModel> onStartVisitor = new Visitor<LifecycleViewModel>() {
             @Override
             public void visit(LifecycleViewModel vm) {
                 vm.start();
+                Logger.t("ViewModelManager").d("start>>>>>>>.visit");
             }
         };
         visitors.add(onStartVisitor);
@@ -154,6 +163,7 @@ public class ViewModelManager {
             @Override
             public void visit(LifecycleViewModel vm) {
                 vm.restart();
+                Logger.t("ViewModelManager").d("restart>>>>>>>.visit");
             }
         };
         visitors.add(onRestartVisitor);
@@ -161,6 +171,7 @@ public class ViewModelManager {
         for (Lifecycle lifecycle : lifecycleViewModelList) {
             lifecycle.accept(onRestartVisitor);
         }
+        Logger.t("ViewModelManager").d("restart lifecycleState=" + lifecycleState);
     }
 
     public void resume() {
@@ -171,6 +182,7 @@ public class ViewModelManager {
             @Override
             public void visit(LifecycleViewModel vm) {
                 vm.resume();
+                Logger.t("ViewModelManager").d("resume>>>>>>>.visit");
             }
         };
         visitors.add(onResumeVisitor);
@@ -186,6 +198,7 @@ public class ViewModelManager {
             @Override
             public void visit(LifecycleViewModel vm) {
                 vm.pause();
+                Logger.t("ViewModelManager").d("pause>>>>>>>.visit");
             }
         };
         visitors.add(onPauseVisitor);
@@ -201,6 +214,7 @@ public class ViewModelManager {
             @Override
             public void visit(LifecycleViewModel vm) {
                 vm.stop();
+                Logger.t("ViewModelManager").d("stop>>>>>>>.visit");
             }
         };
         for (Lifecycle lifecycle : lifecycleViewModelList) {
@@ -217,6 +231,7 @@ public class ViewModelManager {
                         Bundle bundle = new Bundle();
                         data.onSaveInstanceState(bundle);
                         savedInstanceState.putBundle(data.getTag(), bundle);
+                        Logger.t("ViewModelManager").d("onSaveInstanceState>>>>>>>.bundle=" + bundle);
                     }
                 };
         visitors.add(onSaveInstanceState);
@@ -239,6 +254,7 @@ public class ViewModelManager {
                     public void visit(LifecycleViewModel data) {
                         Bundle saveBundle = savedInstanceState == null ? null : savedInstanceState.getBundle(data.getTag());
                         data.onRestoreInstanceState(saveBundle);
+                        Logger.t("ViewModelManager").d("onRestoreInstanceState>>>>>>>.bundle=" + saveBundle);
                     }
                 };
         visitors.add(onRestoreInstanceState);

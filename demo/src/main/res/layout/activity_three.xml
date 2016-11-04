@@ -17,16 +17,16 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/start_three_activity"
+            android:id="@+id/result_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="start_three_activity" />
+            android:text="Three_RESULT_OK" />
 
         <Button
-            android:id="@+id/result_cancel"
+            android:id="@+id/start_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Second_RESULT_CANCEL" />
+            android:text="start_Main_activity" />
     </LinearLayout>
 
 </RelativeLayout>

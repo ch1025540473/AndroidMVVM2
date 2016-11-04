@@ -41,7 +41,7 @@ public abstract class ViewModel extends BaseObservable {
 
     public final void setContext(@NonNull Context context) {
         checkNotNull(context);
-        this.contextRef = new WeakReference<Context>(context);
+        this.contextRef = new WeakReference<>(context);
     }
 
     public <T extends BroadcastEvent> void postEvent(T event) {

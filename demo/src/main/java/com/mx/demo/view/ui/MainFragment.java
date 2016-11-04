@@ -30,13 +30,18 @@ public class MainFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
         FragmentMainBinding mainBinding = DataBindingFactory.inflate(getContext(), R.layout.fragment_main);
+
+
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
+
         //test dialogproxy
         DialogProxy dialogProxy = new DialogProxy(getFragmentManager(), new GomeDialogFragment(), "tag");
         viewModel.setDialogProxy(dialogProxy);
-
+        getViewModelManager().addViewModel(viewModel);
         mainBinding.setModel(viewModel);
+
         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
 
         return mainBinding.getRoot();

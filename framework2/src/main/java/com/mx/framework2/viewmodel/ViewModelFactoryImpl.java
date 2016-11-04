@@ -35,8 +35,8 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
         CheckUtils.checkNotNull(viewModelClassType);
         CheckUtils.checkNotNull(baseDialogFragment);
         //TODO: R.string.activity_msg means ambiguously
-        CheckUtils.checkArgument(baseDialogFragment.getRunState() == RunState.Created,
-                baseDialogFragment.getString(R.string.activity_msg));
+//        CheckUtils.checkArgument(baseDialogFragment.getRunState() == RunState.Created,
+//                baseDialogFragment.getString(R.string.activity_msg));
         return createViewModel(baseDialogFragment.getContext(), baseDialogFragment, viewModelTag, viewModelClassType);
     }
 
@@ -93,9 +93,9 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
             viewModelClass, BaseFragment baseFragment) {
         CheckUtils.checkNotNull(viewModelClass);
         CheckUtils.checkNotNull(baseFragment);
-        //TODO: R.string.activity_msg means ambiguously
-        CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created,
-                baseFragment.getString(R.string.activity_msg));
+//        //TODO: R.string.activity_msg means ambiguously
+//        CheckUtils.checkArgument(baseFragment.getRunState() == RunState.Created,
+//                baseFragment.getString(R.string.activity_msg));
         return createViewModel(baseFragment.getContext(), baseFragment, viewModelTag, viewModelClass);
     }
 
@@ -104,8 +104,8 @@ public class ViewModelFactoryImpl implements ViewModelFactory {
             viewModelClass, BaseActivity baseActivity) {
         CheckUtils.checkNotNull(viewModelClass);
         CheckUtils.checkNotNull(baseActivity);
-        CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created,
-                baseActivity.getString(R.string.activity_msg));
+//        CheckUtils.checkArgument(baseActivity.getRunState() == RunState.Created,
+//                baseActivity.getString(R.string.activity_msg));
         return createViewModel(baseActivity, baseActivity, viewModelTag, viewModelClass);
     }
 }

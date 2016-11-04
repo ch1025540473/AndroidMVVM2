@@ -6,14 +6,12 @@ import android.os.Bundle;
 import com.mx.framework2.BuildConfig;
 import com.mx.framework2.MyRunner;
 import com.mx.framework2.ReflectUtil;
-import com.mx.framework2.viewmodel.LifecycleViewModel;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.util.ActivityController;
 
@@ -77,7 +75,7 @@ public class BaseActivityTest {
 
         activityController.stop();
         runState=(RunState)field.get(activity);
-        assertEquals(RunState.Stoped, runState);
+        assertEquals(RunState.Stopped, runState);
 
         activityController.destroy();
         runState=(RunState)field.get(activity);

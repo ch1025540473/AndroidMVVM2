@@ -34,7 +34,5 @@ dependencies {
     compile project(':engine')
     compile project(':framework')
     compile project(':framework2')
-
-
     testCompile 'junit:junit:4.12'
 }

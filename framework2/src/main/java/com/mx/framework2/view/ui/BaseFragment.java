@@ -43,6 +43,7 @@ public class BaseFragment extends Fragment implements ViewModelScope {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fragmentDelegate.onCreate(savedInstanceState);
+        fragmentDelegate.setFragment(this);
     }
 
     @Override

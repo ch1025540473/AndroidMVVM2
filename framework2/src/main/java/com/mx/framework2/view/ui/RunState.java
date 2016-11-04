@@ -8,8 +8,9 @@ public enum RunState {
     Started(1),
     Resumed(2),
     Paused(3),
-    Stoped(4),
-    Destroyed(5);
+    Stopped(4),
+    Suspend(5),
+    Destroyed(6);
     int value;
 
     RunState(int state) {

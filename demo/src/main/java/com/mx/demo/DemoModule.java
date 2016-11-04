@@ -43,12 +43,12 @@ public class DemoModule extends Module {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public final void receiveEvent(GotoAnotherEvent gotoAnotherEvent) {
-        ActivityStarter activityStarter= BaseActivity.getActivityStarter();
+        ActivityStarter activityStarter = gotoAnotherEvent.getActivityStarter();
         Intent intent = new Intent(activityStarter.getContext(), SecondActivity.class);
         activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
             @Override
             public void onActivityResult(int resultCode, Intent data) {
-                Log.d("DemoModule","onActivityResult>>"+resultCode);
+                Log.d("DemoModule", "onActivityResult>>" + resultCode);
             }
         });
 

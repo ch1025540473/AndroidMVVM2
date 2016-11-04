@@ -4,12 +4,13 @@ apply plugin: 'maven'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
+    defaultPublishConfig "debug"
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 32
-        versionName "1.0.32"
+        versionCode 33
+        versionName "1.0.33"
     }
 
     sourceSets {
@@ -35,8 +36,19 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField "boolean", "logger_debug", "false"
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig null
+        }
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "logger_debug", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig null
         }
     }
 }
@@ -47,6 +59,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
     compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
+    compile 'com.orhanobut:logger:1.15'
 
     provided project(':framework')
     provided project(':engine')
@@ -71,8 +84,8 @@ afterEvaluate { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "admin123")
             }
-            pom.version = "1.0.32"
-            pom.artifactId = "framework2-alpha"
+            pom.version = "1.0.33"
+            pom.artifactId = "framework2-test"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
             pom.packaging = 'aar'

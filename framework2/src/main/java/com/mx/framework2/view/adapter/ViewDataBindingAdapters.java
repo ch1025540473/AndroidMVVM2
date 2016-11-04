@@ -11,18 +11,6 @@ import com.mx.framework2.viewmodel.command.OnClickCommand;
  */
 public class ViewDataBindingAdapters {
 
-    //    @BindingAdapter({"onClickCommand"})
-//    public static void clickCommandAdapter(View view, final OnClickCommand onClickCommand) {
-//        Log.d("PTR", "clickCommandAdapter" + onClickCommand.getClass());
-//        view.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (onClickCommand != null) {
-//                    onClickCommand.execute(v.getUseCaseHolderId());
-//                }
-//            }
-//        });
-//    }
     @BindingConversion
     public static View.OnClickListener click(final OnClickCommand onClickCommand) {
 

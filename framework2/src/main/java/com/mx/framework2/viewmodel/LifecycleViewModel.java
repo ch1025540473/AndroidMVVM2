@@ -14,6 +14,7 @@ import com.mx.framework2.view.ui.ActivityResultManager;
 import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
+import com.orhanobut.logger.Logger;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
@@ -232,7 +233,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
                 .contains("ViewDataBinding$WeakPropertyListener")) {
             detachedFromView();
         }
-        Log.d("home>>>", "removeOnPropertyChangedCallback ");
+        Logger.i("LifecycleViewModel", "removeOnPropertyChangedCallback ");
     }
 
     @Override
@@ -243,7 +244,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
                 .contains("ViewDataBinding$WeakPropertyListener")) {
             attachedToView();
         }
-        Log.d("home>>>", "addOnPropertyChangedCallback ");
+        Logger.i("LifecycleViewModel", "addOnPropertyChangedCallback ");
     }
 
     public String getUniqueId() {

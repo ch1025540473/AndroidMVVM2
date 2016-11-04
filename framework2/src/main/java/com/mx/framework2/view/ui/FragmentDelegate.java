@@ -4,12 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
+import com.mx.framework2.event.Events;
 import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.ViewModelManager;
@@ -29,6 +31,15 @@ public class FragmentDelegate implements ViewModelScope {
     private ViewModelManager viewModelManager = new ViewModelManager();
     private RunState runState;
     private WeakReference<View> contentView;
+    private WeakReference<Fragment> fragmentRef;
+
+    private Fragment getFragment() {
+        return fragmentRef == null ? null : fragmentRef.get();
+    }
+
+    public void setFragment(Fragment fragmentRef) {
+        this.fragmentRef = new WeakReference<>(fragmentRef);
+    }
 
     public final ViewModelManager getViewModelManager() {
         CheckUtils.checkNotNull(viewModelManager);
@@ -89,7 +100,7 @@ public class FragmentDelegate implements ViewModelScope {
 
     public void onStop() {
         getViewModelManager().stop();
-        runState = RunState.Stoped;
+        runState = RunState.Stopped;
         EventProxy.getDefault().unregister(this);
         DataBindingFactory.checkViewDataBinding(getContentView());
 
@@ -128,8 +139,11 @@ public class FragmentDelegate implements ViewModelScope {
         getViewModelManager().removeViewModel(lifecycleViewModel);
     }
 
+    @Override
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
         getViewModelManager().registerActivityResultReceiver(requestCode, receiverId);
+        BaseActivity baseActivity = (BaseActivity) getFragment().getActivity();
+        EventProxy.getDefault().post(new Events.RequestCodeRegisterEvent(requestCode, baseActivity.getActivityId()));
     }
 
     @Override
