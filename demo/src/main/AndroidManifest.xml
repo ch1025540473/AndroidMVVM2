@@ -20,6 +20,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".view.ui.SecondActivity"></activity>
+        <activity android:name=".view.ui.ThirdActivity"></activity>
+
+        <service android:name="com.mx.framework.hotfix.service.GResultService"></service>
         <activity android:name=".view.ui.SecondActivity" />
         <activity android:name=".view.ui.ThreeActivity" />
     </application>

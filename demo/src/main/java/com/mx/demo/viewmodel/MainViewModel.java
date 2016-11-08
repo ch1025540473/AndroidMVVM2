@@ -1,17 +1,16 @@
 package com.mx.demo.viewmodel;
 
-import android.content.Intent;
 import android.databinding.Bindable;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.mx.demo.BR;
 import com.mx.demo.event.GotoAnotherEvent;
+import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
-import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -20,7 +19,6 @@ import com.mx.demo.viewmodel.viewbean.ColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.engine.utils.SubscriberResult;
-import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
@@ -259,6 +257,15 @@ public class MainViewModel extends LifecycleViewModel {
             @Override
             public void execute(int viewId) {
                 postEvent(new GotoAnotherEvent());
+            }
+        };
+    }
+
+    public OnClickCommand getOnClickThirdActivity() {
+        return new OnClickCommand() {
+            @Override
+            public void execute(int viewId) {
+                postEvent(new GotoPatchEvent());
             }
         };
     }

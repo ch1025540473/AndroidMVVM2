@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
+//apply plugin: 'com.tencent.tinker.patch'
 
 android {
     compileSdkVersion 23
@@ -59,6 +60,10 @@ dependencies {
     // Android Testing Support Library's runner and rules
     androidTestCompile "com.android.support.test:runner:0.4.1"
     androidTestCompile "com.android.support.test:rules:0.4.1"
+
+    //tinker的核心库
+    compile('com.tencent.tinker:tinker-android-lib:1.7.2')
+
 }
 
 //afterEvaluate { project ->
@@ -104,39 +109,4 @@ android.testOptions.unitTests.all {
 
     // configure max heap size of the test JVM
     maxHeapSize = "2048m"
-}
-
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
-
-def coverageSourceDirs = [
-        '../framework/src/main/java'
-]
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
-    group = "Reporting"
-
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: '../framework/build/intermediates/classes/debug',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/*$ViewInjector*.*',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('../framework/build/jacoco/testDebugUnitTest.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-    }
-
 }

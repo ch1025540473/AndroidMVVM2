@@ -1,9 +1,6 @@
 package com.mx.framework2;
 
-import android.support.multidex.*;
-import android.util.Log;
-
-import com.orhanobut.logger.*;
+import android.support.multidex.MultiDexApplication;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -13,13 +10,27 @@ import java.util.Map;
  * Created by liuyuxuan on 16/4/19.
  */
 public class BaseApplication extends com.mx.framework.BaseApplication {
-    private static BaseApplication baseApplication;
+    private static Application baseApplication = null;
     private Map<String, Module> modules;
 
+    public BaseApplication(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag,
+                           long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent,
+                           Resources[] resources, ClassLoader[] classLoader, AssetManager[] assetManager) {
+        super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent, resources, classLoader, assetManager);
+    }
+
+    //    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//        baseApplication = this;
+//        modules = new LinkedHashMap<>();
+//        // install modules
+//    }
+//replace
     @Override
-    public void onCreate() {
-        super.onCreate();
-        baseApplication = this;
+    public void onBaseContextAttached(Context base) {
+        super.onBaseContextAttached(base);
+        baseApplication = getApplication();
         modules = new LinkedHashMap<>();
         Log.d("BaseApplication", "BuildConfig.BUILD_TYPE=" + BuildConfig.BUILD_TYPE);
         Log.d("BaseApplication", "BuildConfig.logger_debug=" + BuildConfig.logger_debug);
@@ -46,8 +57,10 @@ public class BaseApplication extends com.mx.framework.BaseApplication {
         module.onStart(module.getUserCaseManager());
     }
 
-    public static BaseApplication instance() {
+    public static Application instance() {
 //        checkNotNull(baseApplication);
         return baseApplication;
     }
+
+
 }

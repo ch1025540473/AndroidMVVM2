@@ -13,11 +13,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -45,7 +43,7 @@ public class ViewModelManagerTest {
         testLifecycleViewModel = new TestLifecycleViewModel();
         testLifecycleViewModel.setContext(baseActivity);
 
-        viewModelManager = new ViewModelManager(bundle);
+        viewModelManager = new ViewModelManager();
     }
 
     @After
@@ -115,7 +113,10 @@ public class ViewModelManagerTest {
         ReflectUtil.invoke(testLifecycleViewModelSpy, "init");
         viewModelManager.addViewModel(testLifecycleViewModelSpy);
         viewModelManager.create();
-        Mockito.verify(testLifecycleViewModelSpy).create(bundle);
+        Field savedInstanceStateField = ViewModelManager.class.getDeclaredField("savedInstanceState");
+        savedInstanceStateField.setAccessible(true);
+        Bundle savedInstanceStateBundle = (Bundle) savedInstanceStateField.get(viewModelManager);
+        Mockito.verify(testLifecycleViewModelSpy).create(savedInstanceStateBundle);
     }
 
     @Test
