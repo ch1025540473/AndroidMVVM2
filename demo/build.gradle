@@ -11,13 +11,23 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    signingConfigs {
+        release {
+            storeFile file("GOME.keystore")      //签名文件
+            storePassword "www.gome.com.cn"
+            keyAlias "android.keystore"
+            keyPassword "www.gome.com.cn"  //签名密码
+        }
+    }
     dataBinding {
         enabled = true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
