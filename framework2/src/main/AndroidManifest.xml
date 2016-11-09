@@ -2,11 +2,11 @@
     package="com.mx.framework2">
 
     <application
-        android:allowBackup="false"
         android:label="@string/app_name"
         android:supportsRtl="true">
 
-        <receiver android:name=".NetworkBroadcastReceiver"
+        <receiver
+            android:name=".NetworkBroadcastReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
