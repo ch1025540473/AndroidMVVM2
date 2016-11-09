@@ -1,11 +1,10 @@
 package com.mx.framework2.view.ui;
 
-import android.app.Activity;
-
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.model.UseCaseHolder;
 
 import java.lang.ref.WeakReference;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,18 +12,17 @@ import java.util.List;
  * Created by liuyuxuan on 2016/10/31.
  */
 
-public class ActivityInfo {
+public class ActivityInfo implements UseCaseHolder {
     private String activityId;
-    private List<Integer> requestCodeList;
+    private List<Integer> flyingRequestCodes;
     private WeakReference<BaseActivity> activityRef;
-    private UseCaseHolder useCaseHolder;
     private RunState runState;
     private String activityName;
 
     @Override
     public String toString() {
         return "{activityName= " + activityName + "} { activityId=" + activityId + "} { runState=" + runState + "}\n"
-                + "requestCodeList {" + requestCodeList + "}";
+                + "flyingRequestCodes {" + flyingRequestCodes + "}";
     }
 
     public String getActivityName() {
@@ -36,13 +34,7 @@ public class ActivityInfo {
         CheckUtils.checkNotNull(activity);
         activityId = activity.getActivityId();
         activityName = activity.getClass().getName();
-        useCaseHolder = new UseCaseHolder() {
-            @Override
-            public String getUseCaseHolderId() {
-                return activityId;
-            }
-        };
-        requestCodeList = new LinkedList<>();
+        flyingRequestCodes = new LinkedList<>();
         runState = activity.getRunState();
     }
 
@@ -54,36 +46,29 @@ public class ActivityInfo {
         return runState == RunState.Destroyed;
     }
 
-    public UseCaseHolder getUseCaseHolder() {
-        return useCaseHolder;
-    }
-
+    @SuppressWarnings("all")
     public String getActivityId() {
         return activityId;
     }
 
-    List<Integer> getRequestCodeList() {
-        return requestCodeList;
+    List<Integer> getFlyingRequestCodes() {
+        return Collections.unmodifiableList(flyingRequestCodes);
     }
 
-    void setActivityId(String activityId) {
-        this.activityId = activityId;
+    void removeFlyingRequestCode(int flyingRequestCode) {
+        flyingRequestCodes.remove(Integer.valueOf(flyingRequestCode));
     }
 
-    void setRequestCodeList(List<Integer> requestCodeList) {
-        this.requestCodeList = requestCodeList;
-    }
-
-    WeakReference<BaseActivity> getActivityRef() {
-        return activityRef;
-    }
-
-    void setActivityRef(WeakReference<BaseActivity> activityRef) {
-        this.activityRef = activityRef;
+    void addFlyingRequestCode(int flyingRequestCode) {
+        flyingRequestCodes.add(flyingRequestCode);
     }
 
     void setRunState(RunState runState) {
         this.runState = runState;
     }
 
+    @Override
+    public String getUseCaseHolderId() {
+        return activityId;
+    }
 }

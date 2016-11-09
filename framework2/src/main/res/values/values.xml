@@ -14,4 +14,7 @@
     <declare-styleable name="DataBindingRecyclerView">
         <attr name="looped" format="boolean" />
     </declare-styleable>
+    <declare-styleable name="ImageGestureView">
+        <attr name="imageLoadCommand" format="reference" />
+    </declare-styleable>
 </resources>

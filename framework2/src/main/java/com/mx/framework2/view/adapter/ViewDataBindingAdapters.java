@@ -4,7 +4,9 @@ import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.view.View;
 
+import com.mx.framework2.view.ImageGestureView;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
+import com.mx.framework2.viewmodel.command.OnLoadImageCommand;
 
 /**
  * Created by liuyuxuan on 16/8/23.
@@ -33,5 +35,19 @@ public class ViewDataBindingAdapters {
     @BindingAdapter("showOrHide")
     public static void showOrHide(View view, boolean showOrHide) {
         view.setVisibility(showOrHide ? View.VISIBLE : View.GONE);
+    }
+
+    public static void setImageLoadCommand(ImageGestureView imageGestureView, final OnLoadImageCommand onLoadImageCommand) {
+        imageGestureView.setOnLoadImageListener(new ImageGestureView.OnLoadImageListener() {
+            @Override
+            public void onLoadSuccess(ImageGestureView imageGestureView, int w, int h) {
+                onLoadImageCommand.onLoadSuccess(imageGestureView.getId(), w, h);
+            }
+
+            @Override
+            public void onLoadFailure(ImageGestureView imageGestureView, Throwable throwable) {
+                onLoadImageCommand.onLoadFailure(imageGestureView.getId(), throwable);
+            }
+        });
     }
 }

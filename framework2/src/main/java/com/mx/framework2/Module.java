@@ -46,7 +46,7 @@ public abstract class Module {
     public void onActivityDestroy(Events.ActivityDestroyEvent event) {
         if (event.getActivityInfo().isFinished()) {
             Logger.t("module").d("onActivityDestroy " + event.getActivityInfo().getActivityName());
-            userCaseManager.onUseCaseHolderDestroy(event.getActivityInfo().getUseCaseHolder());
+            userCaseManager.onUseCaseHolderDestroy(event.getActivityInfo());
         }
     }
 

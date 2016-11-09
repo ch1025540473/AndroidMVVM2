@@ -9,11 +9,10 @@ public enum RunState {
     Resumed(2),
     Paused(3),
     Stopped(4),
-    Suspend(5),
+    Hibernating(5),
     Destroyed(6);
     int value;
-
     RunState(int state) {
-        this.value = value;
+        this.value = state;
     }
 }

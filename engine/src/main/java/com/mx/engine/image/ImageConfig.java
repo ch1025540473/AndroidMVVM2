@@ -116,7 +116,7 @@ class ImageConfig {
                                 .setBaseDirectoryName(IMAGE_PIPELINE_CACHE_DIR)
                                 .setMaxCacheSize(ImageConfig.MAX_DISK_CACHE_SIZE)
                                 .build())
-                .setDecodeFileDescriptorEnabled(true)
+//                .setDecodeFileDescriptorEnabled(true)
 //                .setBitmapsConfig(Bitmap.Config.ARGB_8888) //TODO: if need high picture quality, remove comment here
 //                .setResizeAndRotateEnabledForNetwork(true)
                 .setProgressiveJpegConfig(new SimpleProgressiveJpegConfig());

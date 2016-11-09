@@ -8,6 +8,7 @@ import android.util.Log;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.Module;
 import com.mx.framework2.event.BroadcastEvent;
+import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCase;
 import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.view.ui.ActivityResultManager;
@@ -52,7 +53,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
 
     protected final <T extends UseCase> T obtainUseCase(Class<T> classType) {
         checkNotNull(module);
-        T useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity());
+        T useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity().getActivityInfo());
         return useCase;
     }
 

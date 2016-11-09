@@ -31,15 +31,6 @@ public class FragmentDelegate implements ViewModelScope {
     private ViewModelManager viewModelManager = new ViewModelManager();
     private RunState runState;
     private WeakReference<View> contentView;
-    private WeakReference<Fragment> fragmentRef;
-
-    private Fragment getFragment() {
-        return fragmentRef == null ? null : fragmentRef.get();
-    }
-
-    public void setFragment(Fragment fragmentRef) {
-        this.fragmentRef = new WeakReference<>(fragmentRef);
-    }
 
     public final ViewModelManager getViewModelManager() {
         CheckUtils.checkNotNull(viewModelManager);
@@ -142,8 +133,6 @@ public class FragmentDelegate implements ViewModelScope {
     @Override
     public void registerActivityResultReceiver(int requestCode, String receiverId) {
         getViewModelManager().registerActivityResultReceiver(requestCode, receiverId);
-        BaseActivity baseActivity = (BaseActivity) getFragment().getActivity();
-        EventProxy.getDefault().post(new Events.RequestCodeRegisterEvent(requestCode, baseActivity.getActivityId()));
     }
 
     @Override

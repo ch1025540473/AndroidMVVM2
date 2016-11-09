@@ -36,7 +36,7 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends FragmentActivity implements UseCaseHolder, ViewModelScope {
+public class BaseActivity extends FragmentActivity implements ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private String uuid;
     private RunState runState;
@@ -82,7 +82,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public final void registerActivityResultReceiver(int requestCode, String receiverId) {
         viewModelManager.registerActivityResultReceiver(requestCode, receiverId);
-        EventProxy.getDefault().post(new Events.RequestCodeRegisterEvent(requestCode, getActivityId()));
     }
 
     @Override
@@ -134,6 +133,12 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
         BaseActivity.activityStartViewModelRef = new WeakReference<>(activityStartViewModel);
     }
 
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        super.startActivityForResult(intent, requestCode);
+        ActivityStack.getInstance().onStartActivityForResult(requestCode, this);
+    }
+
     public String getActivityId() {
         return uuid;
     }
@@ -179,8 +184,8 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
 
     @Override
     protected void onDestroy() {
-        this.runState = isFinishing() ? RunState.Destroyed : RunState.Suspend;
         super.onDestroy();
+        this.runState = isFinishing() ? RunState.Destroyed : RunState.Hibernating;
         ActivityStack.getInstance().onActivityDestroy(this);
     }
 
@@ -209,11 +214,6 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     }
 
     @Override
-    public String getUseCaseHolderId() {
-        return uuid;
-    }
-
-    @Override
     public void addViewModel(LifecycleViewModel lifecycle) {
         getViewModelManager().addViewModel(lifecycle);
     }
@@ -226,5 +226,9 @@ public class BaseActivity extends FragmentActivity implements UseCaseHolder, Vie
     @Override
     public Context getContext() {
         return this;
+    }
+
+    public ActivityInfo getActivityInfo() {
+        return ActivityStack.getInstance().getActivityInfo(this);
     }
 }
