@@ -170,7 +170,7 @@ public class ImageGestureView extends FrameLayout {
             return null;
         }
         CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
-                .getEncodedCacheKey(ImageRequest.fromUri(uri), getContext());
+                .getEncodedCacheKey(ImageRequest.fromUri(uri));
         BinaryResource resource = ImagePipelineFactory.getInstance()
                 .getMainFileCache().getResource(cacheKey);
         return ((FileBinaryResource) resource).getFile();

@@ -76,43 +76,43 @@ dependencies {
 }
 
 
-afterEvaluate { project ->
-    uploadArchives {
-        repositories.mavenDeployer {
-            name = 'mavenCentralReleaseDeployer'
-            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "mx123456")
-            }
-            pom.version = "1.0.6"
-            pom.artifactId = "engine"
-            pom.groupId = "com.mx.architecture"
-            pom.name = "engine"
-            pom.packaging = 'aar'
-            pom.project {
-                description ""
-                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/engine"
-            }
-        }
-    }
-
-
-    task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    artifacts {
-        archives androidSourcesJar
-//  archives androidJavadocsJar
-    }
-}
+//afterEvaluate { project ->
+//    uploadArchives {
+//        repositories.mavenDeployer {
+//            name = 'mavenCentralReleaseDeployer'
+//            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+//                authentication(userName: "admin", password: "")
+//            }
+//            pom.version = "1.0.6"
+//            pom.artifactId = "engine"
+//            pom.groupId = "com.mx.architecture"
+//            pom.name = "engine"
+//            pom.packaging = 'aar'
+//            pom.project {
+//                description ""
+//                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/engine"
+//            }
+//        }
+//    }
+//
+//
+//    task androidJavadocs(type: Javadoc) {
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//
+//    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//        classifier = 'javadoc'
+//        from androidJavadocs.destinationDir
+//    }
+//
+//    task androidSourcesJar(type: Jar) {
+//        classifier = 'sources'
+//        from android.sourceSets.main.java.sourceFiles
+//    }
+//
+//    artifacts {
+//        archives androidSourcesJar
+////  archives androidJavadocsJar
+//    }
+//}

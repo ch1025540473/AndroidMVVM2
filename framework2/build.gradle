@@ -4,7 +4,7 @@ apply plugin: 'maven'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-    defaultPublishConfig "debug"
+    defaultPublishConfig "release"
 
     defaultConfig {
         minSdkVersion 14
@@ -59,7 +59,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
     compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
-    compile 'com.orhanobut:logger:1.15'
     compile 'me.kareluo.intensify:image:1.1.0'
     provided project(':framework')
     provided project(':engine')
@@ -76,41 +75,41 @@ dependencies {
     androidTestCompile "com.android.support.test:rules:0.4.1"
 }
 
-afterEvaluate { project ->
-    uploadArchives {
-        repositories.mavenDeployer {
-            name = 'mavenCentralReleaseDeployer'
-            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "admin123")
-            }
-            pom.version = "1.0.33"
-            pom.artifactId = "framework2-test"
-            pom.groupId = "com.mx.architecture"
-            pom.name = "framework"
-            pom.packaging = 'aar'
-        }
-    }
-
-    task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    artifacts {
-        archives androidSourcesJar
-//  archives androidJavadocsJar
-    }
-}
+//afterEvaluate { project ->
+//    uploadArchives {
+//        repositories.mavenDeployer {
+//            name = 'mavenCentralReleaseDeployer'
+//            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+//                authentication(userName: "admin", password: "")
+//            }
+//            pom.version = "1.0.33"
+//            pom.artifactId = "framework2-alpha"
+//            pom.groupId = "com.mx.architecture"
+//            pom.name = "framework"
+//            pom.packaging = 'aar'
+//        }
+//    }
+//
+//    task androidJavadocs(type: Javadoc) {
+//        source = android.sourceSets.main.java.srcDirs
+//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//    }
+//
+//    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//        classifier = 'javadoc'
+//        from androidJavadocs.destinationDir
+//    }
+//
+//    task androidSourcesJar(type: Jar) {
+//        classifier = 'sources'
+//        from android.sourceSets.main.java.sourceFiles
+//    }
+//
+//    artifacts {
+//        archives androidSourcesJar
+////  archives androidJavadocsJar
+//    }
+//}
 
 android.testOptions.unitTests.all {
     // configure the set of classes for JUnit tests
