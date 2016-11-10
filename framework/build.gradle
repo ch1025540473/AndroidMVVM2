@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 9
-        versionName "1.0.9"
+        versionCode 10
+        versionName "1.0.10"
     }
 
     sourceSets {
@@ -68,7 +68,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.9"
+//            pom.version = "1.0.10"
 //            pom.artifactId = "framework-beta"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "framework"
