@@ -4,13 +4,12 @@ apply plugin: 'maven'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-    defaultPublishConfig "release"
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 34
-        versionName "1.0.34"
+        versionCode 35
+        versionName "1.0.35"
     }
 
     sourceSets {
@@ -74,7 +73,7 @@ dependencies {
     androidTestCompile "com.android.support.test:runner:0.4.1"
     androidTestCompile "com.android.support.test:rules:0.4.1"
 }
-//
+
 //afterEvaluate { project ->
 //    uploadArchives {
 //        repositories.mavenDeployer {
@@ -82,7 +81,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.34"
+//            pom.version = "1.0.35"
 //            pom.artifactId = "framework2-alpha"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "framework"
