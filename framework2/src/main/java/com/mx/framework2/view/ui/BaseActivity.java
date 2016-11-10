@@ -38,7 +38,7 @@ import java.util.UUID;
 //TODO 监测生命状态
 public class BaseActivity extends FragmentActivity implements ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
-    private String uuid;
+    private String  uuid;
     private RunState runState;
     private boolean isHasFocus = false;
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
