@@ -1,6 +1,14 @@
 package com.mx.framework2;
 
-import android.support.multidex.MultiDexApplication;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
+import android.content.res.AssetManager;
+import android.content.res.Resources;
+import android.util.Log;
+
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

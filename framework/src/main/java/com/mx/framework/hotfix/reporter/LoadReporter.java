@@ -20,6 +20,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.MessageQueue;
+import android.widget.Toast;
 
 import com.mx.framework.hotfix.util.UpgradePatchRetry;
 import com.mx.framework.hotfix.util.Utils;
@@ -45,7 +46,7 @@ public class LoadReporter extends DefaultLoadReporter {
         super.onLoadPatchListenerReceiveFail(patchFile, errorCode, isUpgrade);
         switch (errorCode) {
             case ShareConstants.ERROR_PATCH_NOTEXIST:
-//                Toast.makeText(context, "patch file is not exist", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "patch file is not exist", Toast.LENGTH_LONG).show();
                 break;
             case ShareConstants.ERROR_PATCH_RUNNING:
                 // try later
@@ -60,7 +61,7 @@ public class LoadReporter extends DefaultLoadReporter {
                 }
                 break;
             case Utils.ERROR_PATCH_ROM_SPACE:
-//                Toast.makeText(context, "rom space is not enough", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "rom space is not enough", Toast.LENGTH_LONG).show();
                 break;
         }
         HotfixReport.onTryApplyFail(errorCode);
