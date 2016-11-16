@@ -13,17 +13,40 @@ import com.mx.demo.viewmodel.MainViewModel;
 import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.view.ui.BaseFragment;
 import com.mx.framework2.viewmodel.proxy.DialogProxy;
+import com.mx.router.Callback;
+import com.mx.router.Route;
+import com.mx.router.Router;
 
-
-public class MainFragment extends BaseFragment {
+public class MainFragment extends BaseFragment implements Callback<MainFragment.Bean> {
 
     public MainFragment() {
+    }
+
+    @Override
+    public void onRouteSuccess(Route route, Bean data) {
+        System.out.println("<R>" + data.aaa);
+    }
+
+    @Override
+    public void onRouteFailure(Route route) {
+
+    }
+
+    public static class Bean {
+        public String aaa;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
+
+        Router.getDefault().newRoute()
+                .from(this.getActivity())
+                .uri("demo/test")
+                .appendParameter("code", 123)
+                .callback(this)
+                .buildAndRoute();
     }
 
     @Override

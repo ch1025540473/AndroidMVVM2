@@ -7,6 +7,10 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 
 import com.mx.framework2.BaseApplication;
+import com.mx.router.Router;
+import com.mx.router.converter.BundleConverter;
+import com.mx.router.converter.FragmentConverter;
+import com.mx.router.converter.ViewConverter;
 import com.tencent.tinker.anno.DefaultLifeCycle;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 
@@ -34,6 +38,13 @@ public class DemoApplicationLike extends BaseApplication {
     @Override
     public void onBaseContextAttached(Context base) {
         super.onBaseContextAttached(base);
+
+        Router.getDefault().init("gomeplus://com.mx");
+        Router.getDefault().addDataConverter(new BundleConverter());
+        Router.getDefault().addDataConverter(new FragmentConverter());
+        Router.getDefault().addDataConverter(new ViewConverter());
+        Router.getDefault().addDataConverter(new BundleConverter());
+
         installModule(DemoModule.get());
         System.out.println("88888888888888888888888");
     }

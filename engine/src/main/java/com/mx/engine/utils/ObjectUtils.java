@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 /**
  * Created by liuyuxuan on 16/4/29.
@@ -196,4 +198,33 @@ public class ObjectUtils {
         return field.get(obj);
     }
 
+    public static Class<?> getGenericClass(Object obj, Class<?> interfaceType, int index) {
+        Type superType = obj.getClass().getGenericSuperclass();
+        if (superType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) superType;
+            Type actualType = parameterizedType.getActualTypeArguments()[index];
+            if (actualType instanceof Class) {
+                return (Class<?>) actualType;
+            }
+        }
+
+        if (interfaceType.isInstance(obj)) {
+            Type[] types = obj.getClass().getGenericInterfaces();
+            for (Type type : types) {
+                if (!(type instanceof ParameterizedType)) {
+                    continue;
+                }
+                ParameterizedType paramType = ParameterizedType.class.cast(type);
+                if (paramType.getRawType() != interfaceType) {
+                    continue;
+                }
+                Type actualType = paramType.getActualTypeArguments()[index];
+                if (actualType instanceof Class) {
+                    return (Class<?>) actualType;
+                }
+            }
+        }
+
+        return null;
+    }
 }

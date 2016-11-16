@@ -13,9 +13,15 @@ import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.router.Route;
+import com.mx.router.RouteRule;
+import com.mx.router.Router;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -40,8 +46,16 @@ public class DemoModule extends Module {
     @Override
     protected void onStart(UseCaseManager userCaseManager) {
         userCaseManager.register(DemoUseCase.class);
-    }
 
+        Router.getDefault().registerRule("demo/test", new RouteRule() {
+            @Override
+            public void handleRoute(Route route) {
+                Map<String, String> m = new HashMap<>();
+                m.put("aaa", "bbb");
+                route.success(m);
+            }
+        });
+    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public final void receiveEvent(GotoAnotherEvent gotoAnotherEvent) {
@@ -58,7 +72,7 @@ public class DemoModule extends Module {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public final void receiveEvent(GotoPatchEvent gotoAnotherEvent) {
-        ActivityStarter activityStarter = BaseActivity.getActivityStarter();
+        ActivityStarter activityStarter = BaseActivity.getTopActivityStarter();
         Intent intent = new Intent(activityStarter.getContext(), ThirdActivity.class);
         activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
             @Override

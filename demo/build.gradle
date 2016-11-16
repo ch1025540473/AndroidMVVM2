@@ -9,6 +9,7 @@ dependencies {
     compile project(':engine')
     compile project(':framework')
     compile project(':framework2')
+    compile project(':router')
     testCompile 'junit:junit:4.12'
     compile("com.tencent.tinker:tinker-android-lib:1.7.2") { changing = true }
     provided("com.tencent.tinker:tinker-android-anno:1.7.2") { changing = true }

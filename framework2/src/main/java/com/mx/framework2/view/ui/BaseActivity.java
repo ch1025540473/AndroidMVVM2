@@ -11,8 +11,6 @@ import android.view.View;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.FrameworkModule;
-import com.mx.framework2.event.Events;
-import com.mx.framework2.model.UseCaseHolder;
 import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.viewmodel.ActivityStartViewModel;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
@@ -46,8 +44,13 @@ public class BaseActivity extends FragmentActivity implements ViewModelScope {
     private static WeakReference<LifecycleViewModel> activityStartViewModelRef;
     private LifecycleViewModel activityStartViewModel;
 
-    public static ActivityStarter getActivityStarter() {
+    public static ActivityStarter getTopActivityStarter() {
         return activityStartViewModelRef == null ? null : activityStartViewModelRef.get();
+    }
+
+    //TODO wrap the real activity starter
+    public ActivityStarter getActivityStarter() {
+        return activityStartViewModel;
     }
 
     private List<BaseFragment> getFragments() {

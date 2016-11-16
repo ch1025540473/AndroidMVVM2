@@ -45,7 +45,7 @@ public abstract class ViewModel extends BaseObservable {
     }
 
     public <T extends BroadcastEvent> void postEvent(T event) {
-        event.setActivityStarter(BaseActivity.getActivityStarter());
+        event.setActivityStarter(BaseActivity.getTopActivityStarter());
         EventProxy.getDefault().post(event);
     }
 
