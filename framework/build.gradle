@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 10
-        versionName "1.0.10"
+        versionCode 11
+        versionName "1.0.11"
     }
 
     sourceSets {
@@ -63,7 +63,7 @@ dependencies {
     androidTestCompile "com.android.support.test:rules:0.4.1"
 
     //tinker的核心库
-    compile('com.tencent.tinker:tinker-android-lib:1.7.2')
+   // compile('com.tencent.tinker:tinker-android-lib:1.7.2')
 
 }
 
@@ -74,7 +74,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.10"
+//            pom.version = "1.0.11"
 //            pom.artifactId = "framework-beta"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "framework"
@@ -102,12 +102,12 @@ dependencies {
 ////  archives androidJavadocsJar
 //    }
 //}
-
-android.testOptions.unitTests.all {
-    // configure the set of classes for JUnit tests
-    include '**/*Test.class'
-    //exclude '**/espresso/**/*.class'
-
-    // configure max heap size of the test JVM
-    maxHeapSize = "2048m"
-}
+//
+//android.testOptions.unitTests.all {
+//    // configure the set of classes for JUnit tests
+//    include '**/*Test.class'
+//    //exclude '**/espresso/**/*.class'
+//
+//    // configure max heap size of the test JVM
+//    maxHeapSize = "2048m"
+//}
