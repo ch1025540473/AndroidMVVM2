@@ -30,6 +30,7 @@ public class PTRRecyclerViewProxy {
     public enum PTRMode {
         NONE, BOTH, TOP, BOTTOM
     }
+
     private PTRMode ptrMode = BOTH;
     private OnStartRefreshingCommand onStartRefreshingCommand;
     private OnPullDownCommand onPullDownCommand;
@@ -60,7 +61,7 @@ public class PTRRecyclerViewProxy {
         }
     }
 
-    private PullToRefreshRecyclerView getPtrRecyclerView() {
+    protected PullToRefreshRecyclerView getPtrRecyclerView() {
         if (ptrRecyclerViewRef != null) {
             return ptrRecyclerViewRef.get();
         }

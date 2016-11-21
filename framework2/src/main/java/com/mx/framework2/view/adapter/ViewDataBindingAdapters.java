@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.mx.framework2.view.ImageGestureView;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadImageCommand;
+import com.mx.framework2.viewmodel.command.OnLongCommand;
 
 /**
  * Created by liuyuxuan on 16/8/23.
@@ -25,6 +26,16 @@ public class ViewDataBindingAdapters {
                 }
             }
         };
+    }
+
+    @BindingAdapter("longClick")
+    public static void longClick(View view, final OnLongCommand onLongCommand) {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return onLongCommand.onLongCommand(v.getId());
+            }
+        });
     }
 
     @BindingConversion

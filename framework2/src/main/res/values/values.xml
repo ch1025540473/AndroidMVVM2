@@ -4,17 +4,18 @@
         <attr name="items" format="string" />
         <attr name="itemViewFactory" format="string" />
     </declare-styleable>
-
     <declare-styleable name="PullToRefreshRecyclerView">
         <attr name="headerClassName" format="string" />
         <attr name="footerClassName" format="string" />
         <attr name="proxy" format="reference" />
     </declare-styleable>
-
     <declare-styleable name="DataBindingRecyclerView">
         <attr name="looped" format="boolean" />
     </declare-styleable>
     <declare-styleable name="ImageGestureView">
         <attr name="imageLoadCommand" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="View">
+        <attr name="longClick" format="reference" />
     </declare-styleable>
 </resources>

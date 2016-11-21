@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 35
-        versionName "1.0.35"
+        versionCode 36
+        versionName "1.0.36"
     }
 
     sourceSets {
@@ -82,7 +82,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.35"
+//            pom.version = "1.0.36"
 //            pom.artifactId = "framework2-alpha"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "framework"
