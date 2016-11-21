@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.3"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -47,14 +47,14 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.2"
+//            pom.version = "1.0.3"
 //            pom.artifactId = "hotfix-alpha"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "hotfix"
 //            pom.packaging = 'aar'
 //            pom.project {
 //                description ""
-//                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/router"
+//                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/hotfix"
 //            }
 //        }
 //    }
