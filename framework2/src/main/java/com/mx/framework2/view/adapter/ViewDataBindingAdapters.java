@@ -3,6 +3,7 @@ package com.mx.framework2.view.adapter;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.mx.framework2.view.ImageGestureView;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
@@ -49,5 +50,19 @@ public class ViewDataBindingAdapters {
                 onLoadImageCommand.onLoadFailure(imageGestureView.getId(), throwable);
             }
         });
+    }
+
+    @BindingAdapter("android:src")
+    public static void adaptSrcToRes(final View view, final int resId) {
+        if (view instanceof ImageView) {
+            ((ImageView) view).setImageResource(resId);
+        }
+    }
+
+    @BindingAdapter("android:visibility")
+    public static void adaptVisibility(final View view, final boolean isVisible) {
+        if (view != null) {
+            view.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        }
     }
 }
