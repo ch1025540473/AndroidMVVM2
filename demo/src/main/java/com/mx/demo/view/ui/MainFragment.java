@@ -1,6 +1,7 @@
 package com.mx.demo.view.ui;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
 
         Router.getDefault().newRoute()
-                .from(this.getActivity())
+                .from(this)
                 .uri("demo/test")
                 .appendParameter("code", 123)
                 .callback(this)
@@ -92,5 +93,17 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
     public void onDestroy() {
         super.onDestroy();
         System.out.println("onDestroy");
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Router.getDefault().saveState(this, outState);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Router.getDefault().restoreState(this, savedInstanceState);
     }
 }

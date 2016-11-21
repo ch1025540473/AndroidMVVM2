@@ -208,7 +208,7 @@ public class ObjectUtils {
             }
         }
 
-        if (interfaceType.isInstance(obj)) {
+        if (interfaceType != null && interfaceType.isInstance(obj)) {
             Type[] types = obj.getClass().getGenericInterfaces();
             for (Type type : types) {
                 if (!(type instanceof ParameterizedType)) {

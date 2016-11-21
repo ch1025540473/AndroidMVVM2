@@ -1,7 +1,7 @@
 package com.mx.router;
 
-import android.app.Activity;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.mx.engine.utils.CheckUtils;
@@ -9,10 +9,12 @@ import com.mx.router.converter.ObjectConverter;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.Set;
 
 /**
  * Created by chenbaocheng on 16/11/14.
@@ -36,13 +38,15 @@ public class Router {
     }
 
     private Uri baseUri = null;
-    private Map<String, RouteRule> routeTable;
-    private Map<Activity, String> activityIds;
     private List<DataConverter> dataConverters;
 
+    private Map<String, RouteRule> routingTable;
+    private Set<RouteClient> activeClients;
+
     private Router() {
-        routeTable = Collections.synchronizedMap(new HashMap<String, RouteRule>());
-        activityIds = Collections.synchronizedMap(new WeakHashMap<Activity, String>());
+        routingTable = Collections.synchronizedMap(new HashMap<String, RouteRule>());
+        activeClients = Collections.synchronizedSet(new HashSet<RouteClient>());
+
         dataConverters = Collections.synchronizedList(new LinkedList<DataConverter>());
         dataConverters.add(new ObjectConverter()); // As default converter
     }
@@ -90,12 +94,12 @@ public class Router {
             throw new RuntimeException("Rule uri cannot have parameters.");
         }
 
-        routeTable.put(fullUri(uri).toString(), rule);
+        routingTable.put(fullUri(uri).toString(), rule);
     }
 
     public void unregisterRule(@NonNull String uriString) {
         CheckUtils.checkNotNull(uriString);
-        routeTable.remove(fullUri(uriString).toString());
+        routingTable.remove(fullUri(uriString).toString());
     }
 
     public void unregisterRule(@NonNull Uri uri) {
@@ -118,62 +122,42 @@ public class Router {
         dataConverters.remove(converter);
     }
 
-    public Route.Builder newRoute() {
-        return new Route.Builder(this);
+    public PipeRoute.Builder newRoute() {
+        return new PipeRoute.Builder(this);
     }
 
-//    private static final String BUNDLE_KEY_ACTIVITY_ID = Router.class.getName() + "_activity_id";
-//
-//    public void saveState(@NonNull Activity activity, Bundle outState) {
-//        if(outState == null){
-//            return;
-//        }
-//
-//        String id;
-//        if (outState.containsKey(BUNDLE_KEY_ACTIVITY_ID)) {
-//            id = outState.getString(BUNDLE_KEY_ACTIVITY_ID);
-//        } else {
-//            id = UUID.randomUUID().toString();
-//            outState.putString(BUNDLE_KEY_ACTIVITY_ID, id);
-//        }
-//
-//        activityIds.put(activity, id);
-//    }
-//
-//    public void restoreState(@NonNull Activity activity, Bundle savedState) {
-//        if(savedState == null){
-//            return;
-//        }
-//
-//        if(activityIds.containsKey(activity) && savedState.containsKey(activityIds.get(activity))){
-//
-//        }
-//    }
-//
-//    public void onStart(Callback callback) {
-//    }
-//
-//    public void onStop(Callback callback) {
-//    }
-//
-//    public void onDestroy(Callback callback) {
-//    }
+    public void saveState(@NonNull Object host, Bundle outState) {
+        for (RouteClient client : activeClients) {
+            client.pause(host, outState);
+        }
+    }
 
-    void route(Route route) {
-        String entryKey = route.getUriWithoutQuery().toString();
+    public void restoreState(@NonNull Object host, Bundle savedState) {
+        Iterator<RouteClient> it = activeClients.iterator();
+        while (it.hasNext()) {
+            RouteClient client = it.next();
+            if (client.resume(host, savedState)) {
+                it.remove();
+            }
+        }
+    }
+
+    void route(PipeRoute pipeRoute) {
+        String entryKey = pipeRoute.getUriWithoutQuery().toString();
         String uri = fullUri(entryKey).toString();
-        if (!routeTable.containsKey(uri)) {
-            throw new RuntimeException("No such route in Router: " + entryKey);
+        if (!routingTable.containsKey(uri)) {
+            throw new RuntimeException("No such pipeRoute in Router: " + entryKey);
         }
 
-        routeTable.get(uri).handleRoute(route);
+        activeClients.add(pipeRoute.getRouteClient());
+        routingTable.get(uri).handleRoute(pipeRoute);
     }
 
-    Object convert(Route route, Object data) {
+    Object convert(PipeRoute pipeRoute, Object data) {
         List<DataConverter> converters = new LinkedList<>(dataConverters);
 
         for (DataConverter converter : converters) {
-            Object converted = converter.convert(route, data);
+            Object converted = converter.convert(data, pipeRoute.getCallbackDataType());
             if (converted != null) {
                 return converted;
             }

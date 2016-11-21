@@ -5,5 +5,5 @@ package com.mx.router;
  */
 
 public interface RouteRule {
-    void handleRoute(Route route);
+    void handleRoute(Pipe pipe);
 }

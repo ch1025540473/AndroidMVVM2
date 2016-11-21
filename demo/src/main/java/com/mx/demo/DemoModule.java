@@ -13,7 +13,7 @@ import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
-import com.mx.router.Route;
+import com.mx.router.Pipe;
 import com.mx.router.RouteRule;
 import com.mx.router.Router;
 
@@ -49,10 +49,11 @@ public class DemoModule extends Module {
 
         Router.getDefault().registerRule("demo/test", new RouteRule() {
             @Override
-            public void handleRoute(Route route) {
+            public void handleRoute(Pipe pipe) {
+                System.out.println("<R> code=" + pipe.getIntParameter("code", 0));
                 Map<String, String> m = new HashMap<>();
                 m.put("aaa", "bbb");
-                route.success(m);
+                pipe.success(m);
             }
         });
     }
