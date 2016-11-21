@@ -28,43 +28,43 @@ dependencies {
     provided project(':framework2')
 }
 
-//afterEvaluate { project ->
-//    uploadArchives {
-//        repositories.mavenDeployer {
-//            name = 'mavenCentralReleaseDeployer'
-//            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-//                authentication(userName: "admin", password: "")
-//            }
-//            pom.version = "1.0.3"
-//            pom.artifactId = "router-alpha"
-//            pom.groupId = "com.mx.architecture"
-//            pom.name = "router"
-//            pom.packaging = 'aar'
-//            pom.project {
-//                description ""
-//                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/router"
-//            }
-//        }
-//    }
-//
-//
-//    task androidJavadocs(type: Javadoc) {
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    }
-//
-//    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-//        classifier = 'javadoc'
-//        from androidJavadocs.destinationDir
-//    }
-//
-//    task androidSourcesJar(type: Jar) {
-//        classifier = 'sources'
-//        from android.sourceSets.main.java.sourceFiles
-//    }
-//
-//    artifacts {
-//        archives androidSourcesJar
-////  archives androidJavadocsJar
-//    }
-//}
+afterEvaluate { project ->
+    uploadArchives {
+        repositories.mavenDeployer {
+            name = 'mavenCentralReleaseDeployer'
+            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+                authentication(userName: "admin", password: "mx123456")
+            }
+            pom.version = "1.0.2"
+            pom.artifactId = "router-alpha"
+            pom.groupId = "com.mx.architecture"
+            pom.name = "router"
+            pom.packaging = 'aar'
+            pom.project {
+                description ""
+                url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/router"
+            }
+        }
+    }
+
+
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    artifacts {
+        archives androidSourcesJar
+//  archives androidJavadocsJar
+    }
+}
