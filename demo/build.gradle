@@ -12,8 +12,8 @@ dependencies {
     compile project(':framework2')
     compile project(':router')
     testCompile 'junit:junit:4.12'
-    compile("com.tencent.tinker:tinker-android-lib:1.7.2") { changing = true }
-    provided("com.tencent.tinker:tinker-android-anno:1.7.2") { changing = true }
+    compile("com.tencent.tinker:tinker-android-lib:1.7.5") { changing = true }
+    provided("com.tencent.tinker:tinker-android-anno:1.7.5") { changing = true }
 
     compile "com.android.support:multidex:1.0.1"
 
@@ -97,7 +97,12 @@ android {
          * client version would update with patch
          * so we can get the newly git version easily!
          */
-        buildConfigField "String", "CLIENTVERSION", "\"${getTinkerIdValue()}\""
+        buildConfigField "String", "TINKER_ID", "\"${getTinkerIdValue()}\""
+//        /**
+//         * client version would update with patch
+//         * so we can get the newly git version easily!
+//         */
+//        buildConfigField "String", "CLIENTVERSION", "\"${getTinkerIdValue()}\""
         buildConfigField "String", "PLATFORM", "\"all\""
     }
 
@@ -150,14 +155,14 @@ ext {
 
     //for normal build
     //old apk file to build patch apk
-    tinkerOldApkPath = "${bakPath}/demo-debug-1121-13-20-14.apk"
+    tinkerOldApkPath = "${bakPath}/demo-debug-1121-17-05-34.apk"
     //proguard mapping file to build patch apk
-    tinkerApplyMappingPath = "${bakPath}/demo-debug-1121-13-20-14-mapping.txt"
+    tinkerApplyMappingPath = "${bakPath}/demo-debug-1121-17-05-34-mapping.txt"
     //resource R.txt to build patch apk, must input if there is resource changed
-    tinkerApplyResourcePath = "${bakPath}/demo-debug-1121-13-20-14-R.txt"
+    tinkerApplyResourcePath = "${bakPath}/demo-debug-1121-17-05-34-R.txt"
 
     //only use for build all flavor, if not, just ignore this field
-    tinkerBuildFlavorDirectory = "${bakPath}/demo-1121-13-20-14"
+    tinkerBuildFlavorDirectory = "${bakPath}/demo-1121-17-05-34"
 }
 
 

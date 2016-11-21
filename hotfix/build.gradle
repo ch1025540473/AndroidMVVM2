@@ -36,7 +36,7 @@ dependencies {
     //    compile 'com.android.support:appcompat-v7:24.2.1'
     testCompile 'junit:junit:4.12'
     //tinker的核心库
-    compile 'com.tencent.tinker:tinker-android-lib:1.7.2'
+    compile 'com.tencent.tinker:tinker-android-lib:1.7.5'
     compile 'com.android.support:multidex:1.0.1'
 }
 //afterEvaluate { project ->

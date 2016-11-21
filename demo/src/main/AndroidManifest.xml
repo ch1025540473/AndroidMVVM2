@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.mx.demo">
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!--<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
+    <!--<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />-->
+
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".DemoApplication"
@@ -26,7 +30,9 @@
         <activity android:name=".view.ui.SecondActivity"></activity>
         <activity android:name=".view.ui.ThirdActivity"></activity>
 
-        <service android:name="com.mx.hotfix.service.HotfixResultService"></service>
+        <service
+            android:name="com.mx.hotfix.service.HotfixResultService"
+            android:exported="false"></service>
         <activity android:name=".view.ui.ThreeActivity" />
 
     </application>

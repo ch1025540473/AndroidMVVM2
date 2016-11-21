@@ -1,12 +1,10 @@
 package com.mx.framework;
 
-import android.annotation.TargetApi;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
-import android.os.Build;
 
 import com.mx.hotfix.HotfixApplication;
 
@@ -82,9 +80,9 @@ public class BaseApplication extends HotfixApplication {
 //    }
 
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    public void registerActivityLifecycleCallbacks(Application.ActivityLifecycleCallbacks callback) {
-        getApplication().registerActivityLifecycleCallbacks(callback);
-    }
+//    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+//    public void registerActivityLifecycleCallbacks(Application.ActivityLifecycleCallbacks callback) {
+//        getApplication().registerActivityLifecycleCallbacks(callback);
+//    }
 
 }
