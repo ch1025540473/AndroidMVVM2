@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.util;
+package com.mx.hotfix.util;
 
-import com.mx.framework.hotfix.crash.UncaughtExceptionHandler;
-import com.mx.framework.hotfix.reporter.HotfixListener;
-import com.mx.framework.hotfix.reporter.LoadReporter;
-import com.mx.framework.hotfix.reporter.PatchReporter;
-import com.mx.framework.hotfix.service.GResultService;
+import com.mx.hotfix.crash.UncaughtExceptionHandler;
+import com.mx.hotfix.reporter.HotfixListener;
+import com.mx.hotfix.reporter.LoadReporter;
+import com.mx.hotfix.reporter.PatchReporter;
+import com.mx.hotfix.service.HotfixResultService;
 import com.tencent.tinker.lib.listener.PatchListener;
 import com.tencent.tinker.lib.patch.AbstractPatch;
 import com.tencent.tinker.lib.patch.RepairPatch;
@@ -94,7 +94,7 @@ public class HotfixManager {
 
         TinkerInstaller.install(appLike,
                 loadReporter, patchReporter, patchListener,
-                GResultService.class, upgradePatchProcessor, repairPatchProcessor);
+                HotfixResultService.class, upgradePatchProcessor, repairPatchProcessor);
 
         isInstalled = true;
     }

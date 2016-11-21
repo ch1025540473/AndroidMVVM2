@@ -26,10 +26,8 @@
         <activity android:name=".view.ui.SecondActivity"></activity>
         <activity android:name=".view.ui.ThirdActivity"></activity>
 
-        <service android:name="com.mx.framework.hotfix.service.GResultService"></service>
-        <activity android:name=".view.ui.SecondActivity" />
+        <service android:name="com.mx.hotfix.service.HotfixResultService"></service>
         <activity android:name=".view.ui.ThreeActivity" />
-        <activity android:name=".view.ui.ThirdActivity" />
 
     </application>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.util;
+package com.mx.hotfix.util;
 
 import android.os.Environment;
 import android.os.StatFs;

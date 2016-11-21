@@ -6,6 +6,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'io.reactivex:rxandroid:1.0.1'
     compile 'com.android.support:appcompat-v7:23.4.0'
+    compile project(':hotfix')
     compile project(':engine')
     compile project(':framework')
     compile project(':framework2')
@@ -149,14 +150,14 @@ ext {
 
     //for normal build
     //old apk file to build patch apk
-    tinkerOldApkPath = "${bakPath}/app-debug-1018-17-32-47.apk"
+    tinkerOldApkPath = "${bakPath}/demo-debug-1121-13-20-14.apk"
     //proguard mapping file to build patch apk
-    tinkerApplyMappingPath = "${bakPath}/app-debug-1018-17-32-47-mapping.txt"
+    tinkerApplyMappingPath = "${bakPath}/demo-debug-1121-13-20-14-mapping.txt"
     //resource R.txt to build patch apk, must input if there is resource changed
-    tinkerApplyResourcePath = "${bakPath}/app-debug-1018-17-32-47-R.txt"
+    tinkerApplyResourcePath = "${bakPath}/demo-debug-1121-13-20-14-R.txt"
 
     //only use for build all flavor, if not, just ignore this field
-    tinkerBuildFlavorDirectory = "${bakPath}/app-1018-17-32-47"
+    tinkerBuildFlavorDirectory = "${bakPath}/demo-1121-13-20-14"
 }
 
 

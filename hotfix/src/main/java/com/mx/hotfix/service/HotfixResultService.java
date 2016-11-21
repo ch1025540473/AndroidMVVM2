@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.service;
+package com.mx.hotfix.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,7 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
-import com.mx.framework.hotfix.util.Utils;
+import com.mx.hotfix.util.Utils;
 import com.tencent.tinker.lib.service.DefaultTinkerResultService;
 import com.tencent.tinker.lib.service.PatchResult;
 import com.tencent.tinker.lib.tinker.Tinker;
@@ -39,17 +39,17 @@ import java.io.File;
  * optional, you can just use DefaultTinkerResultService
  * we can restart process when we are at background or screen off
  */
-public class GResultService extends DefaultTinkerResultService {
-    private static final String TAG = "Tinker.GResultService";
+public class HotfixResultService extends DefaultTinkerResultService {
+    private static final String TAG = "Tinker.HotfixResultService";
 
 
     @Override
     public void onPatchResult(final PatchResult result) {
         if (result == null) {
-            TinkerLog.e(TAG, "GResultService received null result!!!!");
+            TinkerLog.e(TAG, "HotfixResultService received null result!!!!");
             return;
         }
-        TinkerLog.i(TAG, "GResultService receive result: %s", result.toString());
+        TinkerLog.i(TAG, "HotfixResultService receive result: %s", result.toString());
 
         //first, we want to kill the recover process
         TinkerServiceInternals.killTinkerPatchServiceProcess(getApplicationContext());

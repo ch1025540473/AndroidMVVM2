@@ -1,1 +1,1 @@
-include ':engine', ':pulltorefresh', ':framework', ':framework2', ':demo', ':router'
+include ':engine', ':pulltorefresh', ':framework', ':framework2', ':demo', ':router', ':hotfix'

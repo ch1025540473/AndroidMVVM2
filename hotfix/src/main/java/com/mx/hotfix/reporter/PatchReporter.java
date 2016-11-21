@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.reporter;
+package com.mx.hotfix.reporter;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.mx.framework.hotfix.util.UpgradePatchRetry;
+import com.mx.hotfix.util.UpgradePatchRetry;
 import com.tencent.tinker.lib.reporter.DefaultPatchReporter;
 import com.tencent.tinker.loader.shareutil.SharePatchInfo;
 

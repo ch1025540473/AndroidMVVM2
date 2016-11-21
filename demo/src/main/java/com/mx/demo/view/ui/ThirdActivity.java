@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mx.demo.R;
+import com.mx.hotfix.installer.HotfixInstaller;
 import com.tencent.tinker.lib.tinker.Tinker;
-import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
 
@@ -28,12 +28,14 @@ public class ThirdActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("www", "iiiii999999iii4444666iiiiiiiii");
         setContentView(R.layout.activity_third);
         findViewById(R.id.result_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TinkerInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                HotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
                 Log.d("www", "iiiiiiiiiiiiiiiii");
+                Log.d("www", "iiiiiiii4444666iiiiiiiii");
             }
         });
 
@@ -44,7 +46,7 @@ public class ThirdActivity extends AppCompatActivity {
 ////                TinkerInstaller.loadLibraryFromTinker(getApplicationContext(), "assets/x86", "stlport_shared");
                 android.os.Process.killProcess(android.os.Process.myPid());
                 Tinker.with(getApplicationContext()).cleanPatch();
-//                Log.d("www","iiiiiiiiiiiiiiiii");
+                Log.d("www", "iiiiiiiiiiiiiiiii");
             }
         });
     }

@@ -7,14 +7,9 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.os.Build;
-import android.support.multidex.MultiDex;
 
-import com.mx.framework.hotfix.log.MyLogImp;
-import com.mx.framework.hotfix.util.HotfixManager;
-import com.tencent.tinker.lib.tinker.TinkerInstaller;
-import com.tencent.tinker.loader.app.DefaultApplicationLike;
+import com.mx.hotfix.HotfixApplication;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -23,7 +18,8 @@ import java.util.Map;
  */
 @Deprecated
 //public class BaseApplication extends MultiDexApplication {
-public class BaseApplication extends DefaultApplicationLike {
+//public class BaseApplication extends DefaultApplicationLike {
+public class BaseApplication extends HotfixApplication {
 
     public static Application application = null;
     public static Context context = null;
@@ -63,27 +59,27 @@ public class BaseApplication extends DefaultApplicationLike {
         return application;
     }
 
-    @Override
-    public void onBaseContextAttached(Context base) {
-        super.onBaseContextAttached(base);
-        modules = new LinkedHashMap<>();
-        //you must install multiDex whatever tinker is installed!
-        MultiDex.install(base);
-
-        application = getApplication();
-        context = getApplication();
-        HotfixManager.setTinkerApplicationLike(this);
-        HotfixManager.initFastCrashProtect();
-        //should set before tinker is installed
-        HotfixManager.setUpgradeRetryEnable(true);
-
-        //optional set logIml, or you can use default debug log
-        TinkerInstaller.setLogIml(new MyLogImp());
-
-        //installTinker after load multiDex
-        //or you can put com.tencent.tinker.** to main dex
-        HotfixManager.installTinker(this);
-    }
+//    @Override
+//    public void onBaseContextAttached(Context base) {
+//        super.onBaseContextAttached(base);
+//        modules = new LinkedHashMap<>();
+//        //you must install multiDex whatever tinker is installed!
+//        MultiDex.install(base);
+//
+//        application = getApplication();
+//        context = getApplication();
+//        HotfixManager.setTinkerApplicationLike(this);
+//        HotfixManager.initFastCrashProtect();
+//        //should set before tinker is installed
+//        HotfixManager.setUpgradeRetryEnable(true);
+//
+//        //optional set logIml, or you can use default debug log
+//        TinkerInstaller.setLogIml(new MyLogImp());
+//
+//        //installTinker after load multiDex
+//        //or you can put com.tencent.tinker.** to main dex
+//        HotfixManager.installTinker(this);
+//    }
 
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

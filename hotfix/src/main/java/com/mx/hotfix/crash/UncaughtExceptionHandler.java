@@ -14,16 +14,16 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.crash;
+package com.mx.hotfix.crash;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.SystemClock;
 import android.widget.Toast;
 
-import com.mx.framework.hotfix.reporter.HotfixReport;
-import com.mx.framework.hotfix.util.HotfixManager;
-import com.mx.framework.hotfix.util.Utils;
+import com.mx.hotfix.reporter.HotfixReport;
+import com.mx.hotfix.util.HotfixManager;
+import com.mx.hotfix.util.Utils;
 import com.tencent.tinker.lib.tinker.TinkerApplicationHelper;
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.loader.app.ApplicationLike;

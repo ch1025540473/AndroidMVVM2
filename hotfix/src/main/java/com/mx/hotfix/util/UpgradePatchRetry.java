@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.mx.framework.hotfix.util;
+package com.mx.hotfix.util;
 
 import android.content.Context;
 import android.content.Intent;
 
-import com.mx.framework.hotfix.reporter.HotfixReport;
+import com.mx.hotfix.reporter.HotfixReport;
 import com.tencent.tinker.lib.service.TinkerPatchService;
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
