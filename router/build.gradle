@@ -4,13 +4,13 @@ apply plugin: 'maven'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
+    defaultPublishConfig 'release'
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 2
-        versionName "1.0.1"
-
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -35,7 +35,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.1"
+//            pom.version = "1.0.3"
 //            pom.artifactId = "router-alpha"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "router"
