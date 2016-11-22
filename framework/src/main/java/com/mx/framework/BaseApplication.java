@@ -8,6 +8,7 @@ import android.content.res.Resources;
 
 import com.mx.hotfix.HotfixApplication;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 
@@ -33,16 +34,14 @@ public class BaseApplication extends HotfixApplication {
     private Map<String, Module> modules;
 
 
-//    @Override
-//    public void onCreate() {
-//        super.onCreate();
-//        baseApplication = this;
-//        modules = new LinkedHashMap<>();
-//
-//        // install modules
-//    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        modules = new LinkedHashMap<>();
+        // install modules
+    }
 
-    public void installModule( Module module) {
+    public void installModule(Module module) {
         assert (null != module);
         modules.put(module.getClass().getName(), module);
 //        module.checkUpdate();
