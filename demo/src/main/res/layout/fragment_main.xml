@@ -29,8 +29,14 @@
             android:id="@+id/tools_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="10dp">
+
+            <com.mx.router.RouteView
+                android:id="@+id/route_view"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                binding:uri="@{model.uri}" />
 
             <Button
                 android:id="@+id/start_second_activity_btn"

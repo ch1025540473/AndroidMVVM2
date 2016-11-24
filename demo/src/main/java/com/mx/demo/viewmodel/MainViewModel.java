@@ -1,6 +1,7 @@
 package com.mx.demo.viewmodel;
 
 import android.databinding.Bindable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -41,6 +42,10 @@ public class MainViewModel extends LifecycleViewModel {
 
     public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
         this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
+    }
+
+    public Uri getUri() {
+        return Uri.parse("demo/routeView");
     }
 
     @Bindable

@@ -1,5 +1,7 @@
 package com.mx.router;
 
+import android.content.Context;
+
 import com.mx.framework2.view.ui.ActivityStarter;
 
 /**
@@ -9,6 +11,8 @@ public interface Pipe extends UriAccess {
     void success(Object data);
 
     void fail(String message, Throwable reason);
+
+    Context getContext();
 
     ActivityStarter getActivityStarter();
 }

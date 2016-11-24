@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.mx.engine.utils.ObjectUtils;
 import com.mx.framework2.view.ui.ActivityResultCallback;
@@ -77,7 +78,8 @@ public abstract class RouteClient {
 
     public Class<?> getCallbackDataType() {
         if (getCallback() != null) {
-            return ObjectUtils.getGenericClass(getCallback(), Callback.class, 0);
+            Class<?> type = ObjectUtils.getGenericClass(getCallback(), Callback.class, 0);
+            return type != null ? type : Object.class;
         } else {
             return null;
         }
@@ -184,9 +186,14 @@ public abstract class RouteClient {
             return new GeneralActivityClient((Activity) fromObj, callback);
         } else if (fromObj instanceof Fragment) {
             return new GeneralFragmentClient((Fragment) fromObj, callback);
-        } else {
-            throw new RuntimeException("Cannot create RouteClient");
+        } else if (fromObj instanceof View) {
+            View view = (View) fromObj;
+            if (view.getContext() instanceof Activity) {
+                return newRouteClient(view.getContext(), callback);
+            }
         }
+
+        throw new RuntimeException("Cannot create RouteClient");
     }
 
     private static class ActivityStarterClient extends RouteClient {

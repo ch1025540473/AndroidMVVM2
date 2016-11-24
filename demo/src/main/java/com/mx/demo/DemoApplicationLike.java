@@ -40,7 +40,6 @@ public class DemoApplicationLike extends BaseApplication {
         super.onBaseContextAttached(base);
 
         Router.getDefault().init("gomeplus://com.mx");
-        Router.getDefault().addDataConverter(new BundleConverter());
         Router.getDefault().addDataConverter(new FragmentConverter());
         Router.getDefault().addDataConverter(new ViewConverter());
         Router.getDefault().addDataConverter(new BundleConverter());

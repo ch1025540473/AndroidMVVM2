@@ -2,6 +2,7 @@ package com.mx.demo;
 
 import android.content.Intent;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.GotoPatchEvent;
@@ -54,6 +55,15 @@ public class DemoModule extends Module {
                 Map<String, String> m = new HashMap<>();
                 m.put("aaa", "bbb");
                 pipe.success(m);
+            }
+        });
+
+        Router.getDefault().registerRule("demo/routeView", new RouteRule() {
+            @Override
+            public void handleRoute(Pipe pipe) {
+                ImageView v = new ImageView(pipe.getContext());
+                v.setImageResource(R.drawable.comm_titlebar_msg_white);
+                pipe.success(v);
             }
         });
     }

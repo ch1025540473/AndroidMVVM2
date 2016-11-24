@@ -7,4 +7,8 @@ public interface Route extends UriAccess {
     Router getRouter();
 
     Route route();
+
+    String getMessage();
+
+    Throwable getReason();
 }

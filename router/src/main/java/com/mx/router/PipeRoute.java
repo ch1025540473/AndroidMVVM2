@@ -1,9 +1,11 @@
 package com.mx.router;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.view.View;
 
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.view.ui.ActivityStarter;
@@ -42,6 +44,16 @@ public class PipeRoute implements Route, Pipe, UriAccess {
     }
 
     @Override
+    public Context getContext() {
+        ActivityStarter activityStarter = getActivityStarter();
+        if (activityStarter != null) {
+            return activityStarter.getContext();
+        }
+
+        return null;
+    }
+
+    @Override
     public ActivityStarter getActivityStarter() {
         return getRouteClient().getActivityStarter();
     }
@@ -50,6 +62,16 @@ public class PipeRoute implements Route, Pipe, UriAccess {
     public Route route() {
         router.route(this);
         return this;
+    }
+
+    @Override
+    public String getMessage() {
+        return getRouteClient().getMessage();
+    }
+
+    @Override
+    public Throwable getReason() {
+        return getRouteClient().getFailedReason();
     }
 
     @Override
@@ -175,6 +197,13 @@ public class PipeRoute implements Route, Pipe, UriAccess {
         public Builder from(final Fragment fragment) {
             CheckUtils.checkNotNull(fragment);
             this.from = fragment;
+
+            return this;
+        }
+
+        public Builder from(final View view) {
+            CheckUtils.checkNotNull(view);
+            this.from = view;
 
             return this;
         }
