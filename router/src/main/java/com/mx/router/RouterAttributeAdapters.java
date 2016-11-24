@@ -16,6 +16,6 @@ public class RouterAttributeAdapters {
 
     @BindingAdapter("uri")
     public static void bindUri(RouteView view, Uri uri) {
-        view.setUri(uri);
+        view.setRouteUri(uri);
     }
 }
