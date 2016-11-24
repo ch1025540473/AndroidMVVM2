@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 5
+        versionName "1.0.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -28,14 +28,15 @@ dependencies {
     provided project(':framework2')
 }
 
-//afterEvaluate { project ->
+//afterEvaluate {
+//    project ->
 //    uploadArchives {
 //        repositories.mavenDeployer {
 //            name = 'mavenCentralReleaseDeployer'
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.2"
+//            pom.version = "1.0.4"
 //            pom.artifactId = "router-alpha"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "router"
