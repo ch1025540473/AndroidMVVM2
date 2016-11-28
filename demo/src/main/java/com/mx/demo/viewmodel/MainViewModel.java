@@ -8,7 +8,6 @@ import android.util.Log;
 import com.mx.demo.BR;
 import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.GotoPatchEvent;
-import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
@@ -26,6 +25,8 @@ import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
 import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
 import com.mx.framework2.viewmodel.proxy.DialogProxy;
 import com.mx.framework2.viewmodel.proxy.PTRRecyclerViewProxy;
+import com.mx.router.RouteSubscribe;
+import com.mx.router.Router;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -136,6 +137,8 @@ public class MainViewModel extends LifecycleViewModel {
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Log.d("MainViewModel", "onCreate bundle>>" + bundle);
+
+        Router.getDefault().registerReceiver(this);
     }
 
     private void translateList(List<ApiBean> apiBeanList) {
@@ -172,7 +175,6 @@ public class MainViewModel extends LifecycleViewModel {
         }
     }
 
-
     @Override
     protected void onAttachedToView() {
         super.onAttachedToView();
@@ -207,6 +209,8 @@ public class MainViewModel extends LifecycleViewModel {
     protected void onStop() {
         super.onStop();
         Log.d("MainViewModel", "onStop>>");
+
+        Router.getDefault().unregisterReceiver(this);
     }
 
     @Override
@@ -248,9 +252,14 @@ public class MainViewModel extends LifecycleViewModel {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
-        obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void receiveRemove(final RemoveTxtEvent removeTxtEvent) {
+//        obtainUseCase(DemoUseCase.class).remove(removeTxtEvent.getId());
+//    }
+
+    @RouteSubscribe(uri = "demo/textRemoval")
+    public void receiveRemove(Bundle bundle) {
+        obtainUseCase(DemoUseCase.class).remove(bundle.getString("id"));
     }
 
     public void setDialogProxy(DialogProxy dialogProxy) {

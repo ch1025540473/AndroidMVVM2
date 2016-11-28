@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.mx.engine.utils.CheckUtils;
+import com.mx.engine.utils.ObjectUtils;
 import com.mx.router.converter.ObjectConverter;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -40,10 +42,12 @@ public class Router {
     private Uri baseUri = null;
     private List<DataConverter> dataConverters;
 
+    private Map<String, List<SubscribeHandler>> subscribingTable;
     private Map<String, RouteRule> routingTable;
     private Set<RouteClient> activeClients;
 
     private Router() {
+        subscribingTable = Collections.synchronizedMap(new HashMap<String, List<SubscribeHandler>>());
         routingTable = Collections.synchronizedMap(new HashMap<String, RouteRule>());
         activeClients = Collections.synchronizedSet(new HashSet<RouteClient>());
 
@@ -74,6 +78,57 @@ public class Router {
 
     private Uri fullUri(String uriString) {
         return fullUri(Uri.parse(uriString));
+    }
+
+    public void registerReceiver(Object obj) {
+        CheckUtils.checkNotNull(obj);
+        List<Method> methods = ObjectUtils.findMethods(obj.getClass(), new ObjectUtils.MethodFilter() {
+            @Override
+            public boolean accept(Method method) {
+                return SubscribeHandler.acceptable(method);
+            }
+        });
+
+        for (Method method : methods) {
+            String uri = SubscribeHandler.parseUri(method);
+            uri = fullUri(uri).toString();
+            List<SubscribeHandler> handlers = subscribingTable.get(uri);
+            if (handlers == null) {
+                handlers = new LinkedList<>();
+                subscribingTable.put(uri, handlers);
+            }
+
+            handlers.add(new SubscribeHandler(obj, method));
+        }
+    }
+
+    public void unregisterReceiver(Object obj) {
+        Iterator<String> keyIt = subscribingTable.keySet().iterator();
+        while (keyIt.hasNext()) {
+            List<SubscribeHandler> handlers = subscribingTable.get(keyIt.next());
+            Iterator<SubscribeHandler> handlerIt = handlers.iterator();
+            while (handlerIt.hasNext()) {
+                SubscribeHandler handler = handlerIt.next();
+                if (handler.getEnclosingObject() == obj) {
+                    handlerIt.remove();
+                }
+            }
+            if (handlers.isEmpty()) {
+                keyIt.remove();
+            }
+        }
+    }
+
+    public void broadcast(String uri, Bundle data) {
+        broadcast(Uri.parse(uri), data);
+    }
+
+    public void broadcast(Uri uri, Bundle data) {
+        String fullUri = fullUri(uri).toString();
+        List<SubscribeHandler> handlers = subscribingTable.get(fullUri);
+        for (SubscribeHandler handler : handlers) {
+            handler.handle(data);
+        }
     }
 
     public void registerRule(@NonNull String uriString, @NonNull RouteRule rule) {

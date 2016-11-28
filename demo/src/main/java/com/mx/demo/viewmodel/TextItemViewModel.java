@@ -1,12 +1,13 @@
 package com.mx.demo.viewmodel;
 
+import android.os.Bundle;
 import android.util.Log;
 
-import com.mx.demo.event.RemoveTxtEvent;
 import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.framework2.viewmodel.RecyclerItemViewModel;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
+import com.mx.router.Router;
 
 /**
  * Created by chenbaocheng on 16/8/14.
@@ -19,9 +20,12 @@ public class TextItemViewModel extends RecyclerItemViewModel<ItemViewBean> {
             @Override
             public void execute(int viewId) {
                 Log.d("PTR", "OnClickCommand==> " + item.getText());
-                RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
-                removeTxtEvent.setId(item.getId());
-                postEvent(removeTxtEvent);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", item.getId());
+                Router.getDefault().broadcast("demo/textRemoval", bundle);
+//                RemoveTxtEvent removeTxtEvent = new RemoveTxtEvent();
+//                removeTxtEvent.setId(item.getId());
+//                postEvent(removeTxtEvent);
             }
         };
     }

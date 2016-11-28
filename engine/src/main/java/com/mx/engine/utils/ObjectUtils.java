@@ -10,8 +10,14 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by liuyuxuan on 16/4/29.
@@ -226,5 +232,50 @@ public class ObjectUtils {
         }
 
         return null;
+    }
+
+    public interface MethodFilter {
+        boolean accept(Method method);
+    }
+
+    private static class MethodWrapper {
+        private final Method method;
+
+        MethodWrapper(Method method) {
+            this.method = method;
+        }
+
+        public boolean equals(Method m) {
+            return method.getName().equals(m.getName())
+                    && Arrays.asList(method.getParameterTypes()).equals(Arrays.asList(m.getParameterTypes()));
+        }
+
+        public int hashCode() {
+            return method.getName().hashCode() ^ Arrays.asList(method.getParameterTypes()).hashCode();
+        }
+
+        public Method getMethod() {
+            return method;
+        }
+    }
+
+    public static List<Method> findMethods(Class<?> clazz, MethodFilter filter) {
+        Class<?> current = clazz;
+        Set<MethodWrapper> wrappers = new HashSet<>();
+        List<Method> methods = new LinkedList<>();
+        while (current != null && current != Object.class) {
+            for (Method method : current.getDeclaredMethods()) {
+                if (filter.accept(method)) {
+                    wrappers.add(new MethodWrapper(method));
+                }
+            }
+            current = current.getSuperclass();
+        }
+
+        for (MethodWrapper wrapper : wrappers) {
+            methods.add(wrapper.getMethod());
+        }
+
+        return methods;
     }
 }
