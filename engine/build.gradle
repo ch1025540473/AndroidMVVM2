@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 8
-        versionName "1.0.8"
+        versionCode 9
+        versionName "1.0.9"
     }
 
     sourceSets {
@@ -83,7 +83,7 @@ dependencies {
 //            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
 //                authentication(userName: "admin", password: "")
 //            }
-//            pom.version = "1.0.8"
+//            pom.version = "1.0.9"
 //            pom.artifactId = "engine-beta"
 //            pom.groupId = "com.mx.architecture"
 //            pom.name = "engine"
