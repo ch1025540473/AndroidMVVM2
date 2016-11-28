@@ -20,9 +20,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
-import android.os.Looper;
-import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import com.mx.hotfix.util.Utils;
 import com.tencent.tinker.lib.service.DefaultTinkerResultService;
@@ -35,12 +33,12 @@ import com.tencent.tinker.loader.shareutil.SharePatchFileUtil;
 import java.io.File;
 
 
-/**
- * optional, you can just use DefaultTinkerResultService
- * we can restart process when we are at background or screen off
- */
 public class HotfixResultService extends DefaultTinkerResultService {
-    private static final String TAG = "Tinker.HotfixResultService";
+    private static final String TAG = "HotfixResultService";
+    public final static String BROASDCAST_HOTFIX_ACTION = "www.hotfix.result.broadcast";
+    public final static String BROASDCAST_HOTFIX_RESULT = "hotfixResult";
+    public final static String HOTFIX_VERSION = "patchVersion";
+    public final static String HOTFIX_SHAREDPREFERENCES = "gome_hotfix";
 
 
     @Override
@@ -54,20 +52,10 @@ public class HotfixResultService extends DefaultTinkerResultService {
         //first, we want to kill the recover process
         TinkerServiceInternals.killTinkerPatchServiceProcess(getApplicationContext());
 
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (result.isSuccess) {
-                    Toast.makeText(getApplicationContext(), "patch success, please restart process", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "patch fail, please check reason", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
         // is success and newPatch, it is nice to delete the raw file, and restart at once
         // for old patch, you can't delete the patch file
         if (result.isSuccess && result.isUpgradePatch) {
+            storeResult(result);
             File rawFile = new File(result.rawPatchFilePath);
             if (rawFile.exists()) {
                 TinkerLog.i(TAG, "save delete raw patch file");
@@ -100,6 +88,13 @@ public class HotfixResultService extends DefaultTinkerResultService {
             //if you have not install tinker this moment, you can use TinkerApplicationHelper api
             Tinker.with(getApplicationContext()).cleanPatch();
         }
+    }
+
+    private void storeResult(PatchResult result) {
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(HOTFIX_SHAREDPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(HOTFIX_VERSION, result.patchVersion);
+        editor.commit();
     }
 
     /**
@@ -137,5 +132,34 @@ public class HotfixResultService extends DefaultTinkerResultService {
             }, filter);
         }
     }
+//        if (result == null) {
+//            TinkerLog.e(TAG, "HotfixResultService received null result!!!!");
+//            return;
+//        }
+//        TinkerLog.i(TAG, "HotfixResultService receive result: %s", result.toString());
+//        HotfixResult hotfixResult = getHotfixResult(result);
+//        Intent broadcastIntent=new Intent(BROASDCAST_HOTFIX_ACTION);
+//        Bundle mBundle = new Bundle();
+//        mBundle.putSerializable(BROASDCAST_HOTFIX_RESULT, hotfixResult);
+//        broadcastIntent.putExtras(mBundle);
+//        getApplicationContext().sendBroadcast(broadcastIntent);
+//
+//
+//        //repair current patch fail, just clean!
+//        if (!result.isSuccess && !result.isUpgradePatch) {
+//            Tinker.with(getApplicationContext()).cleanPatch();
+//        }
+//    }
+
+//    private HotfixResult getHotfixResult(PatchResult result) {
+//        HotfixResult hotfixResult=new HotfixResult();
+//        hotfixResult.costTime=result.costTime;
+//        hotfixResult.e=result.e;
+//        hotfixResult.isSuccess=result.isSuccess;
+//        hotfixResult.isUpgradePatch=result.isUpgradePatch;
+//        hotfixResult.patchVersion=result.patchVersion;
+//        hotfixResult.rawPatchFilePath=result.rawPatchFilePath;
+//        return hotfixResult;
+//    }
 
 }

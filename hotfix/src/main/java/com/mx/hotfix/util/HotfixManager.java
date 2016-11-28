@@ -60,7 +60,7 @@ public class HotfixManager {
     /**
      * all use default class, simply Tinker install method
      */
-    public static void sampleInstallTinker(ApplicationLike appLike) {
+    public static void hotfixInstallTinker(ApplicationLike appLike) {
         if (isInstalled) {
             TinkerLog.w(TAG, "install tinker, but has installed, ignore");
             return;

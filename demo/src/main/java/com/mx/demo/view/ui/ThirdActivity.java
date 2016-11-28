@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mx.demo.R;
-import com.mx.hotfix.installer.HotfixInstaller;
+import com.mx.hotfix.patcher.HotfixPatcher;
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
 import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
@@ -33,9 +33,18 @@ public class ThirdActivity extends AppCompatActivity {
         findViewById(R.id.result_ok).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
-                Log.d("www", "iiiiiiiiiiiiiiiii");
-                Log.d("www", "iiiiiiii4444666iiiiiiiii");
+//                HotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                HotfixPatcher hotfixInstaller = HotfixPatcher.getInstance();
+                hotfixInstaller.patch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+//                hotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk",new PatchResultListener(){
+//                    @Override
+//                    public void onHotfixResultReceived(HotfixResult path) {
+//                        Log.d("www", "iiiiiooipiiyyiHotfixResultiiiiii ii"+path.isSuccess);
+//                    }
+//                });
+
+
+                Log.d("www", "iiiiii5iiiiiiiii");
             }
         });
 
@@ -44,9 +53,11 @@ public class ThirdActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                TinkerInstaller.loadArmLibrary(getApplicationContext(), "stlport_shared");
 ////                TinkerInstaller.loadLibraryFromTinker(getApplicationContext(), "assets/x86", "stlport_shared");
-                android.os.Process.killProcess(android.os.Process.myPid());
-                Tinker.with(getApplicationContext()).cleanPatch();
-                Log.d("www", "iiiiiiiiiiiiiiiii");
+//                android.os.Process.killProcess(android.os.Process.myPid());
+//                Tinker.with(getApplicationContext()).cleanPatch();
+                Log.d("www", "iiiiiiiiiiiiiiii");
+                HotfixPatcher hotfixInstaller = HotfixPatcher.getInstance();
+                Log.d("www", "iiiiiiiiiii7iiiiii version : " + hotfixInstaller.getPatchVersion(getApplicationContext()));
             }
         });
     }
