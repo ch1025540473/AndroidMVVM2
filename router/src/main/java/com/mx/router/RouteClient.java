@@ -132,7 +132,6 @@ public abstract class RouteClient {
         }
     }
 
-
     public abstract ActivityStarter getActivityStarter();
 
     public Object getHost() {
@@ -178,19 +177,20 @@ public abstract class RouteClient {
     }
 
     public static RouteClient newRouteClient(Object fromObj, Callback callback) {
+        if (fromObj instanceof View && ((View) fromObj).getContext() != null) {
+            fromObj = ((View) fromObj).getContext();
+        }
+
         if (fromObj instanceof ActivityStarter) {
             return new ActivityStarterClient((ActivityStarter) fromObj, callback);
         } else if (fromObj instanceof BaseActivity) {
-            return new ActivityClient((BaseActivity) fromObj, callback);
+            return new MVVMActivityClient((BaseActivity) fromObj, callback);
         } else if (fromObj instanceof Activity) {
             return new GeneralActivityClient((Activity) fromObj, callback);
         } else if (fromObj instanceof Fragment) {
             return new GeneralFragmentClient((Fragment) fromObj, callback);
-        } else if (fromObj instanceof View) {
-            View view = (View) fromObj;
-            if (view.getContext() instanceof Activity) {
-                return newRouteClient(view.getContext(), callback);
-            }
+        } else if (fromObj instanceof Context) {
+            return new ContextClient((Context) fromObj, callback);
         }
 
         throw new RuntimeException("Cannot create RouteClient");
@@ -207,8 +207,8 @@ public abstract class RouteClient {
         }
     }
 
-    private static class ActivityClient extends RouteClient {
-        public ActivityClient(BaseActivity activity, Callback callback) {
+    private static class MVVMActivityClient extends RouteClient {
+        public MVVMActivityClient(BaseActivity activity, Callback callback) {
             super(activity, callback);
         }
 
@@ -220,6 +220,56 @@ public abstract class RouteClient {
             } else {
                 return null;
             }
+        }
+    }
+
+    private static class ContextClient extends RouteClient {
+        public ContextClient(Context view, Callback callback) {
+            super(view, callback);
+        }
+
+        public Context getContext() {
+            return (Context) getHost();
+        }
+
+        public Activity getActivity() {
+            if (getContext() instanceof Activity) {
+                return (Activity) getContext();
+            }
+
+            return null;
+        }
+
+        @Override
+        public ActivityStarter getActivityStarter() {
+            return new ActivityStarter() {
+                @Override
+                public void startActivityForResult(Intent intent, ActivityResultCallback callback) {
+                    throw new UnsupportedOperationException("You cannot use startActivityForResult with a callback," +
+                            " due to this route is client an Activity or Fragment.");
+                }
+
+                @Override
+                public void startActivity(Intent intent) {
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void startActivityForResult(Intent intent, int requestCode) {
+                    Activity activity = getActivity();
+                    if (activity != null) {
+                        activity.startActivityForResult(intent, requestCode);
+                    }
+                }
+
+                @Override
+                public Context getContext() {
+                    return ContextClient.this.getContext();
+                }
+            };
         }
     }
 
@@ -294,17 +344,17 @@ public abstract class RouteClient {
 
                 @Override
                 public void startActivity(Intent intent) {
-                    Fragment activity = getFragment();
-                    if (activity != null) {
-                        activity.startActivity(intent);
+                    Fragment fragment = getFragment();
+                    if (fragment != null) {
+                        fragment.startActivity(intent);
                     }
                 }
 
                 @Override
                 public void startActivityForResult(Intent intent, int requestCode) {
-                    Fragment activity = getFragment();
-                    if (activity != null) {
-                        activity.startActivityForResult(intent, requestCode);
+                    Fragment fragment = getFragment();
+                    if (fragment != null) {
+                        fragment.startActivityForResult(intent, requestCode);
                     }
                 }
 

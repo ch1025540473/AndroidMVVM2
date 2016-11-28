@@ -34,6 +34,11 @@ public class PipeRoute implements Route, Pipe, UriAccess {
     }
 
     @Override
+    public void success() {
+        success(null);
+    }
+
+    @Override
     public void success(Object data) {
         getRouteClient().success(this, router.convert(this, data));
     }
@@ -179,6 +184,12 @@ public class PipeRoute implements Route, Pipe, UriAccess {
         public Builder appendParameter(String name, Object value) {
             CheckUtils.checkNotNull(uriBuilder, "Call uri() before calling appendParameter().");
             uriBuilder.appendQueryParameter(name, value.toString());
+            return this;
+        }
+
+        public Builder from(final Context context) {
+            CheckUtils.checkNotNull(context);
+            this.from = context;
             return this;
         }
 
