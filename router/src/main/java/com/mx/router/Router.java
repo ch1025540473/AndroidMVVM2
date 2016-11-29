@@ -126,8 +126,10 @@ public class Router {
     public void broadcast(Uri uri, Bundle data) {
         String fullUri = fullUri(uri).toString();
         List<SubscribeHandler> handlers = subscribingTable.get(fullUri);
-        for (SubscribeHandler handler : handlers) {
-            handler.handle(data);
+        if (handlers != null) {
+            for (SubscribeHandler handler : handlers) {
+                handler.handle(data);
+            }
         }
     }
 
@@ -181,20 +183,32 @@ public class Router {
         return new PipeRoute.Builder(this);
     }
 
+    private void cleanActiveClients(Object host) {
+        Iterator<RouteClient> it = activeClients.iterator();
+        while (it.hasNext()) {
+            RouteClient client = it.next();
+            if (client.getHost() == null || client.getHost() == host) {
+                it.remove();
+            }
+        }
+    }
+
     public void saveState(@NonNull Object host, Bundle outState) {
+        cleanActiveClients(null);
         for (RouteClient client : activeClients) {
             client.pause(host, outState);
         }
     }
 
     public void restoreState(@NonNull Object host, Bundle savedState) {
-        Iterator<RouteClient> it = activeClients.iterator();
-        while (it.hasNext()) {
-            RouteClient client = it.next();
-            if (client.resume(host, savedState)) {
-                it.remove();
-            }
+        cleanActiveClients(null);
+        for (RouteClient client : activeClients) {
+            client.resume(host, savedState);
         }
+    }
+
+    public void onDestroy(Object host) {
+        cleanActiveClients(host);
     }
 
     void route(PipeRoute pipeRoute) {

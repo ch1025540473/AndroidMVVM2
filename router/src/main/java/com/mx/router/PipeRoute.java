@@ -17,7 +17,7 @@ import java.util.Set;
  * Created by chenbaocheng on 16/11/14.
  */
 
-public class PipeRoute implements Route, Pipe, UriAccess {
+class PipeRoute implements Route, Pipe, UriAccess {
     private Router router;
     private Uri uri;
     private RouteClient client;
@@ -99,28 +99,38 @@ public class PipeRoute implements Route, Pipe, UriAccess {
         return uri.getQueryParameter(name) != null;
     }
 
-    private String getParameter(String name, Object defaultValue) {
-        String value = uri.getQueryParameter(name);
+    private String getParameter(String name) {
+        return uri.getQueryParameter(name);
+    }
+
+    @Override
+    public String getStringParameter(String name, String defaultValue) {
+        String value = getParameter(name);
         if (value == null) {
-            return defaultValue.toString();
+            return defaultValue;
         }
 
         return value;
     }
 
     @Override
-    public String getStringParameter(String name, String defaultValue) {
-        return getParameter(name, defaultValue);
-    }
-
-    @Override
     public int getIntParameter(String name, int defaultValue) {
-        return Integer.valueOf(getParameter(name, defaultValue));
+        String value = getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return Integer.valueOf(value);
     }
 
     @Override
     public long getLongParameter(String name, long defaultValue) {
-        return Long.valueOf(getParameter(name, defaultValue));
+        String value = getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return Long.valueOf(value);
     }
 
     @Override
@@ -130,12 +140,22 @@ public class PipeRoute implements Route, Pipe, UriAccess {
 
     @Override
     public float getFloatParameter(String name, float defaultValue) {
-        return Float.valueOf(getParameter(name, defaultValue));
+        String value = getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return Float.valueOf(value);
     }
 
     @Override
     public double getDoubleParameter(String name, double defaultValue) {
-        return Double.valueOf(getParameter(name, defaultValue));
+        String value = getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+
+        return Double.valueOf(value);
     }
 
     @Override

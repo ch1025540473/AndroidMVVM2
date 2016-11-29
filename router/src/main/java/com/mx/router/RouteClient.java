@@ -20,11 +20,10 @@ import java.util.UUID;
 /**
  * Created by chenbaocheng on 16/11/19.
  */
-
 public abstract class RouteClient {
     private final String tag;
     private WeakReference<Object> host;
-    private WeakReference<Callback> callback;
+    private Callback callback;
     private boolean callbackOnHost;
 
     private Handler uiHandler;
@@ -76,6 +75,10 @@ public abstract class RouteClient {
         return true;
     }
 
+    public void abort() {
+        setCallback(null);
+    }
+
     public Class<?> getCallbackDataType() {
         if (getCallback() != null) {
             Class<?> type = ObjectUtils.getGenericClass(getCallback(), Callback.class, 0);
@@ -86,19 +89,21 @@ public abstract class RouteClient {
     }
 
     private void performSuccess(Route route, Object convertedData) {
-        if (getCallback() != null) {
-            if (convertedData != null) {
-                //noinspection unchecked
-                getCallback().onRouteSuccess(route, convertedData);
-            } else {
-                String message = "Data convert failed.";
-                fail(route, message, new RuntimeException(message));
-            }
+        if (getCallback() == null) {
+            return;
+        }
+
+        if (convertedData != null) {
+            //noinspection unchecked
+            getCallback().onRouteSuccess(route, convertedData);
+        } else {
+            String message = "Data convert failed.";
+            fail(route, message, new RuntimeException(message));
         }
     }
 
     public void success(final Route route, final Object convertedData) {
-        if (isPausing) {
+        if (isPausing()) {
             pendingRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -120,7 +125,7 @@ public abstract class RouteClient {
     }
 
     public void fail(final Route route, final String message, final Throwable reason) {
-        if (isPausing) {
+        if (isPausing()) {
             pendingRunnable = new Runnable() {
                 @Override
                 public void run() {
@@ -153,15 +158,11 @@ public abstract class RouteClient {
     }
 
     private void setCallback(Callback callback) {
-        if (callback != null) {
-            this.callback = new WeakReference<>(callback);
-        } else {
-            this.callback = null;
-        }
+        this.callback = callback;
     }
 
     public Callback getCallback() {
-        return callback.get();
+        return callback;
     }
 
     public Throwable getFailedReason() {
@@ -177,10 +178,6 @@ public abstract class RouteClient {
     }
 
     public static RouteClient newRouteClient(Object fromObj, Callback callback) {
-        if (fromObj instanceof View && ((View) fromObj).getContext() != null) {
-            fromObj = ((View) fromObj).getContext();
-        }
-
         if (fromObj instanceof ActivityStarter) {
             return new ActivityStarterClient((ActivityStarter) fromObj, callback);
         } else if (fromObj instanceof BaseActivity) {
@@ -189,6 +186,8 @@ public abstract class RouteClient {
             return new GeneralActivityClient((Activity) fromObj, callback);
         } else if (fromObj instanceof Fragment) {
             return new GeneralFragmentClient((Fragment) fromObj, callback);
+        } else if (fromObj instanceof View) {
+            return new ViewClient((View) fromObj, callback);
         } else if (fromObj instanceof Context) {
             return new ContextClient((Context) fromObj, callback);
         }
@@ -223,18 +222,18 @@ public abstract class RouteClient {
         }
     }
 
-    private static class ContextClient extends RouteClient {
-        public ContextClient(Context view, Callback callback) {
+    private static class ViewClient extends RouteClient {
+        public ViewClient(View view, Callback callback) {
             super(view, callback);
         }
 
-        public Context getContext() {
-            return (Context) getHost();
+        public View getView() {
+            return (View) getHost();
         }
 
         public Activity getActivity() {
-            if (getContext() instanceof Activity) {
-                return (Activity) getContext();
+            if (getView().getContext() instanceof Activity) {
+                return (Activity) getView().getContext();
             }
 
             return null;
@@ -267,6 +266,45 @@ public abstract class RouteClient {
 
                 @Override
                 public Context getContext() {
+                    return getView().getContext();
+                }
+            };
+        }
+    }
+
+    private static class ContextClient extends RouteClient {
+        public ContextClient(Context context, Callback callback) {
+            super(context, callback);
+        }
+
+        public Context getContext() {
+            return (Context) getHost();
+        }
+
+        @Override
+        public ActivityStarter getActivityStarter() {
+            return new ActivityStarter() {
+                @Override
+                public void startActivityForResult(Intent intent, ActivityResultCallback callback) {
+                    throw new UnsupportedOperationException("You cannot use startActivityForResult with a callback," +
+                            " due to this route is client an Activity or Fragment.");
+                }
+
+                @Override
+                public void startActivity(Intent intent) {
+                    Context context = ContextClient.this.getContext();
+                    if (context != null) {
+                        context.startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void startActivityForResult(Intent intent, int requestCode) {
+                    throw new UnsupportedOperationException("You cannot use startActivityForResult from the Context.");
+                }
+
+                @Override
+                public Context getContext() {
                     return ContextClient.this.getContext();
                 }
             };
@@ -276,9 +314,9 @@ public abstract class RouteClient {
     private static abstract class GeneralBaseClient extends RouteClient {
         public GeneralBaseClient(Object host, Callback callback) {
             super(host, callback);
-            if (callback != null && callback != host) {
-                throw new RuntimeException(host + " must implements interface " + Callback.class.getName());
-            }
+//            if (callback != null && callback != host) {
+//                throw new RuntimeException(host + " must implements interface " + Callback.class.getName());
+//            }
         }
     }
 

@@ -60,4 +60,10 @@ public class RouteView extends FrameLayout {
             }).buildAndRoute();
         }
     }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Router.getDefault().onDestroy(this);
+    }
 }
