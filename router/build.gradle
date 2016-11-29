@@ -43,7 +43,7 @@ def marvenUpload = {
                 repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                     authentication(userName: "admin", password: "mx123456")
                 }
-                pom.version = "1.0.6"
+                pom.version = "1.0.6.1"
                 pom.artifactId = "router-alpha"
                 pom.groupId = "com.mx.architecture"
                 pom.name = "router"

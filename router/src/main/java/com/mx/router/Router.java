@@ -223,6 +223,10 @@ public class Router {
     }
 
     Object convert(PipeRoute pipeRoute, Object data) {
+        if (pipeRoute.getCallbackDataType() == null) {
+            return data;
+        }
+
         List<DataConverter> converters = new LinkedList<>(dataConverters);
 
         for (DataConverter converter : converters) {
@@ -232,6 +236,6 @@ public class Router {
             }
         }
 
-        return null;
+        return data;
     }
 }
