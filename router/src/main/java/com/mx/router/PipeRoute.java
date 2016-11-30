@@ -203,7 +203,9 @@ class PipeRoute implements Route, Pipe, UriAccess {
 
         public Builder appendParameter(String name, Object value) {
             CheckUtils.checkNotNull(uriBuilder, "Call uri() before calling appendParameter().");
-            uriBuilder.appendQueryParameter(name, value.toString());
+            if (name != null && value != null) {
+                uriBuilder.appendQueryParameter(name, value.toString());
+            }
             return this;
         }
 
