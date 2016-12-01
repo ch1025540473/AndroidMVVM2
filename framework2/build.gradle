@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 36
-        versionName "1.0.36"
+        versionCode 37
+        versionName "1.0.37"
     }
 
     sourceSets {
@@ -75,41 +75,42 @@ dependencies {
     androidTestCompile "com.android.support.test:rules:0.4.1"
 }
 
-//afterEvaluate { project ->
-//    uploadArchives {
-//        repositories.mavenDeployer {
-//            name = 'mavenCentralReleaseDeployer'
-//            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-//                authentication(userName: "admin", password: "")
-//            }
-//            pom.version = "1.0.36"
-//            pom.artifactId = "framework2-alpha"
-//            pom.groupId = "com.mx.architecture"
-//            pom.name = "framework"
-//            pom.packaging = 'aar'
-//        }
-//    }
-//
-//    task androidJavadocs(type: Javadoc) {
-//        source = android.sourceSets.main.java.srcDirs
-//        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    }
-//
-//    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-//        classifier = 'javadoc'
-//        from androidJavadocs.destinationDir
-//    }
-//
-//    task androidSourcesJar(type: Jar) {
-//        classifier = 'sources'
-//        from android.sourceSets.main.java.sourceFiles
-//    }
-//
-//    artifacts {
-//        archives androidSourcesJar
-////  archives androidJavadocsJar
-//    }
-//}
+def mavenUpload= { project ->
+    uploadArchives {
+        repositories.mavenDeployer {
+            name = 'mavenCentralReleaseDeployer'
+            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+                authentication(userName: "admin", password: "")
+            }
+            pom.version = "1.0.37"
+            pom.artifactId = "framework2-alpha"
+            pom.groupId = "com.mx.architecture"
+            pom.name = "framework"
+            pom.packaging = 'aar'
+        }
+    }
+
+    task androidJavadocs(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+
+    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+        classifier = 'javadoc'
+        from androidJavadocs.destinationDir
+    }
+
+    task androidSourcesJar(type: Jar) {
+        classifier = 'sources'
+        from android.sourceSets.main.java.sourceFiles
+    }
+
+    artifacts {
+        archives androidSourcesJar
+//  archives androidJavadocsJar
+    }
+}
+//afterEvaluate mavenUpload
 //
 //android.testOptions.unitTests.all {
 //    // configure the set of classes for JUnit tests

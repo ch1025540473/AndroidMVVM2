@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.SparseArray;
 
 import com.mx.engine.utils.CheckUtils;
@@ -31,7 +31,7 @@ import java.util.ListIterator;
  * 3,提供ViewModel的通信;
  */
 @Deprecated
-public class BaseActivity extends FragmentActivity implements DataSourceChangeAware {
+public class BaseActivity extends AppCompatActivity implements DataSourceChangeAware {
 
     // add  get put
 

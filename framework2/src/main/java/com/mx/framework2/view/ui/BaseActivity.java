@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.mx.engine.event.EventProxy;
@@ -34,9 +34,9 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends FragmentActivity implements ViewModelScope {
+public class BaseActivity extends AppCompatActivity implements ViewModelScope {
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
-    private String  uuid;
+    private String uuid;
     private RunState runState;
     private boolean isHasFocus = false;
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
