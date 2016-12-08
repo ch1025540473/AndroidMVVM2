@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mx.demo.R;
+import com.mx.hotfix.loader.HotfixLoader;
 import com.mx.hotfix.patcher.HotfixPatcher;
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.loader.shareutil.ShareConstants;
@@ -55,9 +56,10 @@ public class ThirdActivity extends AppCompatActivity {
 ////                TinkerInstaller.loadLibraryFromTinker(getApplicationContext(), "assets/x86", "stlport_shared");
 //                android.os.Process.killProcess(android.os.Process.myPid());
 //                Tinker.with(getApplicationContext()).cleanPatch();
-                Log.d("www", "iiiiiiiiiiiiiiii");
+                Log.d("www", "iiiiiiiiiiiiiiii9");
                 HotfixPatcher hotfixInstaller = HotfixPatcher.getInstance();
-                Log.d("www", "iiiiiiiiiii7iiiiii version : " + hotfixInstaller.getPatchVersion(getApplicationContext()));
+                Log.d("www", "hotfixInstaller.getPatchVersion(getApplicationContext()) version : " + hotfixInstaller.getPatchVersion(getApplicationContext()));
+                Log.d("www", "HotfixLoader.getLoadPatchFileVersion() " + HotfixLoader.getLoadPatchFileVersion());
             }
         });
     }

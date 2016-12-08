@@ -29,8 +29,10 @@ import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.lib.util.TinkerServiceInternals;
 import com.tencent.tinker.loader.shareutil.SharePatchFileUtil;
+import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
 
 import java.io.File;
+import java.util.Properties;
 
 
 public class HotfixResultService extends DefaultTinkerResultService {
@@ -55,9 +57,13 @@ public class HotfixResultService extends DefaultTinkerResultService {
         // is success and newPatch, it is nice to delete the raw file, and restart at once
         // for old patch, you can't delete the patch file
         if (result.isSuccess && result.isUpgradePatch) {
-            storeResult(result);
             File rawFile = new File(result.rawPatchFilePath);
             if (rawFile.exists()) {
+                Properties properties = ShareTinkerInternals.fastGetPatchPackageMeta(rawFile);
+                if (properties != null) {
+                    storeResult(properties.getProperty(Utils.PATCHVERSION));
+                    TinkerLog.d(TAG, "print patch version code " + properties.getProperty(Utils.PATCHVERSION));
+                }
                 TinkerLog.i(TAG, "save delete raw patch file");
                 SharePatchFileUtil.safeDeleteFile(rawFile);
             }
@@ -90,10 +96,10 @@ public class HotfixResultService extends DefaultTinkerResultService {
         }
     }
 
-    private void storeResult(PatchResult result) {
+    private void storeResult(String result) {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(HOTFIX_SHAREDPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(HOTFIX_VERSION, result.patchVersion);
+        editor.putString(HOTFIX_VERSION, result);
         editor.commit();
     }
 

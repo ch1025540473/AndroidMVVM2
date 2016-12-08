@@ -44,6 +44,8 @@ public class Utils {
 
     public static final String PLATFORM = "platform";
 
+    public static final String PATCHVERSION = "patchVersion";
+
     public static final int MIN_MEMORY_HEAP_SIZE = 45;
 
     private static boolean background = false;
