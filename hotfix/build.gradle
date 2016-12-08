@@ -5,10 +5,10 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
-        versionCode 5
-        versionName "1.0.5"
+        minSdkVersion MIN_SDK_VERSION as int
+        targetSdkVersion TARGET_SDK_VERSION as int
+        versionCode VERSION_CODE as int
+        versionName VERSION_NAME as String
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -33,11 +33,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     testCompile 'junit:junit:4.12'
     //tinker的核心库
-    compile("com.tencent.tinker:tinker-android-lib:1.7.5")
-    compile("com.tencent.tinker:tinker-android-anno:1.7.5")
+    compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}")
+    compile("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}")
     compile 'com.android.support:multidex:1.0.1'
 }
 //afterEvaluate { project ->
