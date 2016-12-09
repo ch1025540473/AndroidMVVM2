@@ -1,13 +1,12 @@
 package com.mx.hotfix.patcher;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
+import com.mx.hotfix.util.Utils;
+import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
+import com.tencent.tinker.lib.tinker.TinkerLoadResult;
 import com.tencent.tinker.lib.util.TinkerLog;
-
-import static com.mx.hotfix.service.HotfixResultService.HOTFIX_SHAREDPREFERENCES;
-import static com.mx.hotfix.service.HotfixResultService.HOTFIX_VERSION;
 
 /**
  * Created by wwish on 16/11/21.
@@ -39,8 +38,8 @@ public class HotfixPatcher {
      * @return hotfix patch version
      */
     public String getPatchVersion(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(HOTFIX_SHAREDPREFERENCES, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(HOTFIX_VERSION, null);
+        TinkerLoadResult tinkerLoadResult = Tinker.with(context).getTinkerLoadResultIfPresent();
+        return tinkerLoadResult.getPackageConfigByName(Utils.PATCHVERSION);
     }
 
     public void patch(Context context, String patchLocation) {
