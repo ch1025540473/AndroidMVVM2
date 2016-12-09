@@ -46,6 +46,9 @@ public class Utils {
 
     public static final String PATCHVERSION = "patchVersion";
 
+    public final static String BROASDCAST_HOTFIX_ACTION = "www.hotfix.result.broadcast";
+    public final static String BROASDCAST_HOTFIX_RESULT = "hotfixResult";
+
     public static final int MIN_MEMORY_HEAP_SIZE = 45;
 
     private static boolean background = false;

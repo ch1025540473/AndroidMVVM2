@@ -20,8 +20,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
+import android.os.Bundle;
 
+import com.mx.hotfix.patcher.HotfixResult;
 import com.mx.hotfix.util.Utils;
 import com.tencent.tinker.lib.service.DefaultTinkerResultService;
 import com.tencent.tinker.lib.service.PatchResult;
@@ -29,18 +30,13 @@ import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.util.TinkerLog;
 import com.tencent.tinker.lib.util.TinkerServiceInternals;
 import com.tencent.tinker.loader.shareutil.SharePatchFileUtil;
-import com.tencent.tinker.loader.shareutil.ShareTinkerInternals;
 
 import java.io.File;
-import java.util.Properties;
 
 
 public class HotfixResultService extends DefaultTinkerResultService {
     private static final String TAG = "HotfixResultService";
-    public final static String BROASDCAST_HOTFIX_ACTION = "www.hotfix.result.broadcast";
-    public final static String BROASDCAST_HOTFIX_RESULT = "hotfixResult";
-    public final static String HOTFIX_VERSION = "patchVersion";
-    public final static String HOTFIX_SHAREDPREFERENCES = "gome_hotfix";
+
 
 
     @Override
@@ -57,13 +53,14 @@ public class HotfixResultService extends DefaultTinkerResultService {
         // is success and newPatch, it is nice to delete the raw file, and restart at once
         // for old patch, you can't delete the patch file
         if (result.isSuccess && result.isUpgradePatch) {
+
             File rawFile = new File(result.rawPatchFilePath);
             if (rawFile.exists()) {
-                Properties properties = ShareTinkerInternals.fastGetPatchPackageMeta(rawFile);
-                if (properties != null) {
-                    storeResult(properties.getProperty(Utils.PATCHVERSION));
-                    TinkerLog.d(TAG, "print patch version code " + properties.getProperty(Utils.PATCHVERSION));
-                }
+//                Properties properties = ShareTinkerInternals.fastGetPatchPackageMeta(rawFile);
+//                if (properties != null) {
+//                    storeResult(properties.getProperty(Utils.PATCHVERSION));
+//                    TinkerLog.d(TAG, "print patch version code " + properties.getProperty(Utils.PATCHVERSION));
+//                }
                 TinkerLog.i(TAG, "save delete raw patch file");
                 SharePatchFileUtil.safeDeleteFile(rawFile);
             }
@@ -89,18 +86,23 @@ public class HotfixResultService extends DefaultTinkerResultService {
             }
         }
 
+        if (result == null) {
+            TinkerLog.e(TAG, "HotfixResultService received null result!!!!");
+            return;
+        }
+        TinkerLog.i(TAG, "HotfixResultService receive result: %s", result.toString());
+        HotfixResult hotfixResult = getHotfixResult(result);
+        Intent broadcastIntent = new Intent(Utils.BROASDCAST_HOTFIX_ACTION);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable(Utils.BROASDCAST_HOTFIX_RESULT, hotfixResult);
+        broadcastIntent.putExtras(mBundle);
+        getApplicationContext().sendBroadcast(broadcastIntent);
+
         //repair current patch fail, just clean!
         if (!result.isSuccess && !result.isUpgradePatch) {
             //if you have not install tinker this moment, you can use TinkerApplicationHelper api
             Tinker.with(getApplicationContext()).cleanPatch();
         }
-    }
-
-    private void storeResult(String result) {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(HOTFIX_SHAREDPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(HOTFIX_VERSION, result);
-        editor.commit();
     }
 
     /**
@@ -138,34 +140,17 @@ public class HotfixResultService extends DefaultTinkerResultService {
             }, filter);
         }
     }
-//        if (result == null) {
-//            TinkerLog.e(TAG, "HotfixResultService received null result!!!!");
-//            return;
-//        }
-//        TinkerLog.i(TAG, "HotfixResultService receive result: %s", result.toString());
-//        HotfixResult hotfixResult = getHotfixResult(result);
-//        Intent broadcastIntent=new Intent(BROASDCAST_HOTFIX_ACTION);
-//        Bundle mBundle = new Bundle();
-//        mBundle.putSerializable(BROASDCAST_HOTFIX_RESULT, hotfixResult);
-//        broadcastIntent.putExtras(mBundle);
-//        getApplicationContext().sendBroadcast(broadcastIntent);
-//
-//
-//        //repair current patch fail, just clean!
-//        if (!result.isSuccess && !result.isUpgradePatch) {
-//            Tinker.with(getApplicationContext()).cleanPatch();
-//        }
-//    }
 
-//    private HotfixResult getHotfixResult(PatchResult result) {
-//        HotfixResult hotfixResult=new HotfixResult();
-//        hotfixResult.costTime=result.costTime;
-//        hotfixResult.e=result.e;
-//        hotfixResult.isSuccess=result.isSuccess;
-//        hotfixResult.isUpgradePatch=result.isUpgradePatch;
-//        hotfixResult.patchVersion=result.patchVersion;
-//        hotfixResult.rawPatchFilePath=result.rawPatchFilePath;
-//        return hotfixResult;
-//    }
+
+    private HotfixResult getHotfixResult(PatchResult result) {
+        HotfixResult hotfixResult = new HotfixResult();
+        hotfixResult.costTime = result.costTime;
+        hotfixResult.e = result.e;
+        hotfixResult.isSuccess = result.isSuccess;
+        hotfixResult.isUpgradePatch = result.isUpgradePatch;
+        hotfixResult.patchVersion = result.patchVersion;
+        hotfixResult.rawPatchFilePath = result.rawPatchFilePath;
+        return hotfixResult;
+    }
 
 }

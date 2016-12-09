@@ -5,5 +5,5 @@ package com.mx.hotfix.patcher;
  */
 
 public interface PatchResultListener {
-    void onHotfixResultReceived(HotfixResult path);
+    void onHotfixResultReceived(HotfixResult hotfixResult);
 }

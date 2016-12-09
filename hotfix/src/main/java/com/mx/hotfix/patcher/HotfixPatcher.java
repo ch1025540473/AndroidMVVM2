@@ -1,12 +1,16 @@
 package com.mx.hotfix.patcher;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import com.mx.hotfix.util.Utils;
 import com.tencent.tinker.lib.tinker.Tinker;
 import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.lib.tinker.TinkerLoadResult;
 import com.tencent.tinker.lib.util.TinkerLog;
+
 
 /**
  * Created by wwish on 16/11/21.
@@ -56,49 +60,49 @@ public class HotfixPatcher {
         TinkerInstaller.onReceiveUpgradePatch(context, patchLocation);
     }
 
-//    /**
-//     * new patch file to install, try install them with :patch process
-//     *
-//     * @param context
-//     * @param patchLocation
-//     * @param patchResultListener
-//     */
-//
-//    public  void onReceiveUpgradePatch(Context context, String patchLocation,PatchResultListener patchResultListener) {
-//        if (context == null) {
-//            TinkerLog.e(TAG, "HotfixPatcher received a null context, ignoring.");
-//            return;
-//        }
-//        if (context == null) {
-//            TinkerLog.e(TAG, "HotfixPatcher received a null patchLocation, ignoring.");
-//            return;
-//        }
-//        TinkerInstaller.onReceiveUpgradePatch(context, patchLocation);
-//        this.context =context;
-//        this.patchResultListener =patchResultListener;
-//        if(this.patchResultListener !=null){
-//            context.registerReceiver(resultBroadcastReceiver, new IntentFilter(BROASDCAST_HOTFIX_ACTION));
-//        }
-//
-//    }
+    /**
+     * new patch file to install, try install them with :patch process
+     *
+     * @param context
+     * @param patchLocation
+     * @param patchResultListener
+     */
 
-//    private void setHotfixInstallerResult(HotfixResult hotfixResult) {
-//        patchResultListener.onHotfixResultReceived(hotfixResult);
-//    }
+    public void onReceiveUpgradePatch(Context context, String patchLocation, PatchResultListener patchResultListener) {
+        if (context == null) {
+            TinkerLog.e(TAG, "HotfixPatcher received a null context, ignoring.");
+            return;
+        }
+        if (context == null) {
+            TinkerLog.e(TAG, "HotfixPatcher received a null patchLocation, ignoring.");
+            return;
+        }
+        TinkerInstaller.onReceiveUpgradePatch(context, patchLocation);
+        this.context = context;
+        this.patchResultListener = patchResultListener;
+        if (this.patchResultListener != null) {
+            context.registerReceiver(resultBroadcastReceiver, new IntentFilter(Utils.BROASDCAST_HOTFIX_ACTION));
+        }
+
+    }
+
+    private void setHotfixInstallerResult(HotfixResult hotfixResult) {
+        patchResultListener.onHotfixResultReceived(hotfixResult);
+    }
 
 
-//    private BroadcastReceiver resultBroadcastReceiver = new BroadcastReceiver() {
-//        @Override
-//        public void onReceive(Context context, Intent intent) {
-//            HotfixResult hotfixResult = (HotfixResult) intent.getSerializableExtra(BROASDCAST_HOTFIX_RESULT);
-//            setHotfixInstallerResult(hotfixResult);
-//            if (context == null) {
-//                throw new RuntimeException("content is null !");
-//            }
-//            context.unregisterReceiver(resultBroadcastReceiver);
-//
-//        }
-//    };
+    private BroadcastReceiver resultBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            HotfixResult hotfixResult = (HotfixResult) intent.getSerializableExtra(Utils.BROASDCAST_HOTFIX_RESULT);
+            setHotfixInstallerResult(hotfixResult);
+            if (context == null) {
+                throw new RuntimeException("content is null !");
+            }
+            context.unregisterReceiver(resultBroadcastReceiver);
+
+        }
+    };
 
 
 //    /**
