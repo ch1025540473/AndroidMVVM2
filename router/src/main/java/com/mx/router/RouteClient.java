@@ -24,6 +24,7 @@ public abstract class RouteClient {
     private final String tag;
     private WeakReference<Object> host;
     private Callback callback;
+    private Object resultData;
     private boolean callbackOnHost;
 
     private Handler uiHandler;
@@ -89,16 +90,11 @@ public abstract class RouteClient {
     }
 
     private void performSuccess(Route route, Object convertedData) {
-        if (getCallback() == null) {
-            return;
-        }
+        this.resultData = convertedData;
 
-        if (convertedData != null) {
+        if (getCallback() != null) {
             //noinspection unchecked
             getCallback().onRouteSuccess(route, convertedData);
-        } else {
-            String message = "Data convert failed.";
-            fail(route, message, new RuntimeException(message));
         }
     }
 
@@ -155,6 +151,10 @@ public abstract class RouteClient {
             // changing host means changing callback at the same time.
             setCallback((Callback) host);
         }
+    }
+
+    public Object getResult() {
+        return resultData;
     }
 
     private void setCallback(Callback callback) {

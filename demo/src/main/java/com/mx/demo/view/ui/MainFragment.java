@@ -18,6 +18,8 @@ import com.mx.router.Callback;
 import com.mx.router.Route;
 import com.mx.router.Router;
 
+import java.util.Map;
+
 public class MainFragment extends BaseFragment implements Callback<MainFragment.Bean> {
 
     public MainFragment() {
@@ -42,12 +44,13 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         super.onCreate(savedInstanceState);
         Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
 
-        Router.getDefault().newRoute()
+        Map m = (Map) Router.getDefault().newRoute()
                 .from(this)
                 .uri("demo/test")
                 .appendParameter("code", 123)
-                .callback(this)
+                //.callback(this)
                 .buildAndRoute();
+        System.out.println("<RA> m.aaa=" + m.get("aaa"));
     }
 
     @Override

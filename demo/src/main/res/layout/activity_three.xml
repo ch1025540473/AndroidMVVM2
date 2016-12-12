@@ -20,10 +20,10 @@
             android:id="@+id/result_ok"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Three_RESULT_OK" />
+            android:text="RESULT_OK" />
 
         <Button
-            android:id="@+id/start_activity"
+            android:id="@+id/start_main_activity"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="start_Main_activity" />

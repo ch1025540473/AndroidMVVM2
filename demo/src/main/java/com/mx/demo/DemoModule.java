@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.model.DemoUseCase;
+import com.mx.demo.view.ui.HotfixTestActivity;
 import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.view.ui.ThirdActivity;
 import com.mx.framework2.Module;
@@ -17,6 +18,7 @@ import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.router.Pipe;
 import com.mx.router.RouteRule;
 import com.mx.router.Router;
+import com.mx.router.rule.ActivityRouteRule;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -66,11 +68,13 @@ public class DemoModule extends Module {
                 pipe.success(v);
             }
         });
+
+        Router.getDefault().registerRule("demo/thirdActivity", new ActivityRouteRule(ThirdActivity.class));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public final void receiveEvent(GotoAnotherEvent gotoAnotherEvent) {
-        ActivityStarter activityStarter = gotoAnotherEvent.getActivityStarter();
+    public final void receiveEvent(GotoAnotherEvent gotoSecondActEvent) {
+        ActivityStarter activityStarter = gotoSecondActEvent.getActivityStarter();
         Intent intent = new Intent(activityStarter.getContext(), SecondActivity.class);
         activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
             @Override
@@ -78,13 +82,12 @@ public class DemoModule extends Module {
                 Log.d("DemoModule", "onActivityResult>>" + resultCode);
             }
         });
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public final void receiveEvent(GotoPatchEvent gotoAnotherEvent) {
+    public final void receiveEvent(GotoPatchEvent gotoPatchActEvent) {
         ActivityStarter activityStarter = BaseActivity.getTopActivityStarter();
-        Intent intent = new Intent(activityStarter.getContext(), ThirdActivity.class);
+        Intent intent = new Intent(activityStarter.getContext(), HotfixTestActivity.class);
         activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
             @Override
             public void onActivityResult(int resultCode, Intent data) {

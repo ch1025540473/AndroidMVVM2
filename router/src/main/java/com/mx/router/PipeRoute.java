@@ -21,6 +21,7 @@ class PipeRoute implements Route, Pipe, UriAccess {
     private Router router;
     private Uri uri;
     private RouteClient client;
+    private int resultCode = Router.RESULT_UNKNOWN;
 
     private PipeRoute() {
     }
@@ -34,17 +35,46 @@ class PipeRoute implements Route, Pipe, UriAccess {
     }
 
     @Override
+    public boolean needInstantReturn() {
+        return getRouteClient().getCallback() == null;
+    }
+
+    @Override
     public void success() {
         success(null);
     }
 
     @Override
     public void success(Object data) {
-        getRouteClient().success(this, router.convert(this, data));
+        resultCode = Router.RESULT_OK;
+        if (data == null) {
+            getRouteClient().success(this, null);
+            return;
+        }
+
+        Object convertedData = router.convert(this, data);
+        if (convertedData != null) {
+            getRouteClient().success(this, convertedData);
+        } else {
+            String message = "Data convert failed.";
+            getRouteClient().fail(this, message, new RuntimeException(message));
+        }
+    }
+
+    @Override
+    public void cancel() {
+        resultCode = Router.RESULT_CANCELED;
+        getRouteClient().fail(this, "Route is canceled", null);
     }
 
     @Override
     public void fail(String message, Throwable reason) {
+        fail(Router.RESULT_FAILED, message, reason);
+    }
+
+    @Override
+    public void fail(int resultCode, String message, Throwable reason) {
+        this.resultCode = resultCode;
         getRouteClient().fail(this, message, reason);
     }
 
@@ -64,9 +94,9 @@ class PipeRoute implements Route, Pipe, UriAccess {
     }
 
     @Override
-    public Route route() {
+    public Object route() {
         router.route(this);
-        return this;
+        return getRouteClient().getResult();
     }
 
     @Override
@@ -168,6 +198,11 @@ class PipeRoute implements Route, Pipe, UriAccess {
         return uri.getQueryParameterNames();
     }
 
+    @Override
+    public int getResultCode() {
+        return resultCode;
+    }
+
     public static class Builder {
         private Router router;
         private Uri.Builder uriBuilder;
@@ -178,7 +213,7 @@ class PipeRoute implements Route, Pipe, UriAccess {
             this.router = router;
         }
 
-        public Route buildAndRoute() {
+        public Object buildAndRoute() {
             return build().route();
         }
 

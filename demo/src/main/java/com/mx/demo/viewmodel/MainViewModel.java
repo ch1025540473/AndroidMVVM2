@@ -275,7 +275,7 @@ public class MainViewModel extends LifecycleViewModel {
         };
     }
 
-    public OnClickCommand getOnClickThirdActivity() {
+    public OnClickCommand getOnClickHotfixActivity() {
         return new OnClickCommand() {
             @Override
             public void execute(int viewId) {

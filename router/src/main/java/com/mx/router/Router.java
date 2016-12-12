@@ -1,5 +1,6 @@
 package com.mx.router;
 
+import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,6 +24,11 @@ import java.util.Set;
  */
 
 public class Router {
+    public static final int RESULT_OK = Activity.RESULT_OK;
+    public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
+    public static final int RESULT_FAILED = Math.min(RESULT_OK, RESULT_CANCELED) - 1;
+    public static final int RESULT_UNKNOWN = RESULT_FAILED - 1;
+
     private static volatile Router defaultInstance = null;
 
     public static Router getDefault() {

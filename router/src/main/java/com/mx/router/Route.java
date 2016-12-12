@@ -6,7 +6,9 @@ package com.mx.router;
 public interface Route extends UriAccess {
     Router getRouter();
 
-    Route route();
+    Object route();
+
+    int getResultCode();
 
     String getMessage();
 
