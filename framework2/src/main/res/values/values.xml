@@ -15,7 +15,10 @@
     <declare-styleable name="ImageGestureView">
         <attr name="imageLoadCommand" format="reference" />
     </declare-styleable>
-    <declare-styleable name="View">
-        <attr name="longClick" format="reference" />
+    <declare-styleable name="DataBindingView">
+        <attr name="onLongClick" format="reference" />
+    </declare-styleable>
+    <declare-styleable name="CompoundButton">
+        <attr name="onCheckedChange" format="reference" />
     </declare-styleable>
 </resources>

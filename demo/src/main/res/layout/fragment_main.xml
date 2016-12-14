@@ -55,6 +55,12 @@
                 android:onClick="@{model.getOnClickHotfixActivity}"
                 android:text="Start Hotfix Test Activity"
                 android:textAllCaps="false" />
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Check Box"
+                binding:onCheckedChange="@{model.checkedChangeCommand}" />
         </LinearLayout>
 
         <com.mx.framework2.view.PullToRefreshRecyclerView

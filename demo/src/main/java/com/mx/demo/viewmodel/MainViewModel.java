@@ -4,6 +4,7 @@ import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.mx.demo.BR;
 import com.mx.demo.event.GotoAnotherEvent;
@@ -20,6 +21,7 @@ import com.mx.demo.viewmodel.viewbean.ItemViewBean;
 import com.mx.demo.viewmodel.viewbean.TextItemViewBean;
 import com.mx.engine.utils.SubscriberResult;
 import com.mx.framework2.viewmodel.LifecycleViewModel;
+import com.mx.framework2.viewmodel.command.OnCheckedChangeCommand;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadMoreCommand;
 import com.mx.framework2.viewmodel.command.OnStartRefreshingCommand;
@@ -280,6 +282,15 @@ public class MainViewModel extends LifecycleViewModel {
             @Override
             public void execute(int viewId) {
                 postEvent(new GotoPatchEvent());
+            }
+        };
+    }
+
+    public OnCheckedChangeCommand getCheckedChangeCommand() {
+        return new OnCheckedChangeCommand() {
+            @Override
+            public void execute(int viewId, boolean isChecked) {
+                Toast.makeText(getContext(), "Checked=" + isChecked, Toast.LENGTH_SHORT).show();
             }
         };
     }

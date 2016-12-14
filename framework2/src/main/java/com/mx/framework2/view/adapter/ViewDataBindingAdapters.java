@@ -3,9 +3,11 @@ package com.mx.framework2.view.adapter;
 import android.databinding.BindingAdapter;
 import android.databinding.BindingConversion;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.mx.framework2.view.ImageGestureView;
+import com.mx.framework2.viewmodel.command.OnCheckedChangeCommand;
 import com.mx.framework2.viewmodel.command.OnClickCommand;
 import com.mx.framework2.viewmodel.command.OnLoadImageCommand;
 import com.mx.framework2.viewmodel.command.OnLongCommand;
@@ -17,7 +19,6 @@ public class ViewDataBindingAdapters {
 
     @BindingConversion
     public static View.OnClickListener click(final OnClickCommand onClickCommand) {
-
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -28,12 +29,28 @@ public class ViewDataBindingAdapters {
         };
     }
 
-    @BindingAdapter("longClick")
+    @BindingAdapter("onLongClick")
     public static void longClick(View view, final OnLongCommand onLongCommand) {
         view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                return onLongCommand.onLongCommand(v.getId());
+                if (onLongCommand != null) {
+                    return onLongCommand.onLongCommand(v.getId());
+                }
+
+                return false;
+            }
+        });
+    }
+
+    @BindingAdapter("onCheckedChange")
+    public static void checkedChange(CompoundButton view, final OnCheckedChangeCommand onLongCommand) {
+        view.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (onLongCommand != null) {
+                    onLongCommand.execute(buttonView.getId(), isChecked);
+                }
             }
         });
     }
