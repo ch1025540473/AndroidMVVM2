@@ -86,6 +86,9 @@ public class ObjectUtils {
         return object;
     }
 
+    public static boolean equals(Object o1, Object o2) {
+        return o1 == null ? o2 == null : o1.equals(o2);
+    }
 
     public static <T> T cast(Object obj, Class<T> type) {
         if (!type.isInstance(obj)) {

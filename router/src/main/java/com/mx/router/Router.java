@@ -101,10 +101,14 @@ public class Router {
             List<SubscribeHandler> handlers = subscribingTable.get(uri);
             if (handlers == null) {
                 handlers = new LinkedList<>();
-                subscribingTable.put(uri, handlers);
             }
 
-            handlers.add(new SubscribeHandler(obj, method));
+            SubscribeHandler handler = new SubscribeHandler(obj, method);
+            if (!handlers.contains(handler)) {
+                handlers.add(handler);
+            }
+
+            subscribingTable.put(uri, handlers);
         }
     }
 

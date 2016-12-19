@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.mx.engine.utils.ObjectUtils;
+
 import java.lang.reflect.Method;
 
 /**
@@ -20,6 +22,19 @@ class SubscribeHandler {
         this.enclosingObject = enclosingObject;
         this.method = method;
         this.handler = new Handler(Looper.getMainLooper()); // 目前只支持主线程回调，未来可以支持其他线程
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || o.getClass() != this.getClass()) {
+            return false;
+        } else if (o == this) {
+            return true;
+        }
+
+        SubscribeHandler another = (SubscribeHandler) o;
+        return this.enclosingObject == another.enclosingObject
+                && ObjectUtils.equals(this.method, another.method);
     }
 
     public boolean handle(final Bundle data) {

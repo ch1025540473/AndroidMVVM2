@@ -1,10 +1,10 @@
 package com.mx.demo;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.view.ui.HotfixTestActivity;
@@ -17,6 +17,7 @@ import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.router.Pipe;
 import com.mx.router.RouteRule;
+import com.mx.router.RouteSubscribe;
 import com.mx.router.Router;
 import com.mx.router.rule.ActivityRouteRule;
 
@@ -40,6 +41,7 @@ public class DemoModule extends Module {
         synchronized (DemoModule.class) {
             if (instance == null) {
                 instance = new DemoModule();
+                Router.getDefault().registerReceiver(instance);
             }
         }
 
@@ -48,6 +50,7 @@ public class DemoModule extends Module {
 
     @Override
     protected void onStart(UseCaseManager userCaseManager) {
+        Router.getDefault().registerReceiver(instance);
         userCaseManager.register(DemoUseCase.class);
 
         Router.getDefault().registerRule("demo/test", new RouteRule() {
@@ -72,9 +75,21 @@ public class DemoModule extends Module {
         Router.getDefault().registerRule("demo/thirdActivity", new ActivityRouteRule(ThirdActivity.class));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public final void receiveEvent(GotoAnotherEvent gotoSecondActEvent) {
-        ActivityStarter activityStarter = gotoSecondActEvent.getActivityStarter();
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public final void receiveEvent(GotoAnotherEvent gotoSecondActEvent) {
+//        ActivityStarter activityStarter = gotoSecondActEvent.getActivityStarter();
+//        Intent intent = new Intent(activityStarter.getContext(), SecondActivity.class);
+//        activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
+//            @Override
+//            public void onActivityResult(int resultCode, Intent data) {
+//                Log.d("DemoModule", "onActivityResult>>" + resultCode);
+//            }
+//        });
+//    }
+
+    @RouteSubscribe(uri = "demo/anotherActivity")
+    public final void receiveEvent(Bundle data) {
+        ActivityStarter activityStarter = BaseActivity.getTopActivityStarter();
         Intent intent = new Intent(activityStarter.getContext(), SecondActivity.class);
         activityStarter.startActivityForResult(intent, new ActivityResultCallback() {
             @Override

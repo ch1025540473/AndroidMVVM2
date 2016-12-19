@@ -7,7 +7,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.mx.demo.BR;
-import com.mx.demo.event.GotoAnotherEvent;
 import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
@@ -272,7 +271,8 @@ public class MainViewModel extends LifecycleViewModel {
         return new OnClickCommand() {
             @Override
             public void execute(int viewId) {
-                postEvent(new GotoAnotherEvent());
+                //postEvent(new GotoAnotherEvent());
+                Router.getDefault().broadcast("demo/anotherActivity", null);
             }
         };
     }
