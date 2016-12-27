@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 40
-        versionName "1.0.40"
+        versionCode 41
+        versionName "1.1.0"
     }
 
     sourceSets {
@@ -60,7 +60,6 @@ dependencies {
     compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
     compile 'me.kareluo.intensify:image:1.1.0'
     provided project(':hotfix')
-    provided project(':framework')
     provided project(':engine')
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile 'org.robolectric:robolectric:3.1-rc1'
@@ -75,15 +74,15 @@ dependencies {
     androidTestCompile "com.android.support.test:rules:0.4.1"
 }
 
-def mavenUpload= { project ->
+def mavenUpload = { project ->
     uploadArchives {
         repositories.mavenDeployer {
             name = 'mavenCentralReleaseDeployer'
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "mx123456")
+                authentication(userName: "admin", password: "")
             }
-            pom.version = "1.0.40"
-            pom.artifactId = "framework2-alpha"
+            pom.version = "1.1.0"
+            pom.artifactId = "framework2"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
             pom.packaging = 'aar'
@@ -110,8 +109,8 @@ def mavenUpload= { project ->
 //  archives androidJavadocsJar
     }
 }
-afterEvaluate mavenUpload
-//
+//afterEvaluate mavenUpload
+
 //android.testOptions.unitTests.all {
 //    // configure the set of classes for JUnit tests
 //    include '**/*Test.class'

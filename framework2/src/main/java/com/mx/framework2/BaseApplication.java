@@ -7,6 +7,7 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.util.Log;
 
+import com.mx.hotfix.HotfixApplication;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -17,8 +18,9 @@ import java.util.Map;
 /**
  * Created by liuyuxuan on 16/4/19.
  */
-public class BaseApplication extends com.mx.framework.BaseApplication {
-    private static Application baseApplication = null;
+public class BaseApplication extends HotfixApplication {
+    public static Application application = null;
+    public static Context context = null;
     private Map<String, Module> modules;
 
     public BaseApplication(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag,
@@ -38,7 +40,7 @@ public class BaseApplication extends com.mx.framework.BaseApplication {
     @Override
     public void onBaseContextAttached(Context base) {
         super.onBaseContextAttached(base);
-        baseApplication = getApplication();
+        application = getApplication();
         modules = new LinkedHashMap<>();
         Log.d("BaseApplication", "BuildConfig.BUILD_TYPE=" + BuildConfig.BUILD_TYPE);
         Log.d("BaseApplication", "BuildConfig.logger_debug=" + BuildConfig.logger_debug);
@@ -52,7 +54,7 @@ public class BaseApplication extends com.mx.framework.BaseApplication {
                     .logLevel(LogLevel.NONE)
                     .methodOffset(2);
         }
-
+        context = base;
 
     }
 
@@ -67,7 +69,7 @@ public class BaseApplication extends com.mx.framework.BaseApplication {
 
     public static Application instance() {
 //        checkNotNull(baseApplication);
-        return baseApplication;
+        return application;
     }
 
 
