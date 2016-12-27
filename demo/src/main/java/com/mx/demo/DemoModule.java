@@ -56,7 +56,7 @@ public class DemoModule extends Module {
         Router.getDefault().registerRule("demo/test", new RouteRule() {
             @Override
             public void handleRoute(Pipe pipe) {
-                System.out.println("<R> code=" + pipe.getIntParameter("code", 0));
+                System.out.println("<R> method=" + pipe.getMethod());
                 Map<String, String> m = new HashMap<>();
                 m.put("aaa", "bbb");
                 pipe.success(m);

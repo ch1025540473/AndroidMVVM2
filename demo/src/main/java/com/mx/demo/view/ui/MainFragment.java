@@ -16,6 +16,7 @@ import com.mx.framework2.view.ui.BaseFragment;
 import com.mx.framework2.viewmodel.proxy.DialogProxy;
 import com.mx.router.Callback;
 import com.mx.router.Route;
+import com.mx.router.RouteMethod;
 import com.mx.router.Router;
 
 import java.util.Map;
@@ -47,6 +48,7 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         Map m = (Map) Router.getDefault().newRoute()
                 .from(this)
                 .uri("demo/test")
+                .method(RouteMethod.POST)
                 .appendParameter("code", 123)
                 //.callback(this)
                 .buildAndRoute();

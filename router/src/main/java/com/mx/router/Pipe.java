@@ -14,6 +14,13 @@ public interface Pipe extends UriAccess {
     boolean needInstantReturn();
 
     /**
+     * Get the query method of this route
+     *
+     * @see RouteMethod
+     */
+    RouteMethod getMethod();
+
+    /**
      * Success, but no data to return
      */
     void success();

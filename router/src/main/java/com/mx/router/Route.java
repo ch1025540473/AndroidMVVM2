@@ -13,4 +13,6 @@ public interface Route extends UriAccess {
     String getMessage();
 
     Throwable getReason();
+
+    RouteMethod getMethod();
 }

@@ -189,6 +189,16 @@ class PipeRoute implements Route, Pipe, UriAccess {
     }
 
     @Override
+    public RouteMethod getMethod() {
+        String method = getParameter(Router.PARAM_NAME_METHOD);
+        try {
+            return RouteMethod.valueOf(method);
+        } catch (IllegalArgumentException e) {
+            return RouteMethod.GET;
+        }
+    }
+
+    @Override
     public List<String> getParameters(String name) {
         return uri.getQueryParameters(name);
     }
@@ -206,6 +216,7 @@ class PipeRoute implements Route, Pipe, UriAccess {
     public static class Builder {
         private Router router;
         private Uri.Builder uriBuilder;
+        private RouteMethod method;
         private Callback callback;
         private Object from;
 
@@ -220,8 +231,13 @@ class PipeRoute implements Route, Pipe, UriAccess {
         public Route build() {
             PipeRoute pipeRoute = new PipeRoute();
             pipeRoute.router = this.router;
-            pipeRoute.uri = this.uriBuilder.build();
             pipeRoute.client = RouteClient.newRouteClient(from, callback);
+
+            if (method == null) {
+                method = RouteMethod.GET;
+            }
+            this.uriBuilder.appendQueryParameter(Router.PARAM_NAME_METHOD, method.toString());
+            pipeRoute.uri = this.uriBuilder.build();
 
             return pipeRoute;
         }
@@ -241,6 +257,11 @@ class PipeRoute implements Route, Pipe, UriAccess {
             if (name != null && value != null) {
                 uriBuilder.appendQueryParameter(name, value.toString());
             }
+            return this;
+        }
+
+        public Builder method(RouteMethod method) {
+            this.method = method;
             return this;
         }
 

@@ -23,7 +23,7 @@ public class RouteView extends FrameLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RouteUriAccess);
         if (a.hasValue(R.styleable.RouteUriAccess_routeUri)) {
             String uriString = a.getString(R.styleable.RouteUriAccess_routeUri);
-            setRouteUri(Uri.parse(uriString));
+            setRouteUri(uriString);
         }
         a.recycle();
     }
@@ -35,6 +35,10 @@ public class RouteView extends FrameLayout {
     public void setRouteUri(Uri uri) {
         this.uri = uri;
         routeContentView();
+    }
+
+    public void setRouteUri(String uriString) {
+        setRouteUri(Uri.parse(uriString));
     }
 
     public Uri getRouteUri() {

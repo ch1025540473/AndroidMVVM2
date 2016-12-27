@@ -29,6 +29,8 @@ public class Router {
     public static final int RESULT_FAILED = Math.min(RESULT_OK, RESULT_CANCELED) - 1;
     public static final int RESULT_UNKNOWN = RESULT_FAILED - 1;
 
+    public static final String PARAM_NAME_METHOD = "METHOD";
+
     private static volatile Router defaultInstance = null;
 
     public static Router getDefault() {
