@@ -64,6 +64,12 @@ public class DataBindingFactory {
         return value;
     }
 
+    public static final <T extends ViewDataBinding> T bind(@NonNull View view) {
+        final T value = DataBindingUtil.bind(view);
+        value.getRoot().addOnAttachStateChangeListener(createOnAttachStateChangeListener(value));
+        return value;
+    }
+
     private static final <T extends ViewDataBinding> View.OnAttachStateChangeListener createOnAttachStateChangeListener(final T value) {
 
         View.OnAttachStateChangeListener listener = new View.OnAttachStateChangeListener() {

@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 39
-        versionName "1.0.39"
+        versionCode 40
+        versionName "1.0.40"
     }
 
     sourceSets {
@@ -80,9 +80,9 @@ def mavenUpload= { project ->
         repositories.mavenDeployer {
             name = 'mavenCentralReleaseDeployer'
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "")
+                authentication(userName: "admin", password: "mx123456")
             }
-            pom.version = "1.0.39"
+            pom.version = "1.0.40"
             pom.artifactId = "framework2-alpha"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
@@ -110,7 +110,7 @@ def mavenUpload= { project ->
 //  archives androidJavadocsJar
     }
 }
-//afterEvaluate mavenUpload
+afterEvaluate mavenUpload
 //
 //android.testOptions.unitTests.all {
 //    // configure the set of classes for JUnit tests

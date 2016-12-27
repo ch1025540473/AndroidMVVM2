@@ -50,7 +50,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
             eventProxy.unregister(this);
         }
     }
-
+    //
     protected final <T extends UseCase> T obtainUseCase(Class<T> classType) {
         checkNotNull(module);
         T useCase = module.getUserCaseManager().obtainUseCase(classType, getActivity().getActivityInfo());
