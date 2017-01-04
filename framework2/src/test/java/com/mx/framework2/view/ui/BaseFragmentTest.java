@@ -1,8 +1,6 @@
 package com.mx.framework2.view.ui;
 
 
-
-
 import android.app.Fragment;
 
 import com.mx.framework2.BuildConfig;
@@ -13,15 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.util.ActivityController;
 import org.robolectric.util.FragmentController;
-
-import java.lang.reflect.Field;
-
-import static org.junit.Assert.*;
-import static org.robolectric.shadows.support.v4.SupportFragmentTestUtil.startFragment;
 
 /**
  * Created by wwish on 16/9/12.

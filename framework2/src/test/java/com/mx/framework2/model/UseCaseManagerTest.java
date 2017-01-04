@@ -1,23 +1,25 @@
 package com.mx.framework2.model;
 
 import com.mx.framework2.BuildConfig;
-import com.mx.framework2.MyRunner;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import static android.os.Build.VERSION_CODES.LOLLIPOP;
 import static junit.framework.Assert.assertNotNull;
 
 /**
  * Created by wwish on 16/8/29.
  */
-@RunWith(MyRunner.class)
-@Config(constants = BuildConfig.class)
+//@RunWith(MyRunner.class)
+//@Config(constants = BuildConfig.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = LOLLIPOP)
 public class UseCaseManagerTest {
     public static class TestUseCase extends UseCase{
         @Override

@@ -4,16 +4,15 @@ import android.app.Application;
 import android.content.Context;
 import android.view.View;
 
-
 import com.mx.engine.BuildConfig;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.junit.Before;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by liuyuxuan on 16/5/24.
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class)
 public class ScreenUtilsTest {
 

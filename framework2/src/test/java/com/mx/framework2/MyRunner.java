@@ -1,7 +1,7 @@
 package com.mx.framework2;
 
 import org.junit.runners.model.InitializationError;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.manifest.AndroidManifest;
 import org.robolectric.res.FileFsFile;
@@ -12,7 +12,7 @@ import org.robolectric.util.ReflectionHelpers;
  * Created by wwish on 16/9/27.
  */
 
-public class MyRunner extends RobolectricGradleTestRunner {
+public class MyRunner extends RobolectricTestRunner {
     private static final String BUILD_OUTPUT = "build/intermediates";
     public MyRunner(Class<?> klass) throws InitializationError {
         super(klass);

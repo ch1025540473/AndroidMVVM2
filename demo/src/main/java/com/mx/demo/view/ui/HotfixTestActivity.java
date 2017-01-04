@@ -35,7 +35,7 @@ public class HotfixTestActivity extends AppCompatActivity {
             public void onClick(View v) {
 //                HotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
                 HotfixPatcher hotfixInstaller = HotfixPatcher.getInstance();
-                hotfixInstaller.patch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
+                hotfixInstaller.patch(Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk");
 //                hotfixInstaller.onReceiveUpgradePatch(getApplicationContext(), Environment.getExternalStorageDirectory().getAbsolutePath() + "/patch_signed_7zip.apk",new PatchResultListener(){
 //                    @Override
 //                    public void onHotfixResultReceived(HotfixResult path) {
@@ -57,8 +57,8 @@ public class HotfixTestActivity extends AppCompatActivity {
 //                Tinker.with(getApplicationContext()).cleanPatch();
                 Log.d("www", "iiiiiiiiiiiiiiii9");
                 HotfixPatcher hotfixInstaller = HotfixPatcher.getInstance();
-                Log.d("www", "hotfixInstaller.getPatchVersion(getApplicationContext()) version : " + hotfixInstaller.getPatchVersion(getApplicationContext()));
-                Log.d("www", "HotfixLoader.getLoadPatchFileVersion() " + HotfixPatcher.getInstance().getPatchVersion(v.getContext()));
+                Log.d("www", "hotfixInstaller.getPatchVersion(getApplicationContext()) version : " + hotfixInstaller.getPatchVersion());
+                Log.d("www", "HotfixLoader.getLoadPatchFileVersion() " + HotfixPatcher.getInstance().getPatchVersion());
             }
         });
     }

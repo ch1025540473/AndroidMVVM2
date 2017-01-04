@@ -30,9 +30,7 @@
         <activity android:name=".view.ui.SecondActivity"></activity>
         <activity android:name=".view.ui.HotfixTestActivity"></activity>
 
-        <service
-            android:name="com.mx.hotfix.service.HotfixResultService"
-            android:exported="false"></service>
+
         <activity android:name=".view.ui.ThirdActivity" />
 
     </application>

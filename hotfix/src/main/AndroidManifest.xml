@@ -8,4 +8,8 @@
 
     </application>
 
+    <service
+        android:name="com.mx.hotfix.service.HotfixResultService"
+        android:exported="false"></service>
+
 </manifest>

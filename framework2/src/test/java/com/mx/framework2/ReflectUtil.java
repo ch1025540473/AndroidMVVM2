@@ -1,7 +1,5 @@
 package com.mx.framework2;
 
-import com.mx.engine.event.EventProxy;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -19,7 +17,7 @@ public class ReflectUtil {
      * @throws Exception
      */
     public static Method getMethod(Class clazz, String methodName,
-                                   final Class[] classes) throws Exception {
+                                   final Class[] classes) throws NoSuchMethodException {
         Method method = null;
         try {
             method = clazz.getDeclaredMethod(methodName, classes);
@@ -65,9 +63,33 @@ public class ReflectUtil {
         return invoke(obj, methodName, new Class[]{}, new Object[]{});
     }
 
-    public static void getField(final String className, final String fieldName){
-
-
+    public static Field findField(Object instance, String name) throws NoSuchFieldException {
+        for (Class<?> clazz = instance.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                return field;
+            } catch (NoSuchFieldException e) {
+                // ignore and search next
+            }
+        }
+        throw new NoSuchFieldException("Field " + name + " not found in " + instance.getClass());
     }
 
+    public static Field findField(Class<?> originClazz, String name) throws NoSuchFieldException {
+        for (Class<?> clazz = originClazz; clazz != null; clazz = clazz.getSuperclass()) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                return field;
+            } catch (NoSuchFieldException e) {
+                // ignore and search next
+            }
+        }
+        throw new NoSuchFieldException("Field " + name + " not found in " + originClazz);
+    }
 }

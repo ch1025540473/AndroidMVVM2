@@ -11,6 +11,8 @@ import com.tencent.tinker.lib.tinker.TinkerInstaller;
 import com.tencent.tinker.lib.tinker.TinkerLoadResult;
 import com.tencent.tinker.lib.util.TinkerLog;
 
+import static com.mx.hotfix.util.HotfixApplicationContext.context;
+
 
 /**
  * Created by wwish on 16/11/21.
@@ -19,7 +21,6 @@ import com.tencent.tinker.lib.util.TinkerLog;
 public class HotfixPatcher {
 
     private static final String TAG = HotfixPatcher.class.getSimpleName(); //"HotfixPatcher";
-    private Context context;
     private PatchResultListener patchResultListener;
     private static HotfixPatcher instance;
 
@@ -38,47 +39,43 @@ public class HotfixPatcher {
     }
 
     /**
-     * @param context
      * @return hotfix patch version
      */
-    public String getPatchVersion(Context context) {
+    public String getPatchVersion() {
         TinkerLoadResult tinkerLoadResult = Tinker.with(context).getTinkerLoadResultIfPresent();
         return tinkerLoadResult.getPackageConfigByName(Utils.PATCHVERSION);
     }
 
-    public void patch(Context context, String patchLocation) {
-        onReceiveUpgradePatch(context, patchLocation);
+    public void patch(String patchLocation) {
+        onReceiveUpgradePatch(patchLocation);
     }
 
     /**
      * new patch file to install, try install them with :patch process
      *
-     * @param context
      * @param patchLocation
      */
-    private void onReceiveUpgradePatch(Context context, String patchLocation) {
+    private void onReceiveUpgradePatch(String patchLocation) {
         TinkerInstaller.onReceiveUpgradePatch(context, patchLocation);
     }
 
     /**
      * new patch file to install, try install them with :patch process
      *
-     * @param context
      * @param patchLocation
      * @param patchResultListener
      */
 
-    public void onReceiveUpgradePatch(Context context, String patchLocation, PatchResultListener patchResultListener) {
+    public void onReceiveUpgradePatch(String patchLocation, PatchResultListener patchResultListener) {
         if (context == null) {
             TinkerLog.e(TAG, "HotfixPatcher received a null context, ignoring.");
             return;
         }
-        if (context == null) {
+        if (patchLocation == null) {
             TinkerLog.e(TAG, "HotfixPatcher received a null patchLocation, ignoring.");
             return;
         }
         TinkerInstaller.onReceiveUpgradePatch(context, patchLocation);
-        this.context = context;
         this.patchResultListener = patchResultListener;
         if (this.patchResultListener != null) {
             context.registerReceiver(resultBroadcastReceiver, new IntentFilter(Utils.BROASDCAST_HOTFIX_ACTION));
@@ -122,12 +119,11 @@ public class HotfixPatcher {
      * usage for native library
      * use TinkerInstaller.loadLibraryFromTinker replace your System.loadLibrary for auto update library!
      *
-     * @param context
      * @param relativePath such as lib/armeabi
      * @param libname      for the lib libTest.so, you can pass Test or libTest, or libTest.so
      * @return boolean
      */
-    public boolean loadLibrary(Context context, String relativePath, String libname) {
+    public boolean loadLibrary(String relativePath, String libname) {
         if (context == null) {
             TinkerLog.e(TAG, "HotfixPatcher received a null context, ignoring.");
             return false;
@@ -144,10 +140,9 @@ public class HotfixPatcher {
      * some file does not exist, repair them with :patch process
      * Generally you will not use it
      *
-     * @param context
      * @param patchLocation
      */
-    private void onReceiveRepairPatch(Context context, String patchLocation) {
+    private void onReceiveRepairPatch(String patchLocation) {
         TinkerInstaller.onReceiveRepairPatch(context, patchLocation);
     }
 }
