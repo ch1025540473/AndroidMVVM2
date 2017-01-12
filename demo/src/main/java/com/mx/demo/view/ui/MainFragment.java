@@ -38,6 +38,15 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
 
     public static class Bean {
         public String aaa;
+
+    }
+
+    public class SendBean {
+        public String aaa;
+
+        public SendBean(String aaa) {
+            this.aaa = aaa;
+        }
     }
 
     @Override
@@ -50,6 +59,7 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
                 .uri("demo/test")
                 .method(RouteMethod.POST)
                 .appendParameter("code", 123)
+                .data(new SendBean("testData"))
                 //.callback(this)
                 .buildAndRoute();
         System.out.println("<RA> m.aaa=" + m.get("aaa"));

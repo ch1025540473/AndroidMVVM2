@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.mx.activitystarter.ActivityStarter;
+import com.google.gson.Gson;
+import com.mx.engine.json.GsonFactory;
 import com.mx.engine.utils.CheckUtils;
 
 import java.util.List;
@@ -22,6 +24,8 @@ class PipeRoute implements Route, Pipe, UriAccess {
     private Uri uri;
     private RouteClient client;
     private int resultCode = Router.RESULT_UNKNOWN;
+
+    private Object data;
 
     private PipeRoute() {
     }
@@ -92,6 +96,17 @@ class PipeRoute implements Route, Pipe, UriAccess {
     @Override
     public ActivityStarter getActivityStarter() {
         return getRouteClient().getActivityStarter();
+    }
+
+    @Override
+    public Object getData(Class<?> targetType) {
+        if (data != null) {
+            Gson gson = GsonFactory.newGson();
+            String json = gson.toJson(data);
+            return gson.fromJson(json, targetType);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -220,6 +235,7 @@ class PipeRoute implements Route, Pipe, UriAccess {
         private RouteMethod method;
         private Callback callback;
         private Object from;
+        private Object data;
 
         Builder(@NonNull Router router) {
             this.router = router;
@@ -229,6 +245,11 @@ class PipeRoute implements Route, Pipe, UriAccess {
             return build().route();
         }
 
+        public Builder data(Object data){
+            this.data = data;
+            return this;
+        }
+
         public Route build() {
             PipeRoute pipeRoute = new PipeRoute();
             pipeRoute.router = this.router;
@@ -236,6 +257,10 @@ class PipeRoute implements Route, Pipe, UriAccess {
 
             if (method == null) {
                 method = RouteMethod.GET;
+            } else if (method == RouteMethod.POST || method == RouteMethod.PUT) {
+                if (data != null) {
+                    pipeRoute.data = this.data;
+                }
             }
             this.uriBuilder.appendQueryParameter(Router.PARAM_NAME_METHOD, method.toString());
             pipeRoute.uri = this.uriBuilder.build();

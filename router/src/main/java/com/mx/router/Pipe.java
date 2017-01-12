@@ -60,4 +60,11 @@ public interface Pipe extends UriAccess {
      * Get an ActivityStarter that can start an activity, which provides some advanced methods.
      */
     ActivityStarter getActivityStarter();
+
+    /**
+     * Get post data
+     * @param targetType
+     */
+    Object getData(Class<?> targetType);
+
 }

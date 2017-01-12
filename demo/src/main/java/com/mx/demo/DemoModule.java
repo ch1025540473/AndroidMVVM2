@@ -48,6 +48,11 @@ public class DemoModule extends Module {
         return instance;
     }
 
+
+    public static class BeanReceive {
+        public String aaa;
+    }
+
     @Override
     protected void onStart(UseCaseManager userCaseManager) {
         Router.getDefault().registerReceiver(instance);
@@ -57,6 +62,8 @@ public class DemoModule extends Module {
             @Override
             public void handleRoute(Pipe pipe) {
                 System.out.println("<R> method=" + pipe.getMethod());
+                BeanReceive beanReceive =  (BeanReceive) pipe.getData(BeanReceive.class);
+                System.out.println("<R>   pipe.getData()=" +  beanReceive.aaa);
                 Map<String, String> m = new HashMap<>();
                 m.put("aaa", "bbb");
                 pipe.success(m);
