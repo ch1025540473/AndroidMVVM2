@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -63,16 +62,8 @@ public final class ActivityResultManager {
     public void onActivityCreate(@NonNull ActivityIdentifiable activityIdentifiable, Bundle savedInstanceState) {
         if (savedInstanceState == null) {
             ActivityRequestInfo activityRequestInfo = new ActivityRequestInfo();
-            activityRequestInfo.setActivityIdentifiable(activityIdentifiable);
             activityRequestInfo.setActivityId(activityIdentifiable.getActivityId());
             activityRequestInfoList.add(activityRequestInfo);
-        } else {
-            ActivityRequestInfo activityRequestInfo = findActivityRequestInfoById(activityIdentifiable.getActivityId());
-            if (activityRequestInfo != null) {
-                activityRequestInfo.setActivityIdentifiable(activityIdentifiable);
-            } else {
-                throw new NullPointerException("activityRequestInfo==null");
-            }
         }
     }
 
@@ -130,6 +121,5 @@ public final class ActivityResultManager {
         }
         return null;
     }
-
 
 }
