@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 41
-        versionName "1.1.0"
+        versionCode 42
+        versionName "1.1.1"
     }
 
     sourceSets {
@@ -82,7 +82,7 @@ def mavenUpload = { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "")
             }
-            pom.version = "1.1.0"
+            pom.version = "1.1.1"
             pom.artifactId = "framework2"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
