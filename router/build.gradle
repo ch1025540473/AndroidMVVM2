@@ -3,36 +3,61 @@ apply plugin: 'maven'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
-    defaultPublishConfig 'release'
+    buildToolsVersion "23.0.3"
 
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
         versionCode 6
         versionName "1.0.5"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+    dataBinding {
+        enabled true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    lintOptions {
+        warning 'InvalidPackage'
+        abortOnError false
+    }
+
+    dexOptions {
+        incremental true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            buildConfigField "boolean", "logger_debug", "false"
+            zipAlignEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig null
+        }
+        debug {
+            // 显示Log
+            buildConfigField "boolean", "logger_debug", "true"
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
+            signingConfig null
         }
     }
+
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided project(':engine')
-    provided project(':framework2')
-
-    testCompile 'org.assertj:assertj-core:1.7.0'
-    testCompile 'org.robolectric:robolectric:3.1-rc1'
-    testCompile "org.robolectric:shadows-support-v4:3.0"
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-all:1.10.19"
-    testCompile "org.hamcrest:hamcrest-all:1.3"
+    provided project(':activitystarter')
+    compile 'com.android.support:appcompat-v7:23.+'
 }
 
 def mavenUpload = {

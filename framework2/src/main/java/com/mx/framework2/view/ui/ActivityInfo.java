@@ -1,5 +1,6 @@
 package com.mx.framework2.view.ui;
 
+import com.mx.activitystarter.ActivityIdentifiable;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.model.UseCaseHolder;
 
@@ -12,17 +13,15 @@ import java.util.List;
  * Created by liuyuxuan on 2016/10/31.
  */
 
-public class ActivityInfo implements UseCaseHolder {
+public class ActivityInfo implements UseCaseHolder, ActivityIdentifiable {
     private String activityId;
-    private List<Integer> flyingRequestCodes;
     private WeakReference<BaseActivity> activityRef;
     private RunState runState;
     private String activityName;
 
     @Override
     public String toString() {
-        return "{activityName= " + activityName + "} { activityId=" + activityId + "} { runState=" + runState + "}\n"
-                + "flyingRequestCodes {" + flyingRequestCodes + "}";
+        return "{activityName= " + activityName + "} { activityId=" + activityId + "} { runState=" + runState + "}";
     }
 
     public String getActivityName() {
@@ -34,7 +33,6 @@ public class ActivityInfo implements UseCaseHolder {
         CheckUtils.checkNotNull(activity);
         activityId = activity.getActivityId();
         activityName = activity.getClass().getName();
-        flyingRequestCodes = new LinkedList<>();
         runState = activity.getRunState();
     }
 
@@ -46,22 +44,11 @@ public class ActivityInfo implements UseCaseHolder {
         return runState == RunState.Destroyed;
     }
 
-    @SuppressWarnings("all")
+    @Override
     public String getActivityId() {
         return activityId;
     }
 
-    List<Integer> getFlyingRequestCodes() {
-        return Collections.unmodifiableList(flyingRequestCodes);
-    }
-
-    void removeFlyingRequestCode(int flyingRequestCode) {
-        flyingRequestCodes.remove(Integer.valueOf(flyingRequestCode));
-    }
-
-    void addFlyingRequestCode(int flyingRequestCode) {
-        flyingRequestCodes.add(flyingRequestCode);
-    }
 
     void setRunState(RunState runState) {
         this.runState = runState;

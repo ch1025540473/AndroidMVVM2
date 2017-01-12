@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 23
         versionCode 41
         versionName "1.1.0"
     }
@@ -61,6 +61,7 @@ dependencies {
     compile 'me.kareluo.intensify:image:1.1.0'
     provided project(':hotfix')
     provided project(':engine')
+    provided project(':activitystarter')
     testCompile 'org.assertj:assertj-core:1.7.0'
     testCompile "org.robolectric:robolectric:3.1.4"
     testCompile "org.robolectric:shadows-support-v4:3.0"

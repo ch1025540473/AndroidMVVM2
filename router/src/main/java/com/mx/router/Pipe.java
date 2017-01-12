@@ -2,7 +2,7 @@ package com.mx.router;
 
 import android.content.Context;
 
-import com.mx.framework2.view.ui.ActivityStarter;
+import com.mx.activitystarter.ActivityStarter;
 
 /**
  * Created by chenbaocheng on 16/11/19.

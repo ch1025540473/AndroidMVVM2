@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.view.ui.ActivityStarter;
 
 import java.util.List;
 import java.util.Set;
@@ -80,7 +80,8 @@ class PipeRoute implements Route, Pipe, UriAccess {
 
     @Override
     public Context getContext() {
-        ActivityStarter activityStarter = getActivityStarter();
+        ActivityStarter
+                activityStarter = getActivityStarter();
         if (activityStarter != null) {
             return activityStarter.getContext();
         }

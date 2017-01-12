@@ -3,8 +3,8 @@ package com.mx.router.rule;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.mx.activitystarter.ActivityResultCallback;
 import com.mx.engine.utils.CheckUtils;
-import com.mx.framework2.view.ui.ActivityResultCallback;
 import com.mx.router.Pipe;
 import com.mx.router.RouteRule;
 

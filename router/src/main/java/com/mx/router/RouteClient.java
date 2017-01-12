@@ -9,10 +9,9 @@ import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.mx.activitystarter.ActivityResultCallback;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.engine.utils.ObjectUtils;
-import com.mx.framework2.view.ui.ActivityResultCallback;
-import com.mx.framework2.view.ui.ActivityStarter;
-import com.mx.framework2.view.ui.BaseActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -180,8 +179,6 @@ public abstract class RouteClient {
     public static RouteClient newRouteClient(Object fromObj, Callback callback) {
         if (fromObj instanceof ActivityStarter) {
             return new ActivityStarterClient((ActivityStarter) fromObj, callback);
-        } else if (fromObj instanceof BaseActivity) {
-            return new MVVMActivityClient((BaseActivity) fromObj, callback);
         } else if (fromObj instanceof Activity) {
             return new GeneralActivityClient((Activity) fromObj, callback);
         } else if (fromObj instanceof Fragment) {
@@ -206,21 +203,6 @@ public abstract class RouteClient {
         }
     }
 
-    private static class MVVMActivityClient extends RouteClient {
-        public MVVMActivityClient(BaseActivity activity, Callback callback) {
-            super(activity, callback);
-        }
-
-        @Override
-        public ActivityStarter getActivityStarter() {
-            Object host = getHost();
-            if (host != null) {
-                return ((BaseActivity) host).getActivityStarter();
-            } else {
-                return null;
-            }
-        }
-    }
 
     private static class ViewClient extends RouteClient {
         public ViewClient(View view, Callback callback) {

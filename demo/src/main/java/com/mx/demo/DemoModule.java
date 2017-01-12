@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.mx.activitystarter.ActivityResultCallback;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.view.ui.HotfixTestActivity;
@@ -12,8 +14,6 @@ import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.view.ui.ThirdActivity;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCaseManager;
-import com.mx.framework2.view.ui.ActivityResultCallback;
-import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.router.Pipe;
 import com.mx.router.RouteRule;

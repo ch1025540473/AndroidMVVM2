@@ -1,4 +1,4 @@
-package com.mx.framework2.view.ui;
+package com.mx.activitystarter;
 
 import android.content.Intent;
 

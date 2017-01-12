@@ -8,6 +8,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.mx.activitystarter.ActivityIdentifiable;
+import com.mx.activitystarter.ActivityResultManager;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.FrameworkModule;
@@ -34,15 +37,15 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends AppCompatActivity implements ViewModelScope {
+public class BaseActivity extends AppCompatActivity implements ViewModelScope ,ActivityIdentifiable{
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
-    private String uuid;
     private RunState runState;
     private boolean isHasFocus = false;
     private final List<Reference<BaseFragment>> fragments = new LinkedList<>();
     private ViewModelManager viewModelManager;
     private static WeakReference<LifecycleViewModel> activityStartViewModelRef;
     private LifecycleViewModel activityStartViewModel;
+    private String uuid;
 
     public static ActivityStarter getTopActivityStarter() {
         return activityStartViewModelRef == null ? null : activityStartViewModelRef.get();
@@ -96,7 +99,6 @@ public class BaseActivity extends AppCompatActivity implements ViewModelScope {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         viewModelManager.onActivityResult(requestCode, resultCode, data);
-        ActivityStack.getInstance().onActivityResult(requestCode, this);
     }
 
     @Override
@@ -121,9 +123,11 @@ public class BaseActivity extends AppCompatActivity implements ViewModelScope {
         } else {
             uuid = UUID.randomUUID().toString();
         }
+        ActivityResultManager.getInstance().onActivityCreate(this, savedInstanceState);
         this.runState = RunState.Created;
         init(savedInstanceState);
         ActivityStack.getInstance().onActivityCreate(this);
+
     }
 
     private void init(Bundle savedInstanceState) {
@@ -137,11 +141,6 @@ public class BaseActivity extends AppCompatActivity implements ViewModelScope {
     }
 
     @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        super.startActivityForResult(intent, requestCode);
-        ActivityStack.getInstance().onStartActivityForResult(requestCode, this);
-    }
-
     public String getActivityId() {
         return uuid;
     }
@@ -175,7 +174,7 @@ public class BaseActivity extends AppCompatActivity implements ViewModelScope {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         getViewModelManager().saveInstanceState(outState);
-        outState.putString(UUID_KEY, uuid);
+        outState.putString(UUID_KEY,uuid);
         super.onSaveInstanceState(outState);
     }
 

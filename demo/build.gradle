@@ -5,10 +5,9 @@ apply plugin: 'com.android.application'
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'io.reactivex:rxandroid:1.0.1'
-    compile 'com.android.support:appcompat-v7:23.4.0'
     compile project(':hotfix')
     compile project(':engine')
-    compile project(':framework')
+    compile project(':activitystarter')
     compile project(':framework2')
     compile project(':router')
     testCompile 'junit:junit:4.12'
@@ -45,7 +44,7 @@ def javaVersion = JavaVersion.VERSION_1_7
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    buildToolsVersion "23.0.3"
 
     compileOptions {
         sourceCompatibility javaVersion
@@ -67,8 +66,6 @@ android {
     dataBinding {
         enabled = true
     }
-
-
 
     defaultConfig {
         multiDexEnabled true

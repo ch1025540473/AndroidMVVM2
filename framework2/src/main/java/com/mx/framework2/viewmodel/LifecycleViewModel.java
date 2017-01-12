@@ -3,16 +3,14 @@ package com.mx.framework2.viewmodel;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
+import com.mx.activitystarter.ActivityResultCallback;
+import com.mx.activitystarter.ActivityResultManager;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.Module;
 import com.mx.framework2.event.BroadcastEvent;
-import com.mx.framework2.event.Events;
 import com.mx.framework2.model.UseCase;
-import com.mx.framework2.view.ui.ActivityResultCallback;
-import com.mx.framework2.view.ui.ActivityResultManager;
-import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.mx.framework2.view.ui.BaseFragment;
 import com.orhanobut.logger.Logger;
@@ -50,6 +48,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
             eventProxy.unregister(this);
         }
     }
+
     //
     protected final <T extends UseCase> T obtainUseCase(Class<T> classType) {
         checkNotNull(module);
@@ -79,6 +78,7 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
 
     public void startActivityForResult(Intent intent, ActivityResultCallback callback) {
         int requestCode = activityResultManager.generateRequestCodeForCallback(callback);
+        ActivityResultManager.getInstance().registerRequestCode(getActivity(), requestCode);
         startActivityForResult(intent, requestCode);
     }
 
@@ -212,9 +212,13 @@ public class LifecycleViewModel extends ViewModel implements Lifecycle, ModuleAw
     public void onRestoreInstanceState(Bundle savedInstanceState) {
     }
 
+    public void executeActivityResult(int requestCode, int resultCode, Intent data) {
+        ActivityResultManager.getInstance().onActivityResult(getActivity(), requestCode, resultCode, data);
+        onActivityResult(requestCode, resultCode, data);
+    }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        activityResultManager.onActivityResult(requestCode, resultCode, intent);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
     }
 
     @Override

@@ -123,7 +123,7 @@ public class ViewModelManager {
                 String tag = activityResultReceivers.get(requestCode);
                 if (tag != null && tag.equals(vm.getTag())) {
                     activityResultReceivers.remove(requestCode);
-                    vm.onActivityResult(requestCode, resultCode, intent);
+                    vm.executeActivityResult(requestCode, resultCode, intent);
                 }
             }
         };
