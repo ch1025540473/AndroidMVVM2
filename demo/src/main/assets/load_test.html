@@ -1,0 +1,32 @@
+<html>
+<head>
+    <title>Load Test</title>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script language="JavaScript">
+        $(function(){
+            $("#load_button").click(function(){
+                $.ajax({
+                    dataType: "json",
+                    url: "http://architect.mx.com/load/test.json",
+                    success: function(data){
+                        alert("Sucess " + data.abc);
+                    },
+                    error: function(xhr, status, e){
+                        alert("Error " + status + " " + e);
+                    },
+                    complete: function(){
+                        alert("Complete");
+                    }
+                });
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+<p>This is a test page.</p>
+
+<input type="button" value="Click To Load From App" id="load_button"/>
+</body>
+</html>

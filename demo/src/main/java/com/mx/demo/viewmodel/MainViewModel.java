@@ -1,5 +1,6 @@
 package com.mx.demo.viewmodel;
 
+import android.content.Intent;
 import android.databinding.Bindable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
+import com.mx.demo.view.ui.WebActivity;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -291,6 +293,15 @@ public class MainViewModel extends LifecycleViewModel {
             @Override
             public void execute(int viewId, boolean isChecked) {
                 Toast.makeText(getContext(), "Checked=" + isChecked, Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    public OnClickCommand getOnClickWebActivity() {
+        return new OnClickCommand() {
+            @Override
+            public void execute(int viewId) {
+                startActivity(new Intent(getContext(), WebActivity.class));
             }
         };
     }

@@ -61,6 +61,15 @@
                 android:layout_height="wrap_content"
                 android:text="Check Box"
                 binding:onCheckedChange="@{model.checkedChangeCommand}" />
+
+            <Button
+                android:id="@+id/start_web_activity_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:onClick="@{model.onClickWebActivity}"
+                android:text="Start Web Activity"
+                android:textAllCaps="false" />
         </LinearLayout>
 
         <com.mx.framework2.view.PullToRefreshRecyclerView

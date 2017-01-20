@@ -8,10 +8,12 @@ import android.widget.ImageView;
 import com.mx.activitystarter.ActivityResultCallback;
 import com.mx.activitystarter.ActivityStarter;
 import com.mx.demo.event.GotoPatchEvent;
+import com.mx.demo.event.GotoWebEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.view.ui.HotfixTestActivity;
 import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.view.ui.ThirdActivity;
+import com.mx.demo.view.ui.WebActivity;
 import com.mx.framework2.Module;
 import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.view.ui.BaseActivity;
@@ -119,4 +121,10 @@ public class DemoModule extends Module {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public final void receiveEvent(GotoWebEvent gotoWebEvent) {
+        ActivityStarter activityStarter = gotoWebEvent.getActivityStarter();
+        Intent intent = new Intent(activityStarter.getContext(), WebActivity.class);
+        activityStarter.startActivity(intent);
+    }
 }
