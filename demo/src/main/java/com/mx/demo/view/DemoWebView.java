@@ -11,10 +11,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.mx.activitystarter.ActivityResultCallback;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.demo.view.ui.ThirdActivity;
 import com.mx.engine.json.GsonFactory;
-import com.mx.framework2.view.ui.ActivityResultCallback;
-import com.mx.framework2.view.ui.ActivityStarter;
 import com.mx.framework2.view.ui.BaseActivity;
 
 import java.io.BufferedWriter;
