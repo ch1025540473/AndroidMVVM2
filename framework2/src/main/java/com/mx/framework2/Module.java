@@ -1,5 +1,7 @@
 package com.mx.framework2;
 
+import android.content.Context;
+
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.event.Events;
@@ -36,11 +38,15 @@ public abstract class Module {
         } else {
             instances.add(this.getClass());
         }
+    }
+
+    protected void onInstall(Context context) {
         eventProxy = EventProxy.getDefault();
         eventProxy.register(this);
-        userCaseManager = new UseCaseManager(BaseApplication.instance());
+        userCaseManager = new UseCaseManager(context);
         viewModelFactory = new ViewModelFactoryImpl(this);
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onActivityDestroy(Events.ActivityDestroyEvent event) {

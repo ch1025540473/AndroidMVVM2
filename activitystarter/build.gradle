@@ -31,12 +31,12 @@ def mavenUpload = { project ->
         repositories.mavenDeployer {
             name = 'mavenCentralReleaseDeployer'
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "")
+                authentication(userName: "admin", password: "mx123456")
             }
             pom.version = "1.0.0"
-            pom.artifactId = "actvitystart"
+            pom.artifactId = "activitystarter"
             pom.groupId = "com.mx.architecture"
-            pom.name = "actvitystart"
+            pom.name = "activitystart"
             pom.packaging = 'aar'
         }
     }
@@ -61,4 +61,4 @@ def mavenUpload = { project ->
 //  archives androidJavadocsJar
     }
 }
-//afterEvaluate mavenUpload
+afterEvaluate mavenUpload

@@ -94,7 +94,7 @@ def mavenUpload = {
         task androidSourcesJar(type: Jar) {
             classifier = 'sources'
             from android.sourceSets.main.java.sourceFiles
-        }
+        }ewew3ee
 
         artifacts {
             archives androidSourcesJar
