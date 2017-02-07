@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 42
-        versionName "1.1.1"
+        versionCode 43
+        versionName "1.1.2"
     }
 
     sourceSets {
@@ -81,7 +81,7 @@ def mavenUpload = { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "")
             }
-            pom.version = "1.1.1"
+            pom.version = "1.1.2"
             pom.artifactId = "framework2"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
@@ -109,7 +109,7 @@ def mavenUpload = { project ->
 //  archives androidJavadocsJar
     }
 }
-//afterEvaluate mavenUpload
+afterEvaluate mavenUpload
 
 //android.testOptions.unitTests.all {
 //    // configure the set of classes for JUnit tests
