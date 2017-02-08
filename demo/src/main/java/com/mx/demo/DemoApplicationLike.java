@@ -37,6 +37,7 @@ public class DemoApplicationLike extends HotfixApplication {
         Router.getDefault().addDataConverter(new FragmentConverter());
         Router.getDefault().addDataConverter(new ViewConverter());
         Router.getDefault().addDataConverter(new BundleConverter());
-        ModuleManager.getInstance().installModule(base, DemoModule.get());
+        ModuleManager.getInstance().init(base);
+        ModuleManager.getInstance().installModule(DemoModule.get());
     }
 }

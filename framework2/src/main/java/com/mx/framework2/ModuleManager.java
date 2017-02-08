@@ -3,6 +3,8 @@ package com.mx.framework2;
 import android.content.Context;
 
 import com.mx.engine.utils.CheckUtils;
+import com.orhanobut.logger.LogLevel;
+import com.orhanobut.logger.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.Map;
 public class ModuleManager {
     private Map<String, Module> modules;
     private static ModuleManager moduleManager;
+    private Context context;
 
     public static ModuleManager getInstance() {
         if (moduleManager != null) {
@@ -31,7 +34,21 @@ public class ModuleManager {
         modules = new HashMap<>();
     }
 
-    public void installModule(Context context, Module module) {
+    public void init(Context context) {
+        this.context = context;
+        if (BuildConfig.logger_debug) {
+            Logger.init().methodCount(3)
+                    .logLevel(LogLevel.FULL)
+                    .methodOffset(2);
+        } else {
+            Logger.init().methodCount(3)
+                    .logLevel(LogLevel.NONE)
+                    .methodOffset(2);
+        }
+        installModule(FrameworkModule.getInstance());
+    }
+
+    public void installModule(Module module) {
         CheckUtils.checkNotNull(module);
         modules.put(module.getClass().getName(), module);
         module.onInstall(context);
