@@ -3,29 +3,29 @@ package com.mx.demo.view;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.webkit.WebChromeClient;
-import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
-import com.mx.activitystarter.ActivityResultCallback;
-import com.mx.activitystarter.ActivityStarter;
-import com.mx.demo.view.ui.ThirdActivity;
 import com.mx.engine.json.GsonFactory;
-import com.mx.framework2.view.ui.BaseActivity;
+import com.mx.webbridge.WebBridge;
+import com.mx.webbridge.WebBridgeClient;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.io.PipedInputStream;
-import java.io.PipedOutputStream;
 import java.io.Writer;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by chenbaocheng on 16/11/11.
@@ -51,55 +51,76 @@ public class DemoWebView extends WebView {
     }
 
     private void setWebView(final Context context) {
-        setWebViewClient(new WebViewClient() {
-            @SuppressLint("NewApi")
+        setWebViewClient(new WebBridgeClient() {
             @Override
-            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+            protected WebBridge shouldInterceptRequest(WebView view, Uri uri) {
                 String target = "http://architect.mx.com/load/test.json";
-                if (url.equals(target)) {
-                    final PipedOutputStream os = new PipedOutputStream();
-                    final InputStream is;
+                if (uri.toString().equals(target)) {
                     try {
-                        is = new PipedInputStream(os);
-                        WebResourceResponse resp = new WebResourceResponse("text/json", "UTF-8", is);
-
-                        resp.setResponseHeaders(new HashMap<String, String>() {
-                            {
-                                put("Access-Control-Allow-Origin", "*");
-                            }
-                        });
-
-                        final Writer writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                        postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ActivityStarter s = BaseActivity.getTopActivityStarter();
-                                final String name = context.getClass().getName();
-                                s.startActivityForResult(new Intent(context, ThirdActivity.class)
-                                        , new ActivityResultCallback() {
-                                            @Override
-                                            public void onActivityResult(int resultCode, Intent data) {
-                                                Map<String, String> map = new HashMap<>();
-                                                map.put("abc", "汉字");//data.getStringExtra("data"));
-                                                try {
-                                                    writer.write(GsonFactory.newGson().toJson(map));
-                                                    writer.close();
-                                                } catch (IOException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }
-                                        });
-                            }
-                        }, 500);
-                        return resp;
+                        WebBridge webBridge = WebBridge.newBuilder().setMimeType("text/json").setUri(uri).putHeader("Access-Control-Allow-Origin", "*").setEncoding("UTF-8").build();
+                        Writer writer = webBridge.getWriter();
+                        Map<String, String> map = new HashMap<>();
+                        map.put("abc", "汉字");//data.getStringExtra("data"));
+                        writer.write(GsonFactory.newGson().toJson(map));
+                        writer.close();
+                        return webBridge;
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
                 }
-                System.out.println(String.format("<WEB> not equals"));
-                return super.shouldInterceptRequest(view, url);
+                return super.shouldInterceptRequest(view, uri);
             }
         });
+//        setWebViewClient(new WebViewClient() {
+//            @SuppressLint("NewApi")
+//            @Override
+//            public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+//                String target = "http://architect.mx.com/load/test.json";
+//                if (url.equals(target)) {
+//                    final PipedOutputStream os = new PipedOutputStream();
+//                    final InputStream is;
+//                    try {
+//                        is = new PipedInputStream(os);
+//                        WebResourceResponse resp = new WebResourceResponse("text/json", "UTF-8", is);
+//
+//                        resp.setResponseHeaders(new HashMap<String, String>() {
+//                            {
+//                                put("Access-Control-Allow-Origin", "*");
+//                            }
+//                        });
+//
+//                        final Writer writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+//                        postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                ActivityStarter s = BaseActivity.getTopActivityStarter();
+//                                final String name = context.getClass().getName();
+//                                s.startActivityForResult(new Intent(context, ThirdActivity.class)
+//                                        , new ActivityResultCallback() {
+//                                            @Override
+//                                            public void onActivityResult(int resultCode, Intent data) {
+//                                                Map<String, String> map = new HashMap<>();
+//                                                map.put("abc", "汉字");//data.getStringExtra("data"));
+//                                                try {
+//                                                    writer.write(GsonFactory.newGson().toJson(map));
+//                                                    writer.close();
+//                                                } catch (IOException e) {
+//                                                    e.printStackTrace();
+//                                                }
+//                                            }
+//                                        });
+//                            }
+//                        }, 500);
+//                        return resp;
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                System.out.println(String.format("<WEB> not equals"));
+//                return super.shouldInterceptRequest(view, url);
+//            }
+//        });
         setWebChromeClient(new WebChromeClient());
 
         requestFocus();
