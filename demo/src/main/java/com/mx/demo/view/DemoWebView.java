@@ -1,13 +1,9 @@
 package com.mx.demo.view;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -18,14 +14,8 @@ import com.mx.webbridge.WebBridgeClient;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * Created by chenbaocheng on 16/11/11.

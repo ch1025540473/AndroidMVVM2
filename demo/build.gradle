@@ -10,6 +10,7 @@ dependencies {
     compile project(':activitystarter')
     compile project(':framework2')
     compile project(':router')
+    compile project(':webbridge')
     testCompile 'junit:junit:4.12'
 //    compile("com.tencent.tinker:tinker-android-lib:1.7.5") { changing = true }
 //    provided("com.tencent.tinker:tinker-android-anno:1.7.5") { changing = true }
