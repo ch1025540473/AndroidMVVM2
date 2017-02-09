@@ -38,7 +38,7 @@ public abstract class WebBridge {
         return new Builder();
     }
 
-    public  static class Builder {
+    public    static class Builder {
         private Uri uri;
         private String mimeType = "text/json";
         private String encoding = "UTF-8";
@@ -54,18 +54,20 @@ public abstract class WebBridge {
             try {
                 webBridge.inputStream = new PipedInputStream(webBridge.outputStream);
             } catch (IOException e) {
+                e.printStackTrace();
                 // never happen
             }
 
             try {
                 webBridge.writer = new OutputStreamWriter(webBridge.outputStream, encoding);
-            } finally {
+            } catch (UnsupportedEncodingException ex){
                 try {
                     webBridge.outputStream.close();
                     webBridge.outputStream.close();
                 } catch (IOException e) {
                     // never happen
                 }
+                throw ex;
             }
             webBridge.response = new WebResourceResponse(mimeType, encoding, webBridge.inputStream);
             webBridge.uri = uri;
