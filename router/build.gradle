@@ -58,6 +58,9 @@ dependencies {
     provided project(':engine')
     provided project(':activitystarter')
     compile 'com.android.support:appcompat-v7:23.+'
+
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.5'
 }
 
 def mavenUpload = {

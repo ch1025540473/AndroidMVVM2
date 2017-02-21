@@ -7,9 +7,10 @@
             $("#load_button").click(function(){
                 $.ajax({
                     dataType: "json",
+                    type: "POST",
                     url: "http://architect.mx.com/load/test.json",
                     success: function(data){
-                        alert("Sucess " + data.abc);
+                        alert("Success " + data.abc);
                     },
                     error: function(xhr, status, e){
                         alert("Error " + status + " " + e);
@@ -20,8 +21,6 @@
                 });
             });
         });
-
-
     </script>
 </head>
 <body>
