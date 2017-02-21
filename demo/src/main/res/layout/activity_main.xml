@@ -5,11 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/main_fragment"
-        class="com.mx.demo.view.ui.MainFragment"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:tag="main_fragment"
-        android:visibility="visible" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>

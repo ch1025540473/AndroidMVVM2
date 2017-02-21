@@ -30,7 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:visibility="gone">
 
             <com.mx.router.RouteView
                 android:id="@+id/route_view"
@@ -81,7 +82,7 @@
             binding:headerClassName="@{PullToRefreshHeaderView.className}"
             binding:itemViewFactory="@{DemoItemViewFactory.className}"
             binding:items="@{model.items}"
-            binding:layoutManager="@{LayoutManagers.linear()}"
+            binding:layoutManager="@{LayoutManagers.staggeredGrid(2,1)}"
             binding:proxy="@{model.ptrRecyclerViewProxy}" />
 
     </RelativeLayout>

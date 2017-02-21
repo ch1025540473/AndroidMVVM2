@@ -87,7 +87,8 @@ public class ViewModelManager {
             activityResultReceivers = (HashMap<Integer, String>) savedInstanceState
                     .getSerializable(BUNDLE_KEY_ACTIVITY_RESULT_RECEIVERS);
         }
-        CheckUtils.checkState(lifecycleState == LifecycleState.Init);
+ //因为viewpager中使用fragment会循环使用 所以无法检查此时的状态
+//        CheckUtils.checkState(lifecycleState == LifecycleState.Init);
         Visitor<LifecycleViewModel> onCreateVisitor = new Visitor<LifecycleViewModel>() {
             @Override
             public void visit(LifecycleViewModel vm) {

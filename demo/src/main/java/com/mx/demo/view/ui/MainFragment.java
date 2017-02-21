@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import com.mx.demo.DemoModule;
 import com.mx.demo.R;
 import com.mx.demo.databinding.FragmentMainBinding;
+import com.mx.demo.view.PullToRefreshFooterView;
+import com.mx.demo.view.PullToRefreshHeaderView;
 import com.mx.demo.viewmodel.MainViewModel;
 import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.view.ui.BaseFragment;
@@ -69,10 +71,11 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-
+          Log.d("TestPTR","1111111111111");
         FragmentMainBinding mainBinding = DataBindingFactory.inflate(getContext(), R.layout.fragment_main);
-
-
+        Log.d("TestPTR","444444444");
+//
+//        mainBinding.demoMylist.setSecondFooterLayout(new PullToRefreshFooterView(getContext()));
         MainViewModel viewModel = DemoModule.get().getViewModelFactory().createViewModel("main_view_model", MainViewModel.class, this);
 
         //test dialogproxy
@@ -80,9 +83,8 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         viewModel.setDialogProxy(dialogProxy);
         getViewModelManager().addViewModel(viewModel);
         mainBinding.setModel(viewModel);
-
         mainBinding.demoMylist.getRefreshableView().getItemAnimator().setAddDuration(2000);
-
+        mainBinding.demoMylist.setHeaderClassName(PullToRefreshHeaderView.className());
         return mainBinding.getRoot();
     }
 

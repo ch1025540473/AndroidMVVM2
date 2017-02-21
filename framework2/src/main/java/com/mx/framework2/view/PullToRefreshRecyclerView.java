@@ -35,7 +35,6 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
     public PullToRefreshRecyclerView(Context context, AttributeSet attrs) {
         super(context, attrs);
         adapter = new ViewModelRecyclerViewAdapter(context);
-        getRefreshableView().setAdapter(adapter);
         if (attrs != null) {
             TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ItemizedView);
 
@@ -153,5 +152,10 @@ public class PullToRefreshRecyclerView extends UltimateRecyclerView {
             };
             getRefreshableView().addOnScrollListener(onScrollListener);
         }
+    }
+
+
+    public RecyclerView.Adapter getRecyclerViewAdapter() {
+        return adapter;
     }
 }

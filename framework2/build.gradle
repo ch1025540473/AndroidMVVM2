@@ -57,7 +57,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
-    compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
+    compile project(':pulltorefresh')
     compile 'me.kareluo.intensify:image:1.1.0'
     provided project(':engine')
     provided project(':activitystarter')

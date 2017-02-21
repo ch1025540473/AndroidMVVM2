@@ -3,6 +3,8 @@ package com.mx.demo.view.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.DataSource;
@@ -13,31 +15,33 @@ import com.mx.framework2.view.DataBindingFactory;
 import com.mx.framework2.view.ui.BaseActivity;
 import com.orhanobut.logger.Logger;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MainActivity extends BaseActivity {
+    List<Fragment> fragments;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Logger.t("result").d(getClass().getName() + "mode=" + getActivityInfo().getUseCaseHolderId());
-    }
+        fragments= new LinkedList<>();
+        fragments.add(new MainFragment());
+        fragments.add(new MainFragment());
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        Logger.t("result").d(getClass().getName() + "onNewIntent");
-    }
+        ViewPager viewPager = (ViewPager) findViewById(R.id.vp_pager);
+        viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return fragments.get(position);
+            }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Logger.t("result").d(getClass().getName() + "onRestart");
-    }
+            @Override
+            public int getCount() {
+                return 2;
+            }
+        });
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Logger.t("result").d(getClass().getName() + "resultCode=" + resultCode);
     }
 
 }

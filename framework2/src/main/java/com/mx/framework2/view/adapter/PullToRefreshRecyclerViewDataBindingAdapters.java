@@ -24,6 +24,7 @@ public class PullToRefreshRecyclerViewDataBindingAdapters {
     public static void setLayoutManager(PullToRefreshRecyclerView pullToRefreshRecyclerView, LayoutManagers.LayoutManagerFactory layoutManagerFactory) {
         RecyclerView recyclerView = pullToRefreshRecyclerView.getRefreshableView();
         recyclerView.setLayoutManager(layoutManagerFactory.create(recyclerView));
+        recyclerView.setAdapter(pullToRefreshRecyclerView.getRecyclerViewAdapter());
     }
 
     @BindingAdapter(value = {"items", "footerClassName", "headerClassName", "itemViewFactory", "proxy"}, requireAll = true)
