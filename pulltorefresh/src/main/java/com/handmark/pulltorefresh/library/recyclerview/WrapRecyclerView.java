@@ -72,7 +72,10 @@ public class WrapRecyclerView extends RecyclerView {
         if (shouldAdjustSpanSize) {
             mWrapAdapter.adjustSpanSize(this);
         }
-        adapter.registerAdapterDataObserver(mDataObserver);
+
+        if (!adapter.hasObservers()) {
+            adapter.registerAdapterDataObserver(mDataObserver);
+        }
         mDataObserver.onChanged();
     }
 
