@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 23
-        versionCode 45
-        versionName "1.1.4"
+        versionCode 46
+        versionName "1.1.5"
     }
 
     sourceSets {
@@ -57,7 +57,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.+'
     compile 'com.android.support:recyclerview-v7:23.+'
-    compile 'com.mx.architecture:pulltorefresh-alpha:1.+'
+    compile 'com.mx.architecture:pulltorefresh:1.+'
     compile 'me.kareluo.intensify:image:1.1.0'
     provided project(':engine')
     provided project(':activitystarter')
@@ -81,7 +81,7 @@ def mavenUpload = { project ->
             repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
                 authentication(userName: "admin", password: "")
             }
-            pom.version = "1.1.4"
+            pom.version = "1.1.5"
             pom.artifactId = "framework2"
             pom.groupId = "com.mx.architecture"
             pom.name = "framework"
