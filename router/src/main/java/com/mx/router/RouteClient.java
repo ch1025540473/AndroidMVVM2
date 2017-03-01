@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.mx.activitystarter.ActivityResultCallback;
 import com.mx.activitystarter.ActivityStarter;
+import com.mx.activitystarter.ActivityStarterAware;
 import com.mx.engine.utils.ObjectUtils;
 
 import java.lang.ref.WeakReference;
@@ -177,18 +178,19 @@ public abstract class RouteClient {
     }
 
     public static RouteClient newRouteClient(Object fromObj, Callback callback) {
-        if (fromObj instanceof ActivityStarter) {
+        if (fromObj instanceof ActivityStarterAware) {
+            return newRouteClient(((ActivityStarterAware) fromObj).getActivityStarter(), callback);
+        } else if (fromObj instanceof View) {
+            return newRouteClient(((View) fromObj).getContext(), callback);
+        } else if (fromObj instanceof ActivityStarter) {
             return new ActivityStarterClient((ActivityStarter) fromObj, callback);
         } else if (fromObj instanceof Activity) {
             return new GeneralActivityClient((Activity) fromObj, callback);
         } else if (fromObj instanceof Fragment) {
             return new GeneralFragmentClient((Fragment) fromObj, callback);
-        } else if (fromObj instanceof View) {
-            return new ViewClient((View) fromObj, callback);
         } else if (fromObj instanceof Context) {
             return new ContextClient((Context) fromObj, callback);
         }
-
         throw new RuntimeException("Cannot create RouteClient");
     }
 

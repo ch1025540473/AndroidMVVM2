@@ -11,6 +11,7 @@ import android.view.View;
 import com.mx.activitystarter.ActivityIdentifiable;
 import com.mx.activitystarter.ActivityResultManager;
 import com.mx.activitystarter.ActivityStarter;
+import com.mx.activitystarter.ActivityStarterAware;
 import com.mx.engine.event.EventProxy;
 import com.mx.engine.utils.CheckUtils;
 import com.mx.framework2.FrameworkModule;
@@ -37,7 +38,7 @@ import java.util.UUID;
  * 3,提供ViewModel的通信;
  */
 //TODO 监测生命状态
-public class BaseActivity extends AppCompatActivity implements ViewModelScope ,ActivityIdentifiable{
+public class BaseActivity extends AppCompatActivity implements ViewModelScope ,ActivityIdentifiable,ActivityStarterAware{
     private final String UUID_KEY = "UUID_KEY_FRAMEWORK2_" + getClass().getName();
     private RunState runState;
     private boolean isHasFocus = false;
@@ -52,6 +53,7 @@ public class BaseActivity extends AppCompatActivity implements ViewModelScope ,A
     }
 
     //TODO wrap the real activity starter
+    @Override
     public ActivityStarter getActivityStarter() {
         return activityStartViewModel;
     }
