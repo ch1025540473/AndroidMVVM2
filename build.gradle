@@ -8,7 +8,11 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:2.3.0'
+
+        classpath('org.ow2.asm:asm:5.2')
+        classpath('org.ow2.asm:asm-commons:5.2')
+        classpath('org.ow2.asm:asm-util:5.2')
 
         classpath('com.tencent.tinker:tinker-patch-gradle-plugin:1.7.5')
 
@@ -38,8 +42,29 @@ allprojects {
         maven {
             url "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/"
         }
-
-
     }
 
+    ext {
+        DEFAULT_COMPILE_SDK_VERSION = 23
+        DEFAULT_BUILD_TOOLS_VERSION = '25.0.2'
+    }
+}
+
+class MavenNexus {
+    def artifactId
+    def versionName
+}
+
+subprojects {
+    def nexusOptions = new MavenNexus()
+    project.ext {
+        nexus = { c ->
+            c.delegate = nexusOptions
+            c()
+        }
+    }
+
+    afterEvaluate {
+        println nexusOptions.artifactId + ' zz ' + nexusOptions.versionName
+    }
 }

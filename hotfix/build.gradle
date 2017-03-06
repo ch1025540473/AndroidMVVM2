@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion DEFAULT_COMPILE_SDK_VERSION
+    buildToolsVersion DEFAULT_BUILD_TOOLS_VERSION
 
     defaultConfig {
         minSdkVersion MIN_SDK_VERSION as int
@@ -34,6 +34,8 @@ dependencies {
     })
     compile "com.android.support:appcompat-v7:${SUPPORT_LIB_VERSION}"
     testCompile 'junit:junit:4.12'
+
+    println TINKER_VERSION
     //tinker的核心库
     compile("com.tencent.tinker:tinker-android-lib:${TINKER_VERSION}")
     compile("com.tencent.tinker:tinker-android-anno:${TINKER_VERSION}")
