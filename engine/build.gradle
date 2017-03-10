@@ -116,3 +116,9 @@ dependencies {
 ////  archives androidJavadocsJar
 //    }
 //}
+
+maven {
+    artifactId = 'engine-beta'
+    versionName = '1.0.9'
+    snapshot = false
+}

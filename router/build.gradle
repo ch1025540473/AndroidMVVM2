@@ -105,4 +105,10 @@ def mavenUpload = {
         }
 }
 
-afterEvaluate mavenUpload
+//afterEvaluate mavenUpload
+
+maven {
+    artifactId = 'router'
+    versionName = '1.1.1'
+    snapshot = false
+}

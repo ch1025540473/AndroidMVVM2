@@ -61,4 +61,10 @@ def mavenUpload = { project ->
 //  archives androidJavadocsJar
     }
 }
-afterEvaluate mavenUpload
+//afterEvaluate mavenUpload
+
+maven {
+    artifactId = 'activitystarter'
+    versionName = '1.0.1'
+    snapshot = false
+}

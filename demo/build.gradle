@@ -643,8 +643,3 @@ if (buildWithTinker()) {
         }
     }
 }
-
-nexus {
-    artifactId = 'artId'
-    versionName = '1.1.0'
-}

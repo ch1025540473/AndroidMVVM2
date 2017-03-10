@@ -67,4 +67,10 @@ def mavenUpload = { project ->
 //  archives androidJavadocsJar
     }
 }
-afterEvaluate mavenUpload
+//afterEvaluate mavenUpload
+
+maven {
+    artifactId = 'webbridge'
+    versionName = '1.0.0'
+    snapshot = false
+}

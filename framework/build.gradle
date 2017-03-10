@@ -112,3 +112,9 @@ def mavenUpload={ project ->
 //    // configure max heap size of the test JVM
 //    maxHeapSize = "2048m"
 //}
+
+maven {
+    artifactId = "framework-beta"
+    versionName = "1.0.13"
+    snapshot = false
+}

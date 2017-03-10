@@ -81,3 +81,9 @@ dependencies {
 ////  archives androidJavadocsJar
 //    }
 //}
+
+maven {
+    artifactId = 'hotfix-alpha'
+    versionName = '1.0.6'
+    snapshot = false
+}

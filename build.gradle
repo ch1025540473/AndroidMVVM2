@@ -50,21 +50,80 @@ allprojects {
     }
 }
 
-class MavenNexus {
+class MavenOptions {
     def artifactId
     def versionName
+    def snapshot = false
+    def groupId = 'com.mx.architecture'
+    def packing = 'aar'
+
+    public String getVersion() {
+        if (snapshot) {
+            return versionName + '-SNAPSHOT'
+        }
+
+        return versionName
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "artifactId=%s, versionName=%s, snapshot=%s, groupId=%s, packing=%s",
+                artifactId, versionName, snapshot, groupId, packing
+        )
+    }
 }
 
 subprojects {
-    def nexusOptions = new MavenNexus()
+    def nexusOptions = new MavenOptions()
     project.ext {
-        nexus = { c ->
+        maven = { c ->
             c.delegate = nexusOptions
             c()
         }
     }
 
-    afterEvaluate {
-        println nexusOptions.artifactId + ' zz ' + nexusOptions.versionName
+    apply plugin: 'maven'
+    def mavenUpload = { project ->
+        if (nexusOptions.artifactId == null || nexusOptions.versionName == null) {
+            return;
+        }
+
+        project.uploadArchives {
+            repositories.mavenDeployer {
+                println 'options = ' + nexusOptions
+                name = 'mavenCentralReleaseDeployer'
+                repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
+                    authentication(userName: "admin", password: "mx123456")
+                }
+                pom.version = nexusOptions.versionName
+                pom.artifactId = nexusOptions.artifactId
+                pom.groupId = nexusOptions.groupId
+                pom.name = nexusOptions.artifactId
+                pom.packaging = nexusOptions.packing
+            }
+        }
+
+        task androidJavadocs(type: Javadoc) {
+            source = android.sourceSets.main.java.srcDirs
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+
+        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+            classifier = 'javadoc'
+            from androidJavadocs.destinationDir
+        }
+
+        task androidSourcesJar(type: Jar) {
+            classifier = 'sources'
+            from android.sourceSets.main.java.sourceFiles
+        }
+
+        artifacts {
+            archives androidSourcesJar
+            //archives androidJavadocsJar
+        }
     }
+
+    afterEvaluate mavenUpload
 }

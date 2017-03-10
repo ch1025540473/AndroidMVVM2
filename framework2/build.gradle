@@ -109,7 +109,7 @@ def mavenUpload = { project ->
 //  archives androidJavadocsJar
     }
 }
-afterEvaluate mavenUpload
+//afterEvaluate mavenUpload
 
 //android.testOptions.unitTests.all {
 //    // configure the set of classes for JUnit tests
@@ -153,3 +153,9 @@ afterEvaluate mavenUpload
 //    }
 //
 //}
+
+maven {
+    artifactId = 'framework2'
+    versionName = '1.1.6'
+    snapshot = false
+}
