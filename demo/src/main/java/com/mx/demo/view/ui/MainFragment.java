@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.mx.demo.DemoModule;
 import com.mx.demo.R;
 import com.mx.demo.databinding.FragmentMainBinding;
-import com.mx.demo.view.PullToRefreshFooterView;
 import com.mx.demo.view.PullToRefreshHeaderView;
 import com.mx.demo.viewmodel.MainViewModel;
 import com.mx.framework2.view.DataBindingFactory;
@@ -56,6 +55,9 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         super.onCreate(savedInstanceState);
         Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
 
+        //router可以携带参数和复杂类型的数据
+        // method不设置时默认类型为get,支持简单的param携带参数
+        //当需要携带复杂对象data时，需要设置method为post方式。
         Map m = (Map) Router.getDefault().newRoute()
                 .from(this)
                 .uri("demo/test")
