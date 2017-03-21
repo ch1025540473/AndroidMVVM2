@@ -9,3 +9,10 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+maven {
+    artifactId = 'gunit'
+    versionName = '0.0.2'
+    snapshot = true
+    packaging = 'jar'
+}

@@ -1,5 +1,5 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
+//apply plugin: 'com.mx.gunit'
 
 android {
     compileSdkVersion DEFAULT_COMPILE_SDK_VERSION

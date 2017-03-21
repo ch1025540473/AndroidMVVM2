@@ -1,1 +1,1 @@
-include ':engine', ':pulltorefresh', ':framework', ':framework2', ':activitystarter', ':demo', ':router', ':hotfix', ':webbridge'
+include ':engine', ':pulltorefresh', ':framework', ':framework2', ':activitystarter', ':demo', ':router', ':hotfix', ':webbridge', ':gunit'
