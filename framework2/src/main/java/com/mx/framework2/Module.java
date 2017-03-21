@@ -5,7 +5,6 @@ import android.content.Context;
 import com.mx.engine.event.BroadcastEvent;
 import com.mx.engine.event.EventProxy;
 import com.mx.framework2.event.Events;
-import com.mx.framework2.model.UseCaseHolder;
 import com.mx.framework2.model.UseCaseManager;
 import com.mx.framework2.viewmodel.ViewModelFactory;
 import com.mx.framework2.viewmodel.ViewModelFactoryImpl;
@@ -60,7 +59,7 @@ public abstract class Module {
         return userCaseManager;
     }
 
-    protected abstract void onStart(UseCaseManager userCaseManager);
+    protected abstract void onStart(UseCaseManager useCaseManager);
 
     public ViewModelFactory getViewModelFactory() {
         return viewModelFactory;
