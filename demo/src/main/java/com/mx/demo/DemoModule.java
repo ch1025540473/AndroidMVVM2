@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -66,6 +67,12 @@ public class DemoModule extends Module {
                 System.out.println("<R> method=" + pipe.getMethod());
                 BeanReceive beanReceive =  (BeanReceive) pipe.getData(BeanReceive.class);
                 System.out.println("<R>   pipe.getData()=" +  beanReceive.aaa);
+
+                List<String> params=  pipe.getParameters("key");
+                System.out.println("<R>   pipe.getParameters=" +  params+",size="+ params.size());
+                for(String temp:params){
+                    System.out.println("<R>  get param=" + temp);
+                }
                 Map<String, String> m = new HashMap<>();
                 m.put("aaa", "bbb");
                 pipe.success(m);

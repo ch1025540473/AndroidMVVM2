@@ -7,11 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.mx.activitystarter.ActivityStarter;
 import com.google.gson.Gson;
+import com.mx.activitystarter.ActivityStarter;
 import com.mx.engine.json.GsonFactory;
 import com.mx.engine.utils.CheckUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -282,6 +283,16 @@ class PipeRoute implements Route, Pipe, UriAccess {
             CheckUtils.checkNotNull(uriBuilder, "Call uri() before calling appendParameter().");
             if (name != null && value != null) {
                 uriBuilder.appendQueryParameter(name, value.toString());
+            }
+            return this;
+        }
+
+        public Builder appendParameters(String name, Collection<Object> values) {
+            CheckUtils.checkNotNull(uriBuilder, "Call uri() before calling appendParameters().");
+            if (name != null && values != null) {
+                for (Object value : values) {
+                    uriBuilder.appendQueryParameter(name, value.toString());
+                }
             }
             return this;
         }

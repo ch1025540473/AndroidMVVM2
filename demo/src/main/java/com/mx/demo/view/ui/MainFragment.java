@@ -20,6 +20,8 @@ import com.mx.router.Route;
 import com.mx.router.RouteMethod;
 import com.mx.router.Router;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class MainFragment extends BaseFragment implements Callback<MainFragment.Bean> {
@@ -55,6 +57,10 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
         super.onCreate(savedInstanceState);
         Log.d("MainFragment", "savedInstanceState>>" + savedInstanceState);
 
+        List params = new ArrayList();
+        params.add(0,"a");
+        params.add(1,"b");
+        params.add(2,"c");
         //router可以携带参数和复杂类型的数据
         // method不设置时默认类型为get,支持简单的param携带参数
         //当需要携带复杂对象data时，需要设置method为post方式。
@@ -64,6 +70,7 @@ public class MainFragment extends BaseFragment implements Callback<MainFragment.
                 .method(RouteMethod.POST)
                 .appendParameter("code", 123)
                 .data(new SendBean("testData"))
+                .appendParameters("key",params)
                 //.callback(this)
                 .buildAndRoute();
         System.out.println("<RA> m.aaa=" + m.get("aaa"));
