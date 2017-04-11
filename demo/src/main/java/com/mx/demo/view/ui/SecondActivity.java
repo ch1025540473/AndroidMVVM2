@@ -21,6 +21,7 @@ public class SecondActivity extends BaseActivity {
         findViewById(R.id.start_three_activity).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int test=1/0;
                 Router.getDefault().newRoute()
                         .from(SecondActivity.this)
                         .uri("demo/thirdActivity")
@@ -28,6 +29,7 @@ public class SecondActivity extends BaseActivity {
                             @Override
                             public void onRouteSuccess(Route route, Bundle data) {
                                 System.out.println("<RA> result data=" + data.getString("data"));
+
                             }
 
                             @Override
@@ -47,6 +49,8 @@ public class SecondActivity extends BaseActivity {
                 finish();
             }
         });
+
+
     }
 
     @Override

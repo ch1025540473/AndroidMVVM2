@@ -7,12 +7,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.mx.activitystarter.ActivityResultCallback;
 import com.mx.demo.BR;
 import com.mx.demo.event.GotoPatchEvent;
 import com.mx.demo.event.UpdatedApiBeanEvent;
 import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
+import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.view.ui.WebActivity;
+import com.mx.demo.viewmodel.proxy.GPTRRecyclerViewProxy;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -44,7 +47,7 @@ public class MainViewModel extends LifecycleViewModel {
 
     private DialogProxy dialogProxy1;
 
-    public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
+    public void setPtrRecyclerViewProxy(GPTRRecyclerViewProxy ptrRecyclerViewProxy) {
         this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
     }
 
@@ -59,8 +62,8 @@ public class MainViewModel extends LifecycleViewModel {
 
 
     private List<ItemViewBean> items = new LinkedList<>();
-    private PTRRecyclerViewProxy
-            ptrRecyclerViewProxy = new PTRRecyclerViewProxy();
+    private GPTRRecyclerViewProxy
+            ptrRecyclerViewProxy = new GPTRRecyclerViewProxy();
 
     public PTRRecyclerViewProxy getPtrRecyclerViewProxy() {
         return ptrRecyclerViewProxy;
@@ -81,12 +84,14 @@ public class MainViewModel extends LifecycleViewModel {
                     @Override
                     public void onSuccess(List<ApiBean> apiBeanList) {
                         count++;
-                        translateList(apiBeanList);
+                        if (count < 3) {
+                            translateList(apiBeanList);
+                        } else {
+                            Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
+                            ptrRecyclerViewProxy.dismissLoadMoreBar();
+                        }
                         ptrRecyclerViewProxy.setLoadMoreComplete(true);
                         notifyPropertyChanged(BR.items);
-                        if (count > 3) {
-                            ptrRecyclerViewProxy.setPtrMode(PTRRecyclerViewProxy.PTRMode.TOP);
-                        }
 
                     }
 
@@ -274,7 +279,12 @@ public class MainViewModel extends LifecycleViewModel {
             @Override
             public void execute(int viewId) {
                 //postEvent(new GotoAnotherEvent());
-                Router.getDefault().broadcast("demo/anotherActivity", null);
+               startActivityForResult(new Intent(getContext(), SecondActivity.class), new ActivityResultCallback() {
+                   @Override
+                   public void onActivityResult(int resultCode, Intent data) {
+
+                   }
+               });
             }
         };
     }

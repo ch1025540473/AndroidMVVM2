@@ -109,6 +109,6 @@ def mavenUpload = {
 
 maven {
     artifactId = 'router'
-    versionName = '1.1.1'
+    versionName = '1.1.2'
     snapshot = false
 }

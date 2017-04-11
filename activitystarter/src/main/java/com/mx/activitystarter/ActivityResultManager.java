@@ -1,7 +1,6 @@
 package com.mx.activitystarter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -34,6 +33,10 @@ public final class ActivityResultManager {
         }
     }
 
+    public int getCatchSize() {
+        return activityRequestInfoList == null ? 0 : activityRequestInfoList.size();
+    }
+
     private static final int MIN_REQUEST_CODE = 65434;
     private static final int MAX_REQUEST_CODE = 65534;
 
@@ -60,8 +63,9 @@ public final class ActivityResultManager {
     }
 
     public void onActivityCreate(@NonNull ActivityIdentifiable activityIdentifiable, Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            ActivityRequestInfo activityRequestInfo = new ActivityRequestInfo();
+        ActivityRequestInfo activityRequestInfo = findActivityRequestInfoById(activityIdentifiable.getActivityId());
+        if (activityRequestInfo == null) {
+            activityRequestInfo = new ActivityRequestInfo();
             activityRequestInfo.setActivityId(activityIdentifiable.getActivityId());
             activityRequestInfoList.add(activityRequestInfo);
         }
