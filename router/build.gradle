@@ -107,8 +107,8 @@ def mavenUpload = {
 
 //afterEvaluate mavenUpload
 
-maven {
-    artifactId = 'router'
-    versionName = '1.1.2'
-    snapshot = false
-}
+//maven {
+//    artifactId = 'router'
+//    versionName = '1.1.2'
+//    snapshot = false
+//}

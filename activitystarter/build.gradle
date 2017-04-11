@@ -25,46 +25,9 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.tools:annotations:24.5.0'
 }
-apply plugin: 'maven'
-def mavenUpload = { project ->
-    uploadArchives {
-        repositories.mavenDeployer {
-            name = 'mavenCentralReleaseDeployer'
-            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "")
-            }
-            pom.version = "1.0.1"
-            pom.artifactId = "activitystarter"
-            pom.groupId = "com.mx.architecture"
-            pom.name = "activitystart"
-            pom.packaging = 'aar'
-        }
-    }
 
-    task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    artifacts {
-        archives androidSourcesJar
-//  archives androidJavadocsJar
-    }
-}
-//afterEvaluate mavenUpload
-
-maven {
-    artifactId = 'activitystarter'
-    versionName = '1.0.1'
-    snapshot = false
-}
+//maven {
+//    artifactId = 'activitystarter'
+//    versionName = '1.0.1'
+//    snapshot = false
+//}

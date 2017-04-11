@@ -113,8 +113,8 @@ def mavenUpload={ project ->
 //    maxHeapSize = "2048m"
 //}
 
-maven {
-    artifactId = "framework-beta"
-    versionName = "1.0.13"
-    snapshot = false
-}
+//maven {
+//    artifactId = "framework-beta"
+//    versionName = "1.0.13"
+//    snapshot = false
+//}
