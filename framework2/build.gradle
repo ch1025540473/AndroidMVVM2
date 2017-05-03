@@ -62,7 +62,7 @@ dependencies {
     provided project(':engine')
     provided project(':activitystarter')
     testCompile 'org.assertj:assertj-core:1.7.0'
-    testCompile "org.robolectric:robolectric:3.1.4"
+    testCompile "org.robolectric:robolectric:3.3.2"
     testCompile "org.robolectric:shadows-support-v4:3.0"
 
     testCompile "junit:junit:4.12"
@@ -111,48 +111,47 @@ def mavenUpload = { project ->
 }
 //afterEvaluate mavenUpload
 
-//android.testOptions.unitTests.all {
-//    // configure the set of classes for JUnit tests
-//    include '**/*Test.class'
-//    //exclude '**/espresso/**/*.class'
-//
-//    // configure max heap size of the test JVM
-//    maxHeapSize = "2048m"
-//}
-//apply plugin: 'jacoco'
-//
-//jacoco {
-//    toolVersion = "0.7.1.201405082137"
-//}
-//
-//def coverageSourceDirs = [
-//        '../framework2/src/main/java'
-//]
-//
-//task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
-//    group = "Reporting"
-//
-//    description = "Generate Jacoco coverage reports"
-//
-//    classDirectories = fileTree(
-//            dir: '../framework2/build/intermediates/classes/debug',
-//            excludes: ['**/R.class',
-//                       '**/R$*.class',
-//                       '**/*$ViewInjector*.*',
-//                       '**/BuildConfig.*',
-//                       '**/Manifest*.*']
-//    )
-//
-//    additionalSourceDirs = files(coverageSourceDirs)
-//    sourceDirectories = files(coverageSourceDirs)
-//    executionData = files('../framework2/build/jacoco/testDebugUnitTest.exec')
-//
-//    reports {
-//        xml.enabled = true
-//        html.enabled = true
-//    }
-//
-//}
+android.testOptions.unitTests.all {
+    // configure the set of classes for JUnit tests
+    include '**/*Test.class'
+    exclude '**/espresso/**/*.class'
+
+    // configure max heap size of the test JVM
+    maxHeapSize = "2048m"
+}
+apply plugin: 'jacoco'
+
+jacoco {
+    toolVersion = "0.7.1.201405082137"
+}
+
+def coverageSourceDirs = [
+        'src/main/java'
+]
+
+task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
+    group = "Reporting"
+
+    description = "Generate Jacoco coverage reports"
+
+    classDirectories = fileTree(
+            dir: 'build/intermediates/classes/debug',
+            excludes: ['**/R.class',
+                       '**/R$*.class',
+                       '**/*$ViewInjector*.*',
+                       '**/BuildConfig.*',
+                       '**/Manifest*.*']
+    )
+
+    additionalSourceDirs = files(coverageSourceDirs)
+    sourceDirectories = files(coverageSourceDirs)
+    executionData = files('build/jacoco/testDebugUnitTest.exec')
+
+    reports {
+        // xml.enabled = true
+        html.enabled = true
+    }
+}
 
 maven {
     artifactId = 'framework2'
