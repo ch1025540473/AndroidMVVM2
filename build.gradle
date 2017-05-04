@@ -72,8 +72,8 @@ allprojects {
 class MavenOptions {
     def artifactId
     def versionName
-    def snapshot = false
-    def groupId = 'com.mx.architecture'
+    def snapshot = true
+    def groupId = 'com.mx.os'
     def packaging = 'aar'
 
     public String getVersionName() {
@@ -93,66 +93,143 @@ class MavenOptions {
     }
 }
 
-subprojects {
-    def nexusOptions = new MavenOptions()
+def provision = { project ->
+    MavenOptions nexusOptions = new MavenOptions()
     project.ext {
         maven = { c ->
             c.delegate = nexusOptions
             c()
         }
+        nexus = nexusOptions
+    }
+}
+
+def installMaven = { project ->
+    delegate = project
+    resolveStrategy = Closure.DELEGATE_FIRST
+
+    def nexusOptions = project.nexus
+    if (nexusOptions.artifactId == null || nexusOptions.versionName == null) {
+        return;
     }
 
     apply plugin: 'maven'
-    def mavenUpload = { project ->
-        delegate = project
 
-        if (nexusOptions.artifactId == null || nexusOptions.versionName == null) {
-            return;
-        }
+    def url;
+    if (nexusOptions.snapshot) {
+        url = 'http://10.69.213.71:8081/nexus/content/repositories/GomePlusOSSnapshot/'
+    } else {
+        url = 'http://10.69.213.71:8081/nexus/content/repositories/GomePlusOSRelease/'
+    }
 
-        def url;
-        if (nexusOptions.snapshot) {
-            url = 'http://10.69.213.71:8081/nexus/content/repositories/snapshots/'
-        } else {
-            url = 'http://10.69.213.71:8081/nexus/content/repositories/MXCentral/'
-        }
-
-        uploadArchives {
-            repositories.mavenDeployer {
-                //name = 'mavenCentralReleaseDeployer'
-                repository(url: url) {
-                    authentication(userName: "admin", password: "mx123456")
-                }
-                pom.version = nexusOptions.versionName
-                pom.artifactId = nexusOptions.artifactId
-                pom.groupId = nexusOptions.groupId
-                pom.name = nexusOptions.artifactId
-                pom.packaging = nexusOptions.packaging
+    uploadArchives {
+        repositories.mavenDeployer {
+            //name = 'mavenCentralReleaseDeployer'
+            repository(url: url) {
+                authentication(userName: "admin", password: "mx123456")
             }
-        }
-
-        if (getExtensions().findByName('android') != null) {
-            task androidJavadocs(type: Javadoc) {
-                source = android.sourceSets.main.java.srcDirs
-                classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-            }
-
-            task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-                classifier = 'javadoc'
-                from androidJavadocs.destinationDir
-            }
-
-            task androidSourcesJar(type: Jar) {
-                classifier = 'sources'
-                from android.sourceSets.main.java.sourceFiles
-            }
-
-            artifacts {
-                archives androidSourcesJar
-                //archives androidJavadocsJar
-            }
+            pom.version = nexusOptions.versionName
+            pom.artifactId = nexusOptions.artifactId
+            pom.groupId = nexusOptions.groupId
+            pom.name = nexusOptions.artifactId
+            pom.packaging = nexusOptions.packaging
         }
     }
 
-    afterEvaluate mavenUpload
+    def android = getExtensions().findByName('android')
+    if (android != null) {
+        task androidJavadocs(type: Javadoc) {
+            source = android.sourceSets.main.java.srcDirs
+            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+        }
+
+        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+            classifier = 'javadoc'
+            from androidJavadocs.destinationDir
+        }
+
+        task androidSourcesJar(type: Jar) {
+            classifier = 'sources'
+            from android.sourceSets.main.java.sourceFiles
+        }
+
+        artifacts {
+            archives androidSourcesJar
+            //archives androidJavadocsJar
+        }
+    }
+}
+
+def installTest = { project ->
+    delegate = project
+    resolveStrategy = Closure.DELEGATE_FIRST
+
+    def android = getExtensions().findByName('android')
+    if (android == null) {
+        return
+    }
+
+    android.testOptions.unitTests.all {
+        // configure the set of classes for JUnit tests
+        include '**/*Test.class'
+        exclude '**/espresso/**/*.class'
+
+        // configure max heap size of the test JVM
+        maxHeapSize = "2048m"
+    }
+    project.apply plugin: 'jacoco'
+
+    jacoco {
+        toolVersion = "0.7.1.201405082137"
+    }
+
+    def coverageSourceDirs = ['src/main/java']
+
+    def coverage = { buildType ->
+        resolveStrategy = Closure.DELEGATE_FIRST
+        group = "Coverage"
+        description = "Generate Jacoco coverage reports"
+        classDirectories = project.fileTree(
+                dir: "build/intermediates/classes/${buildType}",
+                excludes: [
+                        '**/R.class',
+                        '**/R$*.class',
+                        '**/*$ViewInjector*.*',
+                        '**/BuildConfig.*',
+                        '**/Manifest*.*',
+                        '**/DataBinding*.*',
+                        '**/databinding/*.*'
+                ]
+        )
+        additionalSourceDirs = project.files(coverageSourceDirs)
+        sourceDirectories = project.files(coverageSourceDirs)
+        executionData = project.files("build/jacoco/test${buildType}UnitTest.exec")
+
+        reports {
+            html.enabled = true
+        }
+    }
+
+    task coverageDebug(type: JacocoReport, dependsOn: "test") {
+        //println "jacocoDebug this=${this}, delegate=${delegate}"
+        coverage.setDelegate(delegate)
+        coverage("debug")
+    }
+
+    task coverageRelease(type: JacocoReport, dependsOn: "test") {
+        coverage.setDelegate(delegate)
+        coverage("release")
+    }
+}
+
+def install = { project ->
+    project.afterEvaluate {
+        installMaven(project)
+        installTest(project)
+    }
+}
+
+subprojects {
+    provision(project)
+    install(project)
 }
