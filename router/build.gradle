@@ -2,12 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    compileSdkVersion DEFAULT_COMPILE_SDK_VERSION
-    buildToolsVersion DEFAULT_BUILD_TOOLS_VERSION
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
         versionCode 7
         versionName "1.0.7"
     }
@@ -57,53 +58,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided project(':engine')
     provided project(':activitystarter')
-    compile 'com.android.support:appcompat-v7:23.+'
+    compile rootProject.ext.dependencies["appcompat"]
 
     testCompile 'junit:junit:4.12'
     androidTestCompile 'com.android.support.test:runner:0.5'
 }
 
-def mavenUpload = {
-    project ->
-        uploadArchives {
-            repositories.mavenDeployer {
-                name = 'mavenCentralReleaseDeployer'
-                repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                    authentication(userName: "admin", password: "")
-                }
-                pom.version = "1.1.1"
-                pom.artifactId = "router"
-                pom.groupId = "com.mx.architecture"
-                pom.name = "router"
-                pom.packaging = 'aar'
-                pom.project {
-                    description ""
-                    url "http://10.69.213.71:8888/mx_android_architecture/AndroidMVVM/tree/master/router"
-                }
-            }
-        }
 
-
-        task androidJavadocs(type: Javadoc) {
-            source = android.sourceSets.main.java.srcDirs
-            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-        }
-
-        task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-            classifier = 'javadoc'
-            from androidJavadocs.destinationDir
-        }
-
-        task androidSourcesJar(type: Jar) {
-            classifier = 'sources'
-            from android.sourceSets.main.java.sourceFiles
-        }
-
-        artifacts {
-            archives androidSourcesJar
-//  archives androidJavadocsJar
-        }
-}
 
 //afterEvaluate mavenUpload
 

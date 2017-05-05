@@ -2,12 +2,13 @@ apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
 android {
-    compileSdkVersion DEFAULT_COMPILE_SDK_VERSION
-    buildToolsVersion DEFAULT_BUILD_TOOLS_VERSION
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        testInstrumentationRunner rootProject.ext.testInstrumentationRunner
         versionCode 47
         versionName "1.1.6"
     }
@@ -54,103 +55,24 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:appcompat-v7:23.+'
-    compile 'com.android.support:recyclerview-v7:23.+'
-    compile 'com.mx.architecture:pulltorefresh:1.+'
-    compile 'me.kareluo.intensify:image:1.1.0'
+    compile rootProject.ext.dependencies["appcompat"]
+    compile rootProject.ext.dependencies["multidex"]
+    compile rootProject.ext.dependencies["recyclerview"]
+    compile rootProject.ext.dependencies["pulltorefresh"]
+    compile rootProject.ext.dependencies["intensify-image"]
+
+
     provided project(':engine')
     provided project(':activitystarter')
-    testCompile 'org.assertj:assertj-core:1.7.0'
-    testCompile "org.robolectric:robolectric:3.3.2"
-    testCompile "org.robolectric:shadows-support-v4:3.0"
 
-    testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-all:1.10.19"
-    testCompile "org.hamcrest:hamcrest-all:1.3"
+    testCompile rootProject.ext.dependencies["assertj-core"]
+    testCompile rootProject.ext.dependencies["robolectric"]
+    testCompile rootProject.ext.dependencies["junit"]
+    testCompile rootProject.ext.dependencies["mockito"]
+    testCompile rootProject.ext.dependencies["hamcrest"]
+    testCompile rootProject.ext.dependencies["runner"]
+    testCompile rootProject.ext.dependencies["rules"]
 
-    // Android Testing Support Library's runner and rules
-    androidTestCompile "com.android.support.test:runner:0.4.1"
-    androidTestCompile "com.android.support.test:rules:0.4.1"
-}
-
-def mavenUpload = { project ->
-    uploadArchives {
-        repositories.mavenDeployer {
-            name = 'mavenCentralReleaseDeployer'
-            repository(url: "http://10.69.213.71:8081/nexus/content/repositories/MXCentral/") {
-                authentication(userName: "admin", password: "")
-            }
-            pom.version = "1.1.6"
-            pom.artifactId = "framework2"
-            pom.groupId = "com.mx.architecture"
-            pom.name = "framework"
-            pom.packaging = 'aar'
-        }
-    }
-
-    task androidJavadocs(type: Javadoc) {
-        source = android.sourceSets.main.java.srcDirs
-        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    }
-
-    task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-        classifier = 'javadoc'
-        from androidJavadocs.destinationDir
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.sourceFiles
-    }
-
-    artifacts {
-        archives androidSourcesJar
-//  archives androidJavadocsJar
-    }
-}
-//afterEvaluate mavenUpload
-
-android.testOptions.unitTests.all {
-    // configure the set of classes for JUnit tests
-    include '**/*Test.class'
-    exclude '**/espresso/**/*.class'
-
-    // configure max heap size of the test JVM
-    maxHeapSize = "2048m"
-}
-apply plugin: 'jacoco'
-
-jacoco {
-    toolVersion = "0.7.1.201405082137"
-}
-
-def coverageSourceDirs = [
-        'src/main/java'
-]
-
-task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
-    group = "Reporting"
-
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/*$ViewInjector*.*',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']
-    )
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebugUnitTest.exec')
-
-    reports {
-        // xml.enabled = true
-        html.enabled = true
-    }
 }
 
 maven {

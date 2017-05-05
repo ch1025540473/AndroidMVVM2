@@ -1,17 +1,15 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 25
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
     buildTypes {
         release {
@@ -26,13 +24,12 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    testCompile 'junit:junit:4.12'
 
-    compile 'com.android.support:appcompat-v7:25.3.1'
-    compile 'junit:junit:4.12'
-    compile "org.robolectric:robolectric:3.3.2"
-    compile "org.powermock:powermock-module-junit4:1.6.4"
-    compile "org.powermock:powermock-module-junit4-rule:1.6.4"
-    compile "org.powermock:powermock-api-mockito:1.6.4"
-    compile "org.powermock:powermock-classloading-xstream:1.6.4"
+    compile rootProject.ext.dependencies["appcompat"]
+    compile rootProject.ext.dependencies["robolectric"]
+    compile rootProject.ext.dependencies["junit"]
+    compile rootProject.ext.dependencies["powermock-module-junit4"]
+    compile rootProject.ext.dependencies["powermock-module-junit4-rule"]
+    compile rootProject.ext.dependencies["powermock-api-mockito"]
+    compile rootProject.ext.dependencies["powermock-classloading-xstream"]
 }
