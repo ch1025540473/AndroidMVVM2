@@ -15,7 +15,6 @@ import com.mx.demo.model.DemoUseCase;
 import com.mx.demo.model.bean.ApiBean;
 import com.mx.demo.view.ui.SecondActivity;
 import com.mx.demo.view.ui.WebActivity;
-import com.mx.demo.viewmodel.proxy.GPTRRecyclerViewProxy;
 import com.mx.demo.viewmodel.viewbean.ChildColorItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildItemViewBean;
 import com.mx.demo.viewmodel.viewbean.ChildListViewBean;
@@ -47,7 +46,7 @@ public class MainViewModel extends LifecycleViewModel {
 
     private DialogProxy dialogProxy1;
 
-    public void setPtrRecyclerViewProxy(GPTRRecyclerViewProxy ptrRecyclerViewProxy) {
+    public void setPtrRecyclerViewProxy(PTRRecyclerViewProxy ptrRecyclerViewProxy) {
         this.ptrRecyclerViewProxy = ptrRecyclerViewProxy;
     }
 
@@ -62,8 +61,8 @@ public class MainViewModel extends LifecycleViewModel {
 
 
     private List<ItemViewBean> items = new LinkedList<>();
-    private GPTRRecyclerViewProxy
-            ptrRecyclerViewProxy = new GPTRRecyclerViewProxy();
+    private PTRRecyclerViewProxy
+            ptrRecyclerViewProxy = new PTRRecyclerViewProxy();
 
     public PTRRecyclerViewProxy getPtrRecyclerViewProxy() {
         return ptrRecyclerViewProxy;
@@ -88,7 +87,6 @@ public class MainViewModel extends LifecycleViewModel {
                             translateList(apiBeanList);
                         } else {
                             Toast.makeText(getContext(), "网络异常", Toast.LENGTH_LONG).show();
-                            ptrRecyclerViewProxy.dismissLoadMoreBar();
                         }
                         ptrRecyclerViewProxy.setLoadMoreComplete(true);
                         notifyPropertyChanged(BR.items);
