@@ -90,17 +90,16 @@ public class MainViewModel extends LifecycleViewModel {
                         }
                         ptrRecyclerViewProxy.setLoadMoreComplete(true);
                         notifyPropertyChanged(BR.items);
-
                     }
 
                     @Override
                     public void onError(int i, String s) {
-
+                        System.out.println("onError");
                     }
 
                     @Override
                     public void onFailure(Throwable throwable) {
-
+                        System.out.println("onFailure");
                     }
                 });
             }
