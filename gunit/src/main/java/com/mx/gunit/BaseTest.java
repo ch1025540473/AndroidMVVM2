@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.MockitoAnnotations;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 
 /**
@@ -13,6 +14,7 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
  */
 //@Config(constants = BuildConfig.class) 指定当前Module的BuildConfig类
 //@PrepareForTest(ClassForTest.class) 指定被测试的类
+@PrepareForTest(fullyQualifiedNames = {"com.mx.*"})
 @PowerMockIgnore({"org.mockito.*", "org.robolectric.*", "android.*", "javax.net.ssl.*"})
 public class BaseTest extends Asserts {
     public BaseTest() {

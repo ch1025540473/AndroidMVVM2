@@ -9,7 +9,7 @@ public interface MethodMockable {
 
     MethodMockable withParameters(Class<?>... params);
 
-    //MethodMockable withInvocationListener(InvocationListener listener);
+    MethodMockable withInvocationListener(InvocationListener listener);
 
     MethodMockable thenReturn(Object returnValue);
 }

@@ -35,15 +35,27 @@ public class MethodMockManager {
             MockRepository.putMethodProxy(mock.getMethod(), new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                    MethodMock target = null;
                     for (MethodMock mock : methodMocks) {
-                        if (mock.getOwner() == proxy) {
-                            return mock.getReturnValue();
+                        if (mock.getMethod().equals(method) && mock.getOwner() == proxy) {
+                            target = mock;
+                            break;
                         }
                     }
-                    for (MethodMock mock : methodMocks) {
-                        if (mock.getOwner() == null) {
-                            return mock.getReturnValue();
+                    if (target == null) {
+                        for (MethodMock mock : methodMocks) {
+                            if (mock.getMethod().equals(method) && mock.getOwner() == null) {
+                                target = mock;
+                                break;
+                            }
                         }
+                    }
+
+                    if (target != null) {
+                        if (target.getListener() != null) {
+                            target.getListener().onInvoke(proxy, method, args);
+                        }
+                        return target.getReturnValue();
                     }
 
                     return method.invoke(proxy, args);

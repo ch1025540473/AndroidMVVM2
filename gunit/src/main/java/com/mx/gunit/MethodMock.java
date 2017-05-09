@@ -26,6 +26,10 @@ public class MethodMock {
         return returnValue;
     }
 
+    public InvocationListener getListener() {
+        return listener;
+    }
+
     public static class MethodMockBuilder implements MethodMockable {
         private String name;
         private Class<?> type;
@@ -74,6 +78,7 @@ public class MethodMock {
             return this;
         }
 
+        @Override
         public MethodMockable withInvocationListener(InvocationListener listener) {
             this.listener = listener;
             return this;
