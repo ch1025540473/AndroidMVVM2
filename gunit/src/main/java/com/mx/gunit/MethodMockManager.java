@@ -1,5 +1,7 @@
 package com.mx.gunit;
 
+import com.google.common.collect.Lists;
+
 import org.powermock.core.MockRepository;
 
 import java.lang.reflect.InvocationHandler;
@@ -70,7 +72,8 @@ public class MethodMockManager {
     }
 
     public void clear() {
-        methodMocks.clear();
-        MockRepository.clear();
+        for (MethodMock mock : Lists.newArrayList(methodMocks)) {
+            removeMethodMock(mock);
+        }
     }
 }

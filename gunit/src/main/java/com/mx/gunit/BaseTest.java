@@ -1,13 +1,17 @@
 package com.mx.gunit;
 
 
+import android.content.Context;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.MockitoAnnotations;
+import org.powermock.core.MockRepository;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.robolectric.RuntimeEnvironment;
 
 /**
  * Created by chenbaocheng on 17/5/3.
@@ -36,6 +40,7 @@ public class BaseTest extends Asserts {
     @After
     public void tearDown() throws Exception {
         MethodMockManager.getInstance().clear();
+        MockRepository.clear();
     }
 
     public MethodMockable mockMethod(Object owner, String methodName) {
@@ -48,5 +53,9 @@ public class BaseTest extends Asserts {
         MethodMock.MethodMockBuilder builder = new MethodMock.MethodMockBuilder(methodName);
         builder.setClass(type);
         return builder;
+    }
+
+    public Context getApplicationContext() {
+        return RuntimeEnvironment.application.getApplicationContext();
     }
 }
