@@ -75,8 +75,8 @@ dependencies {
 
 }
 
-maven {
-    artifactId = 'framework2'
-    versionName = '1.1.7'
-    snapshot = false
-}
+//maven {
+//    artifactId = 'framework2'
+//    versionName = '1.1.7'
+//    snapshot = false
+//}

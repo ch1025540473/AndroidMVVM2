@@ -124,7 +124,7 @@ class MavenOptions {
     def artifactId
     def versionName
     def snapshot = true
-    def groupId = 'com.mx.os'
+    def groupId = 'com.mx.architecture'
     def packaging = 'aar'
 
     public String getVersionName() {
