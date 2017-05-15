@@ -220,6 +220,27 @@ def installTest = { project ->
         return
     }
 
+    project.apply plugin: 'jacoco'
+
+    def coverageSourceDirs = ['src/main/java']
+    def classesDir = "build/intermediates/classes/debug"
+    def instrumentedClassesDir = "build/intermediates/classes/jacoco"
+    def executionDataFile = "build/jacoco/jacoco.exec"
+
+    def instrumentedClassesPattern = [
+            'com/mx/**/*.class'
+    ]
+    def nonInstrumentedClassesPattern = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/*$ViewInjector*.*',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            '**/BR.class',
+            '**/DataBinding*.*',
+            '**/databinding/*.*'
+    ]
+
     android.testOptions.unitTests.all {
         // configure the set of classes for JUnit tests
         include '**/*Test.class'
@@ -228,49 +249,75 @@ def installTest = { project ->
         // configure max heap size of the test JVM
         maxHeapSize = "2048m"
     }
-    project.apply plugin: 'jacoco'
 
     jacoco {
         toolVersion = "0.7.1.201405082137"
     }
 
-    def coverageSourceDirs = ['src/main/java']
+    task doJacocoOfflineInstrumentation(dependsOn: ['compileDebugSources', project.configurations.jacocoAnt]) {
+        inputs.files compileDebugSources.outputs.files
+        def outputDir = project.file(instrumentedClassesDir)
+        outputs.dir outputDir
+        doFirst {
+            if (!project.file(classesDir).exists()) {
+                throw RuntimeException("No class to instrument in ${classesDir}")
+            }
+
+            project.delete(outputDir)
+            ant.taskdef(
+                    resource: 'org/jacoco/ant/antlib.xml',
+                    classpath: project.configurations.jacocoAnt.asPath,
+                    uri: 'jacoco'
+            )
+            ant.'jacoco:instrument'(destdir: instrumentedClassesDir) {
+                fileset(
+                        dir: classesDir,
+                        includes: instrumentedClassesPattern.join(','),
+                        excludes: nonInstrumentedClassesPattern.join(',')
+                )
+            }
+
+            android.testOptions.unitTests.all {
+                classpath -= project.files(classesDir)
+                classpath += project.files(instrumentedClassesDir)
+                classpath += project.files(classesDir)
+
+                jvmArgs += '-noverify'
+                systemProperties.put('jacoco-agent.destfile', project.file(executionDataFile).absolutePath)
+                //forkEvery 1
+            }
+        }
+    }
+    testDebugUnitTest.dependsOn doJacocoOfflineInstrumentation
 
     def coverage = { buildType ->
         resolveStrategy = Closure.DELEGATE_FIRST
         group = "Coverage"
         description = "Generate Jacoco coverage reports"
         classDirectories = project.fileTree(
-                dir: "build/intermediates/classes/${buildType}",
-                excludes: [
-                        '**/R.class',
-                        '**/R$*.class',
-                        '**/*$ViewInjector*.*',
-                        '**/BuildConfig.*',
-                        '**/Manifest*.*',
-                        '**/DataBinding*.*',
-                        '**/databinding/*.*'
-                ]
+                dir: classesDir,
+                include: 'com/mx/demo/viewmodel/*.class',
+                excludes: nonInstrumentedClassesPattern
         )
-        additionalSourceDirs = project.files(coverageSourceDirs)
+        //additionalSourceDirs = project.files(coverageSourceDirs)
         sourceDirectories = project.files(coverageSourceDirs)
-        executionData = project.files("build/jacoco/test${buildType}UnitTest.exec")
+        executionData = project.files(executionDataFile)
 
         reports {
             html.enabled = true
         }
     }
 
-    task coverageDebug(type: JacocoReport, dependsOn: "test") {
+    task coverageDebug(type: JacocoReport, dependsOn: "testDebugUnitTest") {
         //println "jacocoDebug this=${this}, delegate=${delegate}"
         coverage.setDelegate(delegate)
         coverage("debug")
     }
-
-    task coverageRelease(type: JacocoReport, dependsOn: "test") {
-        coverage.setDelegate(delegate)
-        coverage("release")
-    }
+//
+//    task coverageRelease(type: JacocoReport, dependsOn: "testReleaseUnitTest") {
+//        coverage.setDelegate(delegate)
+//        coverage("release")
+//    }
 }
 
 def install = { project ->
@@ -282,5 +329,14 @@ def install = { project ->
 
 subprojects {
     provision(project)
-    install(project)
+    project.afterEvaluate {
+        installMaven(project)
+    }
 }
+
+gradle.projectsEvaluated {
+    subprojects {
+        installTest(project)
+    }
+}
+
