@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import org.junit.Assert;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by chenbaocheng on 17/5/3.
@@ -77,6 +78,20 @@ public abstract class Asserts extends Assert {
         }
     }
 
+    public static void assertNotEmpty(@Nullable final Map<?, ?> map) {
+        assertNotEmpty(null, map);
+    }
+
+    public static void assertNotEmpty(final String name, @Nullable final Map<?, ?> map) {
+        assertNotNull(name, map);
+        if (map.isEmpty()) {
+            String formatted = "";
+            if (name != null) {
+                formatted = name + ".";
+            }
+            fail(formatted + "cannot be empty");
+        }
+    }
 
     public static void assertIsMainThread() {
         if (Looper.myLooper() != Looper.getMainLooper()) {
