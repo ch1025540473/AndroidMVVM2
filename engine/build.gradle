@@ -63,8 +63,8 @@ dependencies {
 
 }
 
-//maven {
-//    artifactId = 'engine-beta'
-//    versionName = '1.0.9'
-//    snapshot = false
-//}
+maven {
+    artifactId = 'engine'
+    versionName = '1.0.9'
+    snapshot = false
+}

@@ -7,6 +7,26 @@ import rx.Subscriber;
  */
 public abstract class SubscriberResult<Success> extends Subscriber<Success> {
 
+    public SubscriberResult() {
+        super();
+        captor(this);
+    }
+
+    public SubscriberResult(Subscriber<?> subscriber) {
+        super(subscriber);
+        captor(this);
+    }
+
+    protected SubscriberResult(Subscriber<?> subscriber, boolean shareSubscriptions) {
+        super(subscriber, shareSubscriptions);
+        captor(this);
+    }
+
+    private void captor(SubscriberResult<Success> value) {
+
+    }
+
+
     @Deprecated
     @Override
     public final void onCompleted() {
