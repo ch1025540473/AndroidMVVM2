@@ -144,22 +144,16 @@ class MavenOptions {
     }
 }
 
-def provision = { project ->
+def provisionMaven = { project ->
     MavenOptions nexusOptions = new MavenOptions()
-    project.ext {
-        maven = { c ->
-            c.delegate = nexusOptions
-            c()
-        }
-        nexus = nexusOptions
-    }
+    project.extensions.add('maven', nexusOptions)
 }
 
 def installMaven = { project ->
     delegate = project
     resolveStrategy = Closure.DELEGATE_FIRST
 
-    def nexusOptions = project.nexus
+    def nexusOptions = project.maven
     if (nexusOptions.artifactId == null || nexusOptions.versionName == null) {
         return;
     }
@@ -211,25 +205,37 @@ def installMaven = { project ->
     }
 }
 
+class CoverageOptions {
+    def reportClasses = 'com/mx/demo/**'
+}
+
+def provisionTest = { project ->
+    project.extensions.add('coverage', new CoverageOptions())
+}
+
 def installTest = { project ->
     delegate = project
     resolveStrategy = Closure.DELEGATE_FIRST
 
     def android = getExtensions().findByName('android')
     if (android == null) {
+        // 无视非android工程
         return
     }
 
     project.apply plugin: 'jacoco'
 
-    def coverageSourceDirs = ['src/main/java']
-    def classesDir = "build/intermediates/classes/debug"
-    def instrumentedClassesDir = "build/intermediates/classes/jacoco"
-    def executionDataFile = "build/jacoco/jacoco.exec"
+    def coverageSourceDirs = ['src/main/java'] // 源代码路径
+    def classesDir = "build/intermediates/classes/debug" // class文件所在路径
+    def instrumentedClassesDir = "build/intermediates/classes/jacoco"  // 插装后的class文件位置
+    def executionDataFile = "build/jacoco/jacoco.exec"  // 数据文件位置
 
+    // 需要计算覆盖率class文件模式
     def instrumentedClassesPattern = [
             'com/mx/**/*.class'
     ]
+
+    // 不需要计算覆盖率class文件模式
     def nonInstrumentedClassesPattern = [
             '**/R.class',
             '**/R$*.class',
@@ -254,11 +260,13 @@ def installTest = { project ->
         toolVersion = "0.7.1.201405082137"
     }
 
+    // jacoco离线插装任务
     task doJacocoOfflineInstrumentation(dependsOn: ['compileDebugSources', project.configurations.jacocoAnt]) {
         inputs.files compileDebugSources.outputs.files
         def outputDir = project.file(instrumentedClassesDir)
         outputs.dir outputDir
         doFirst {
+            println "AAA=" + compileDebugSources.outputs.files.isEmpty()
             if (!project.file(classesDir).exists()) {
                 throw RuntimeException("No class to instrument in ${classesDir}")
             }
@@ -278,12 +286,17 @@ def installTest = { project ->
             }
 
             android.testOptions.unitTests.all {
+                // 设整classpath，让单元测试优先加载已插装class文件
                 classpath -= project.files(classesDir)
                 classpath += project.files(instrumentedClassesDir)
                 classpath += project.files(classesDir)
 
+                // 关掉class校验，防止jvm对已插装class文件报错
                 jvmArgs += '-noverify'
+
+                // 指定数据文件位置
                 systemProperties.put('jacoco-agent.destfile', project.file(executionDataFile).absolutePath)
+
                 //forkEvery 1
             }
         }
@@ -294,46 +307,47 @@ def installTest = { project ->
         resolveStrategy = Closure.DELEGATE_FIRST
         group = "Coverage"
         description = "Generate Jacoco coverage reports"
+
+        // 指定哪些class文件需要计算覆盖率
         classDirectories = project.fileTree(
                 dir: classesDir,
-                include: 'com/mx/demo/viewmodel/*.class',
+                include: project.coverage.reportClasses,
                 excludes: nonInstrumentedClassesPattern
         )
-        //additionalSourceDirs = project.files(coverageSourceDirs)
+
+        // 指定源代码位置
         sourceDirectories = project.files(coverageSourceDirs)
+
+        // 指定单元测试中生成的数据文件位置
         executionData = project.files(executionDataFile)
 
         reports {
-            html.enabled = true
+            html.enabled = true // 启动html报告
         }
     }
 
     task coverageDebug(type: JacocoReport, dependsOn: "testDebugUnitTest") {
-        //println "jacocoDebug this=${this}, delegate=${delegate}"
         coverage.setDelegate(delegate)
         coverage("debug")
-    }
-//
-//    task coverageRelease(type: JacocoReport, dependsOn: "testReleaseUnitTest") {
-//        coverage.setDelegate(delegate)
-//        coverage("release")
-//    }
-}
-
-def install = { project ->
-    project.afterEvaluate {
-        installMaven(project)
-        installTest(project)
     }
 }
 
 subprojects {
-    provision(project)
+    provisionMaven(project)
+    provisionTest(project)
+
     project.afterEvaluate {
         installMaven(project)
     }
 }
 
+/**
+ * 这里需要区分一下 project.afterEvaluate 和 gradle.projectsEvaluated 两个回调的区别：
+ * project.afterEvaluate ：android插件读取配置后的时点，此时没有定义任何android相关task
+ * gradle.projectsEvaluated ：gradle的回调，各工程及相关插件初始化结束时点
+ *
+ * 由于installTest()方法需要依赖test task，只能在 gradle.projectsEvaluated 回调中可以访问到
+ */
 gradle.projectsEvaluated {
     subprojects {
         installTest(project)

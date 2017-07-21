@@ -32,10 +32,10 @@ dependencies {
     compile rootProject.ext.dependencies["powermock-module-junit4-rule"]
     compile rootProject.ext.dependencies["powermock-api-mockito"]
     compile rootProject.ext.dependencies["powermock-classloading-xstream"]
+}
 
-    maven {
-        artifactId = 'gunit'
-        versionName = '1.0.0'
-        snapshot = true
-    }
+maven {
+    artifactId = 'gunit'
+    versionName = '1.0.0'
+    snapshot = true
 }

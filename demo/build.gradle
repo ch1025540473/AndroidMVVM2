@@ -464,3 +464,7 @@ if (buildWithTinker()) {
         }
     }
 }
+
+coverage {
+    reportClasses = 'com/mx/demo/viewmodel/*.class'
+}
